@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Amphur extends Model
+class Hospical extends Model
 {
     protected $table = "c_hospital";
     public $timestamps = false;
