@@ -5,15 +5,17 @@ $i=1;
 $j=2;
 //ini_set('max_execution_time', 300); //300 seconds = 5 minutes
 $get_provincename_th =\App\Http\Controllers\Controller::get_provincename_th();
+$get_list_disease =\App\Http\Controllers\Controller::list_disease();
 $current_year =  (isset($_GET['year']))? $_GET['year']: date('Y');
 $disease_code =  (isset($_GET['disease_code']))? $_GET['disease_code']: '01';
+$current_year_th = $current_year+543;
 
 //$province,$year,$disease_code
-//dd($get_sub_level);
+//dd($datas_province);
 ?>
 <!-- Content Header (Page header) -->
 <section class="content-header">
-<h1>Export<small></small></h1>
+<h1><small>แสดงข้อมูลปี <?php echo $current_year_th; ?> โรค <?php echo $get_list_disease[$disease_code]; ?></small></h1>
 <ol class="breadcrumb">
 	<li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
 	<li><a href="#">Examples</a></li>
@@ -27,7 +29,7 @@ $disease_code =  (isset($_GET['disease_code']))? $_GET['disease_code']: '01';
 			<!-- Default box -->
 			<div class="box">
 				<div class="box-header with-border">
-					<h3 class="box-title">Show By Disease</h3>
+					<h3 class="box-title">แสดงข้อมูลปี <?php echo $current_year_th; ?> โรค <?php echo $get_list_disease[$disease_code]; ?></h3>
 				</div>
 				<div class="box-body">
 					<table id="tree-table" class="table table-hover table-bordered">
@@ -35,13 +37,13 @@ $disease_code =  (isset($_GET['disease_code']))? $_GET['disease_code']: '01';
 							<th>จังหวัด</th>
 							<th>จำนวน</th>
 							@foreach ($datas_province as $value_province)
-							<tr data-id="{{ $value_province->PROVINCE }}" data-parent="0" data-level="1">
-								<td data-column="name">{{ $get_provincename_th[$value_province->PROVINCE] }}</td>
+							<tr data-id="{{ $value_province->prov_code }}" data-parent="0" data-level="1">
+								<td data-column="name">{{ $value_province->prov_name }}</td>
 								<td>{{ number_format($value_province->total_province) }}</td>
 							</tr>
-							<?php $get_sub_level = \App\Http\Controllers\PopulationController::ShowByDiseaseSub($value_province->PROVINCE,$current_year,$disease_code); ?>
+							<?php $get_sub_level = \App\Http\Controllers\PopulationController::ShowByDiseaseSub($value_province->prov_code,$current_year,$disease_code); ?>
 							@foreach ($get_sub_level as $value_sub_level)
-							<tr data-id="{{ $i }}" data-parent="{{ $value_province->PROVINCE }}" data-level="2">
+							<tr data-id="{{ $i }}" data-parent="{{ $value_province->prov_code }}" data-level="2">
 					      <td data-column="name">{{ $value_sub_level->urbanname }}</td>
 					      <td>{{ number_format($value_sub_level->total_amphur) }}</td>
     					</tr>
@@ -66,5 +68,6 @@ $disease_code =  (isset($_GET['disease_code']))? $_GET['disease_code']: '01';
 <?php
 unset($get_provincename_th);
 unset($get_sub_level);
+unset($get_list_disease);
  ?>
 @stop
