@@ -3,25 +3,25 @@
 
 <?php
 use \App\Http\Controllers\PopulationController as PopulationController;
-//$select_year = (isset($_GET['year']))? $_GET['year']: $select_current_year;
+$select_year = (isset($_GET['year']))? $_GET['year']: date('Y');
 //get group disease name
-$get_group_of_disease =\App\Http\Controllers\Controller::get_group_of_disease();
-$get_group_of_disease_th =\App\Http\Controllers\Controller::get_group_of_disease_th();
+$get_group_of_disease =\App\Http\Controllers\Controller::get_group_of_disease($select_year);
+$get_group_of_disease_th =\App\Http\Controllers\Controller::get_group_of_disease_th($select_year);
 
 //dd($get_group_of_disease_th);
 //count group_of_disease
 $total_group_of_disease = count($get_group_of_disease);
 $current_year =  (isset($_GET['year']))? $_GET['year']: date('Y');
+$current_year_th = $current_year+543;
 
 //dd($current_year);
 ?>
 <!-- Content Header (Page header) -->
 <section class="content-header">
-<h1>Demo<small>Population Summary Report</small></h1>
+<h1><small>รายงานประชากรประจำปี {{ $current_year_th }}</small></h1>
 <ol class="breadcrumb">
-	<li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-	<li><a href="#">Demo</a></li>
-	<li class="active">Population Summary Report</li>
+	<li><a href="{{ route('dashboard') }}"><i class="fa fa-home"></i> หนัาหลัก</a></li>
+	<li class="active">รายงานประชากรประจำปี {{ $current_year_th }}</li>
 </ol>
 </section>
 <!-- Main content -->
@@ -38,7 +38,7 @@ $first_row_item = ($total_items - $remainder); //first item in the last row
 <?php $i=0; // counter ?>
 
 <?php foreach ($get_group_of_disease as $group_name_of_disease): ?>
-	<?php $data[$group_name_of_disease] = PopulationController::get_total_population($group_name_of_disease);
+	<?php $data[$group_name_of_disease] = PopulationController::get_total_population($select_year);
 	//convert json data
 	$json = json_decode($data[$group_name_of_disease], true);
 
