@@ -20,9 +20,10 @@ class PopulationController extends Controller
         return view('population');
     }
 
-    public static function get_total_population()
+    public static function get_total_population($c_year)
     {
-        $query = Population::all()->groupBy('gr');
+        $year = (isset($c_year)) ? $c_year : date('Y');
+        $query = Population::all()->where('c_year',$year)->groupBy('gr');
         return $query;
     }
     // export_population_by_disease form
