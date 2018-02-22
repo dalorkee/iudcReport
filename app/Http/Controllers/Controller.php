@@ -18,15 +18,17 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     // get_group_of_disease on ur_count_all table
-    public static function get_group_of_disease()
+    public static function get_group_of_disease($c_year)
     {
-        $query = Population::groupBy('gr')->pluck('gr');
+        $year = (isset($c_year)) ? $c_year : date('Y');
+        $query = Population::where('c_year',$year)->groupBy('gr')->pluck('gr');
         return $query;
     }
 
-    public static function get_group_of_disease_th()
+    public static function get_group_of_disease_th($c_year)
     {
-        $query = Population::groupBy('gr')->pluck('gr_th','gr');
+        $year = (isset($c_year)) ? $c_year : date('Y');
+        $query = Population::where('c_year',$year)->groupBy('gr')->pluck('gr_th','gr');
         return $query;
     }
     //list of disease on dsgr table
