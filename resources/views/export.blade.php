@@ -31,8 +31,8 @@ $get_all_disease =\App\Http\Controllers\Controller::list_disease();
 							<label for="input_monthchoose" class="col-sm-3 control-label">โรค</label>
 							<div class="col-sm-4">
 								<select class="form-control" name="disease_code" id="disease_code">
-								@foreach ($get_all_disease as $disease_value)
-									<option value="{{ $disease_value->DISEASE }}">{{ $disease_value->DISEASE }} - {{ $disease_value->DISNAME }}</option>
+								@foreach ($get_all_disease as $disease_key => $disease_value)
+									<option value="{{ $disease_key }}">{{ $disease_key }} - {{ $disease_value }}</option>
 								@endforeach
 								</select>
 							</div>
