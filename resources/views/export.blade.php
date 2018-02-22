@@ -39,14 +39,22 @@ $get_all_disease =\App\Http\Controllers\Controller::list_disease();
 						</div>
 						<div class="form-group">
 						<label for="input_yearchoose" class="col-sm-3 control-label">ปี</label>
-						<div class="col-sm-4">
-							  <?php $year = array('2017' => '2560','2018' => '2561'); ?>
-							  <select class="form-control" name="select_year" id="select_year">
-							  @foreach ($year as $key_year => $val_year)
-							  <option value="{{ $key_year }}">{{ $val_year }}</option>
-							  @endforeach
-							  </select>
-						</div>
+							<div class="col-sm-4">
+								<?php
+											$current_year =  (isset($_GET['year']))? $_GET['year']: date('Y');
+											//Current Year
+											$already_selected_value = (int)date('Y');
+											//Start Year
+											$earliest_year = 2012;
+
+											echo '<select name="select_year" class="form-control" id="select_year">';
+												foreach (range($already_selected_value, $earliest_year) as $x) {
+														 $year_th = $x+543;
+														 print '<option value="'.$x.'"'.($x === (int)$current_year ? ' selected="selected"' : '').'>'.$year_th.'</option>';
+												}
+											echo '</select>';
+								?>
+							</div>
 						</div>
 					</div>
 					<!-- /.box-body -->
