@@ -34,7 +34,8 @@ class Controller extends BaseController
     //list of disease on dsgr table
     public static function list_disease()
     {
-        $query = DB::table('dsgr')->select('DISEASE','DISNAME')->where('list',1)->get();
+        //$query = DB::table('dsgr')->select('DISEASE','DISNAME')->where('list',1)->get();
+        $query = DB::table('dsgr')->where('list',1)->pluck('DISNAME','DISEASE');
         //dd($query);
         return $query;
     }
