@@ -80,14 +80,25 @@ class PopulationController extends Controller
         $disease_code = trim($request->disease_code);
         $table_name = "ur506_".$year;
         //Total Data Province
-        $query = DB::table($table_name)
-                                       ->select(DB::raw('count(DISEASE) as total_province,PROVINCE'))
-                                       ->where('DISEASE',$disease_code)
-                                       ->groupBy('PROVINCE');
-        $result['datas_province']  = $query->paginate(10);
+        // $query = DB::table($table_name)
+        //                                ->select(DB::raw('count(DISEASE) as total_province,PROVINCE'))
+        //                                ->where('DISEASE',$disease_code)
+        //                                ->groupBy('PROVINCE');
+        // $result['datas_province']  = $query->paginate(10);
         //$result['datas_province'] = $query->get();
+        // $query = DB::table($table_name)
+        //          ->select(DB::raw('count(DISEASE) as total_province,PROVINCE'));
+        $query = DB::table('c_province')
+            ->select('c_province.prov_code','c_province.prov_name','u.total_province as total_province')
+            ->leftjoin(DB::raw('(SELECT '.$table_name.'.PROVINCE,count('.$table_name.'.DISEASE) as total_province FROM '.$table_name.' WHERE DISEASE='.$disease_code.' GROUP BY '.$table_name.'.PROVINCE) u'),
+            function($join)
+            {
+               $join->on('c_province.prov_code', '=', 'u.PROVINCE');
+            })
+            ->orderBy('c_province.prov_code', 'ASC');
 
-        return view('showbydisease')->with($result);
+           $result['datas_province']  = $query->paginate(10);
+           return view('showbydisease')->with($result);
     }
     public static function ShowByDiseaseSub($province,$year,$disease_code){
       if(empty($province) || empty($year) || empty($disease_code)) return false;
