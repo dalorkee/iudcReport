@@ -33,3 +33,7 @@ Route::get('showbydisease','PopulationController@ShowByDisease')->name('showbydi
 
 //export xls From disease name and year
 Route::post('exportbydisease','PopulationController@ExportByDiseaseXLS')->name('exportbydisease');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
