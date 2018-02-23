@@ -17,7 +17,7 @@
 							$earliest_year = 2012;
 							foreach (range($already_selected_value, $earliest_year) as $x) {
 									 $year_th = $x+543;
-									 echo '<li '.($x === (int)$current_year ? 'class="active"' : '').'><a href="?year='.$x.'"><i class="fa fa-circle-o"></i>'.$year_th.'</a></li>';
+									 echo '<li '.($x === (int)$current_year ? 'class="active"' : '').'><a href="'.route('dashboard').'?year='.$x.'"><i class="fa fa-circle-o"></i>'.$year_th.'</a></li>';
 							}
 							?>
 			</ul>
