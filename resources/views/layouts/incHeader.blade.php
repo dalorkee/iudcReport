@@ -1,6 +1,6 @@
 <?php $current_year =  (isset($_GET['year']))? $_GET['year']: date('Y'); ?>
 <!-- Logo -->
-<a href="/?year=<?php echo $current_year;?>" class="logo">
+<a href="{{ route('dashboard')}}?year=<?php echo $current_year;?>" class="logo">
 	<!-- mini logo for sidebar mini 50x50 pixels -->
 	<span class="logo-mini"><b>C</b>IUDCR</span>
 	<!-- logo for regular state and mobile devices -->
