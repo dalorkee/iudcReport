@@ -98,6 +98,7 @@ class PopulationController extends Controller
             ->orderBy('c_province.prov_code', 'ASC');
 
            $result['datas_province']  = $query->paginate(10);
+          // $result['datas_province']  = $query->get();
            return view('showbydisease')->with($result);
     }
     public static function ShowByDiseaseSub($province,$year,$disease_code){
