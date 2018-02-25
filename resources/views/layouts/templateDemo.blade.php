@@ -24,11 +24,10 @@ $pj = 'PJ';
 		@include('layouts.incSidebarDemo');
 	</aside>
 	<!-- =============================================== -->
-	<!-- animation loader -->
-	<div class="loader"></div>
 	<!-- Content Wrapper. Contains page content -->
 	<div class="content-wrapper">
-
+		<!-- animation loader -->
+		<div class="loader"></div>
 		@yield('content')
 	</div>
 	<!-- /.content-wrapper -->
