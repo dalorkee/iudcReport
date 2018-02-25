@@ -15,6 +15,7 @@
 
 <script>
 $(document).ready(function () {
-	$('.sidebar-menu').tree()
+	$('.sidebar-menu').tree();
+	$('.loader').fadeOut('slow');
 })
 </script>
