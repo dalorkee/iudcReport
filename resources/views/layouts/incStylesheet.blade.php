@@ -6,6 +6,8 @@
 {{ Html::style(('public/AdminLTE-2.4.2/bower_components/Ionicons/css/ionicons.min.css')) }}
 <!-- Theme style -->
 {{ Html::style(('public/AdminLTE-2.4.2/dist/css/AdminLTE.min.css')) }}
+<!-- DataTables -->
+{{ Html::style(('public/AdminLTE-2.4.2/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css')) }}
 <!-- AdminLTE Skins. Choose a skin from the css/skins
 	folder instead of downloading all of them to reduce the load. -->
 {{ Html::style(('public/AdminLTE-2.4.2/dist/css/skins/_all-skins.min.css')) }}
