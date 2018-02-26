@@ -54,21 +54,17 @@
 				<h3 class="box-title"><?php echo $get_group_of_disease_th[$group_name_of_disease];?></h3>
 			</div>
 			<div class="box-body">
-				<div class="box-body no-padding">
-					<table class="table table-condensed">
+					<table class="table table-bordered table-hover" id="example<?php echo $i;?>">
 						<thead>
 							<tr>
-								<th style="width: 10px">#</th>
 								<th>โรค (Code)</th>
 								<th>ป่วย</th>
 								<th>ตาย</th>
 							</tr>
 						</thead>
-						<tfoot></tfoot>
 						<tbody>
 						<?php $j=1;  foreach ($json[$group_name_of_disease] as $total_by_disease) : ?>
 							<tr>
-								<td><?php echo $j;?></td>
 								<td><a href="showbydisease?disease_code={{ $total_by_disease['DISEASE'] }}&year={{ $current_year }}"><?php echo $total_by_disease['DISNAME'];?></a></td>
 								<td><?php echo number_format($total_by_disease['total']);?></td>
 								<td><?php echo number_format($total_by_disease['totald']);?></td>
@@ -76,7 +72,6 @@
 							<?php $j++; endforeach; ?>
 						</tbody>
 					</table>
-				</div>
 				<?php if($group_name_of_disease=='vbd') :?>
 					<div class="box-footer text-center">
 						<div class="no-margin">
