@@ -14,6 +14,15 @@ $pj = 'PJ';
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <!-- Site wrapper -->
+<div class="iudc-header hidden-xs hidden-sm">
+	<figure>
+		<img src="{{ URL::asset('public/images/moph-logo.png') }}" alt="logo" class="moph-logo">
+	</figure>
+	<div class="iudc-title">
+		<h2>ระบบรายงานสถานการณ์โรคเขตเมือง</h2>
+		<p>IUDC Report</p>
+	</div>
+</div>
 <div class="wrapper">
 	<header class="main-header">
 		@include('layouts.incHeader')
@@ -21,7 +30,7 @@ $pj = 'PJ';
 	<!-- =============================================== -->
 	<!-- Left side column. contains the sidebar -->
 	<aside class="main-sidebar">
-		@include('layouts.incSidebarDemo');
+		@include('layouts.incSidebarDemo')
 	</aside>
 	<!-- =============================================== -->
 	<!-- Content Wrapper. Contains page content -->

@@ -15,11 +15,11 @@ $current_year_th = $current_year+543;
 ?>
 <!-- Content Header (Page header) -->
 <section class="content-header">
-<h1><small>แสดงข้อมูลปี <?php echo $current_year_th; ?> โรค <?php echo $get_list_disease[$disease_code]; ?></small></h1>
+<h1>รายงานปี <?php echo $current_year_th; ?> โรค <?php echo $get_list_disease[$disease_code]; ?></h1>
 <ol class="breadcrumb">
-	<li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-	<li><a href="#">Examples</a></li>
-	<li class="active">Blank page</li>
+	<li><a href="{{ route('dashboard') }}"><i class="fa fa-home"></i> หน้าหลัก</a></li>
+	<li><a href="{{ route('dashboard') }}?year=<?php echo $current_year; ?>">ข้อมูลปี <?php echo $current_year_th; ?></a></li>
+	<li class="active"><a href="showbydisease?disease_code={{ $disease_code }}&year={{ $current_year }}"> <?php echo $get_list_disease[$disease_code]; ?></a></li>
 </ol>
 </section>
 <!-- Main content -->
@@ -33,9 +33,12 @@ $current_year_th = $current_year+543;
 				</div>
 				<div class="box-body">
 					<table id="tree-table" class="table table-hover table-bordered">
-						<tbody>
+						<thead>
 							<th>จังหวัด</th>
 							<th>จำนวน</th>
+						</thead>
+						<tfoot></tfoot>
+						<tbody>
 							@foreach ($datas_province as $value_province)
 							<tr data-id="{{ $value_province->prov_code }}" data-parent="0" data-level="1">
 								<td data-column="name">{{ $value_province->prov_name }}</td>
@@ -44,9 +47,9 @@ $current_year_th = $current_year+543;
 							<?php $get_sub_level = \App\Http\Controllers\PopulationController::ShowByDiseaseSub($value_province->prov_code,$current_year,$disease_code); ?>
 							@foreach ($get_sub_level as $value_sub_level)
 							<tr data-id="{{ $i }}" data-parent="{{ $value_province->prov_code }}" data-level="2">
-					      <td data-column="name">{{ $value_sub_level->urbanname }}</td>
-					      <td>{{ number_format($value_sub_level->total_amphur) }}</td>
-    					</tr>
+								<td data-column="name">{{ $value_sub_level->urbanname }}</td>
+								<td>{{ number_format($value_sub_level->total_amphur) }}</td>
+							</tr>
 							@endforeach
 							<?php $i++; ?>
 							@endforeach
