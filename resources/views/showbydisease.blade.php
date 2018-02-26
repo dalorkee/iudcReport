@@ -37,7 +37,6 @@ $current_year_th = $current_year+543;
 							<th>จังหวัด</th>
 							<th>จำนวน</th>
 						</thead>
-						<tfoot></tfoot>
 						<tbody>
 							@foreach ($datas_province as $value_province)
 							<tr data-id="{{ $value_province->prov_code }}" data-parent="0" data-level="1">
