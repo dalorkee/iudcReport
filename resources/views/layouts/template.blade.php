@@ -52,6 +52,6 @@ $pj = 'PJ';
 </div>
 <!-- ./wrapper -->
 	@include('layouts.incFooterScript')
-
+	@yield('script');
 </body>
 </html>

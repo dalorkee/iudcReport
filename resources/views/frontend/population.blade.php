@@ -93,3 +93,18 @@
 </section>
 <!-- /.content -->
 @stop
+@section('script')
+<script>
+$(document).ready(function () {
+	$('#example0,#example1,#example2,#example3,#example4,#example5,#example6,#example7,#example8,#example9').DataTable({
+		'paging'      : false,
+		'lengthChange': false,
+		'searching'   : false,
+		'ordering'    : true,
+		'info'        : false,
+		'autoWidth'   : false,
+		"aaSorting": [[ 1, "desc" ]]
+	});
+});
+</script>
+@stop

@@ -73,3 +73,19 @@ unset($get_sub_level);
 unset($get_list_disease);
  ?>
 @stop
+@section('script')
+<script>
+$(document).ready(function () {
+	$('.sidebar-menu').tree();
+	$('#example10').DataTable({
+		'paging'      : false,
+		'lengthChange': false,
+		'searching'   : false,
+		'ordering'    : true,
+		'info'        : false,
+		'autoWidth'   : false,
+		"aaSorting": [[ 1, "desc" ]]
+	});
+});
+</script>
+@stop
