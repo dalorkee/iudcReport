@@ -1,12 +1,11 @@
-@extends('layouts.templateDemo')
+@extends('layouts.template')
 @section('content')
 <!-- Content Header (Page header) -->
 <section class="content-header">
-<h1>Demo<small>Population Summary Report</small></h1>
+<h1>Blank page<small>it all starts here</small></h1>
 <ol class="breadcrumb">
-	<li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-	<li><a href="#">Demo</a></li>
-	<li class="active">Population Summary Report</li>
+	<li><a href="#"><i class="fa fa-dashboard"></i> Administrator</a></li>
+	<li><a href="#">Examples</a></li>
 </ol>
 </section>
 <!-- Main content -->
@@ -25,7 +24,7 @@
 			</div>
 		</div>
 		<div class="box-body">
-		{!! $chart->html() !!}
+			Start creating your amazing application!
 		</div>
 		<!-- /.box-body -->
 		<div class="box-footer">
@@ -36,6 +35,4 @@
 	<!-- /.box -->
 </section>
 <!-- /.content -->
-{!! Charts::scripts() !!}
-{!! $chart->script() !!}
 @stop

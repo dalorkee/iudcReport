@@ -11,7 +11,6 @@ $pj = 'PJ';
 	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 	@include('layouts.incHeaderScript')
 	@include('layouts.incStylesheet')
-	{!! Charts::styles() !!}
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <!-- Site wrapper -->
@@ -22,7 +21,7 @@ $pj = 'PJ';
 	<!-- =============================================== -->
 	<!-- Left side column. contains the sidebar -->
 	<aside class="main-sidebar">
-		@include('layouts.incSidebarDemo');
+		@include('layouts.incSidebar');
 	</aside>
 	<!-- =============================================== -->
 	<!-- Content Wrapper. Contains page content -->

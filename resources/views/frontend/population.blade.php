@@ -1,4 +1,4 @@
-@extends('layouts.templateDemo')
+@extends('layouts.template')
 @section('content')
 <?php
 	use \App\Http\Controllers\PopulationController as PopulationController;

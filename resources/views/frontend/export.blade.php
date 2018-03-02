@@ -1,4 +1,4 @@
-@extends('layouts.templateDemo')
+@extends('layouts.template')
 @section('content')
 <?php
 ini_set('max_execution_time', 300); //300 seconds = 5 minutes
@@ -9,9 +9,8 @@ $get_all_disease =\App\Http\Controllers\Controller::list_disease();
 <section class="content-header">
 <h1>Export<small></small></h1>
 <ol class="breadcrumb">
-	<li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-	<li><a href="#">Examples</a></li>
-	<li class="active">Blank page</li>
+	<li><a href="{{ route('dashboard') }}"><i class="fa fa-home"></i> หนัาหลัก</a></li>
+	<li><a href="#" class="active">Export</a></li>
 </ol>
 </section>
 <!-- Main content -->
@@ -21,7 +20,7 @@ $get_all_disease =\App\Http\Controllers\Controller::list_disease();
 			<!-- Default box -->
 			<div class="box">
 				<div class="box-header with-border">
-					<h3 class="box-title">Export</h3>
+					<h3 class="box-title">Export to CSV file</h3>
 				</div>
 				<div class="box-body">
 				<form action='{{ url('exportbydisease') }}' class="form-horizontal" method="post">

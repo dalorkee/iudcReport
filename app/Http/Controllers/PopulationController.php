@@ -17,7 +17,7 @@ class PopulationController extends Controller
     // }
     public function index()
     {
-        return view('population');
+        return view('frontend.population');
     }
 
     public static function get_total_population($c_year)
@@ -29,7 +29,7 @@ class PopulationController extends Controller
     // export_population_by_disease form
     public static function export_form()
     {
-        return view('export');
+        return view('frontend.export');
     }
     public function ExportByDiseaseXLS(Request $request)
     {
@@ -99,7 +99,7 @@ class PopulationController extends Controller
 
            $result['datas_province']  = $query->paginate(10);
           // $result['datas_province']  = $query->get();
-           return view('showbydisease')->with($result);
+           return view('frontend.showbydisease')->with($result);
     }
     public static function ShowByDiseaseSub($province,$year,$disease_code){
       if(empty($province) || empty($year) || empty($disease_code)) return false;

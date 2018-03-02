@@ -14,26 +14,24 @@
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/', function () {
+	return view('index');
+});
 */
+Auth::routes();
+Route::get('/home', 'HomeController@index')->name('home');
 
-
-
-// Route::get('/', function () {
-// 	return view('index');
-// });
-
-//index page
+/* index */
 Route::get('/', 'PopulationController@index')->name('dashboard');
-//form export
-Route::get('export-csv', 'PopulationController@export_form')->name('export.form');
-//view by disease
-//Route::get('showbydisease/{disease_code}/{year}','PopulationController@ShowByDisease')->where(['disease_code' => '[0-9]+','year' => '[0-9]+']);
+/* view by disease */
 Route::get('showbydisease','PopulationController@ShowByDisease')->name('showbydisease');
-
-
-//export xls From disease name and year
+// Route::get('showbydisease/{disease_code}/{year}','PopulationController@ShowByDisease')->where(['disease_code' => '[0-9]+','year' => '[0-9]+']);
+/* form export */
+Route::get('export-csv', 'PopulationController@export_form')->name('export.form');
+/* export xls From disease name and year */
 Route::post('exportbydisease','PopulationController@ExportByDiseaseXLS')->name('exportbydisease');
 
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
+/* ******** backend ******** */
+Route::get('/backend', function() {
+	return view('backend/index');
+});
