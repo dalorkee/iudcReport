@@ -26,7 +26,7 @@
 <!-- Main content -->
 <section class="content">
 	<?php
-	$max_columns = 3; //columns will arrange to any number (as long as it is evenly divisible by 12)
+	$max_columns = 2; //columns will arrange to any number (as long as it is evenly divisible by 12)
 	$column = 12/$max_columns; //column number
 	$total_items = $total_group_of_disease ;
 	$remainder = $total_group_of_disease %$max_columns; //how many items are in the last row
@@ -54,12 +54,20 @@
 				<h3 class="box-title"><?php echo $get_group_of_disease_th[$group_name_of_disease];?></h3>
 			</div>
 			<div class="box-body">
+				<div class="table-responsive">
 					<table class="table table-bordered table-hover" id="example<?php echo $i;?>">
 						<thead>
 							<tr>
-								<th>โรค (Code)</th>
-								<th>ป่วย</th>
+								<th rowspan="2">โรค (Code)</th>
+								<th colspan="2">ป่วย</th>
+								<th colspan="2">ตาย</th>
+								<th rowspan="2">อัตรา ป/ต</th>
+							</tr>
+							<tr>
+								<th>จำนวน</th>
+								<th>อัตรา</th>
 								<th>ตาย</th>
+								<th>อัตรา</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -68,10 +76,14 @@
 								<td><a href="showbydisease?disease_code={{ $total_by_disease['DISEASE'] }}&year={{ $current_year }}"><?php echo $total_by_disease['DISNAME'];?></a></td>
 								<td><?php echo number_format($total_by_disease['total']);?></td>
 								<td><?php echo number_format($total_by_disease['totald']);?></td>
+								<td><?php echo number_format($total_by_disease['total']);?></td>
+								<td><?php echo number_format($total_by_disease['totald']);?></td>
+								<td>ddd</td>
 							</tr>
 							<?php $j++; endforeach; ?>
 						</tbody>
 					</table>
+				</div>
 				<?php if($group_name_of_disease=='vbd') :?>
 					<div class="box-footer text-center">
 						<div class="no-margin">
