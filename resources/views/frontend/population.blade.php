@@ -55,7 +55,7 @@
 			</div>
 			<div class="box-body">
 				<div class="table-responsive">
-					<table class="table table-bordered table-hover" id="example<?php echo $i;?>">
+					<table class="iudc-tbl" id="example<?php echo $i;?>">
 						<thead>
 							<tr>
 								<th rowspan="2">โรค (Code)</th>
@@ -70,6 +70,7 @@
 								<th>อัตรา</th>
 							</tr>
 						</thead>
+						<tfoot></tfoot>
 						<tbody>
 						<?php $j=1;  foreach ($json[$group_name_of_disease] as $total_by_disease) : ?>
 							<tr>

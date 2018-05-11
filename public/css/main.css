@@ -77,4 +77,25 @@ body {
 .box-title {
   font-size: 1.275em; }
 
+table.iudc-tbl {
+  width: 99%;
+  margin: 0 auto;
+  border: 1px solid #eeeeee;
+  border-collapse: collapse;
+  border: 1px solid #eeeeee;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px; }
+
+table.iudc-tbl tr th,
+table.iudc-tbl tr td {
+  padding: 10px;
+  border-right: 1px solid #eee;
+  border-bottom: 1px solid #eee; }
+
+table.iudc-tbl tr:first-child th:last-child,
+table.iudc-tbl tr td:last-child {
+  border-right: none; }
+
 /*# sourceMappingURL=main.css.map */
