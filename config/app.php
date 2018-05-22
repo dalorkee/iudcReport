@@ -179,6 +179,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         //Laravel Chart
         //ConsoleTVs\Charts\ChartsServiceProvider::class,
+		Khill\Lavacharts\Laravel\LavachartsServiceProvider::class,
         //Debug Bar
         //Barryvdh\Debugbar\ServiceProvider::class,
         //Laravel Excel
@@ -233,12 +234,14 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         //Laravel Chart
         //'Charts' => ConsoleTVs\Charts\Facades\Charts::class,
+		'Lava' => Khill\Lavacharts\Laravel\LavachartsFacade::class,
         //Debug Bar
         //'Debugbar' => Barryvdh\Debugbar\Facade::class,
         //Laravel Excel
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
 		'Form' => Collective\Html\FormFacade::class,
 		'Html' => Collective\Html\HtmlFacade::class,
+
     ],
 
 ];
