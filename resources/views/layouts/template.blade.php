@@ -6,7 +6,7 @@ $pj = 'PJ';
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>IUDC Report</title>
+	<title>UCDD</title>
 	<!-- Tell the browser to be responsive to screen width -->
 	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 	@include('layouts.incHeaderScript')
@@ -19,8 +19,8 @@ $pj = 'PJ';
 		<img src="{{ URL::asset('public/images/moph-logo.png') }}" alt="logo" class="moph-logo">
 	</figure>
 	<div class="iudc-title">
-		<h2>ระบบรายงานสถานการณ์โรคเขตเมือง</h2>
-		<p>IUDC Report</p>
+		<h2>ฐานข้อมูลโรคติดต่อเขตเมือง</h2>
+		<p>Urban Communicable Disease Database</p>
 	</div>
 </div>
 <div class="wrapper">

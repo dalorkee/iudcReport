@@ -2,9 +2,9 @@
 <!-- Logo -->
 <a href="{{ route('dashboard')}}?year=<?php echo $current_year; ?>" class="logo">
 	<!-- mini logo for sidebar mini 50x50 pixels -->
-	<span class="logo-mini"><b>I</b>UDC</span>
+	<span class="logo-mini"><b>U</b>CDD</span>
 	<!-- logo for regular state and mobile devices -->
-	<span class="logo-lg"><b>Iudc</b>Report</span>
+	<span class="logo-lg"><b>UCD</b>&nbsp;Database</span>
 </a>
 <!-- Header Navbar: style can be found in header.less -->
 <nav class="navbar navbar-static-top">
