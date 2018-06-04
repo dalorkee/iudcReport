@@ -30,7 +30,10 @@ Route::get('showbydisease','PopulationController@ShowByDisease')->name('showbydi
 Route::get('export-csv', 'PopulationController@export_form')->name('export.form');
 /* export xls From disease name and year */
 Route::post('exportbydisease','PopulationController@ExportByDiseaseXLS')->name('exportbydisease');
-
+/* Report */
+Route::get('/report', function() {
+	return view('frontend.report');
+})->name('report');
 /* ******** backend ******** */
 Route::get('/backend', function() {
 	return view('backend/index');

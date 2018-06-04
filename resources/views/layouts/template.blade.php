@@ -9,8 +9,8 @@ $pj = 'PJ';
 	<title>UCDD</title>
 	<!-- Tell the browser to be responsive to screen width -->
 	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-	@include('layouts.incHeaderScript')
 	@include('layouts.incStylesheet')
+	@yield('style')
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <!-- Site wrapper -->
