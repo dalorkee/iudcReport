@@ -780,7 +780,7 @@
 	{{ Html::script(('public/AdminLTE-2.4.2/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js')) }}
 	{{ Html::script(('public/AdminLTE-2.4.2/plugins/jvectormap/jquery-jvectormap-world-mill-en.js')) }}
 	<!-- ChartJS -->
-	{{ Html::script(('public/AdminLTE-2.4.2/bower_components/Chartjs/Chart.js')) }}
+	{{ Html::script(('public/AdminLTE-2.4.2/bower_components/chartjs/Chart.js')) }}
 	<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 	{{ Html::script(('public/AdminLTE-2.4.2/dist/js/pages/dashboard2.js')) }}
 	<!-- AdminLTE for demo purposes -->
