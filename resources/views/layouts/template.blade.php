@@ -11,9 +11,10 @@ $pj = 'PJ';
 	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 	@include('layouts.incStylesheet')
 	@yield('style')
+	@yield('incHeaderScript')
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
-<!-- Site wrapper -->
+<body class="hold-transition skin-purple sidebar-mini">
+<!-- Site wrapper
 <div class="iudc-header hidden-xs hidden-sm">
 	<figure>
 		<img src="{{ URL::asset('public/images/moph-logo.png') }}" alt="logo" class="moph-logo">
@@ -22,11 +23,9 @@ $pj = 'PJ';
 		<h2>ฐานข้อมูลโรคติดต่อเขตเมือง</h2>
 		<p>Urban Communicable Disease Database</p>
 	</div>
-</div>
+</div>   -->
 <div class="wrapper">
-	<header class="main-header">
-		@include('layouts.incHeader')
-	</header>
+	@include('layouts.incHeader')
 	<!-- =============================================== -->
 	<!-- Left side column. contains the sidebar -->
 	<aside class="main-sidebar">
@@ -51,7 +50,7 @@ $pj = 'PJ';
 	<div class="control-sidebar-bg"></div>
 </div>
 <!-- ./wrapper -->
-	@include('layouts.incFooterScript')
-	@yield('script')
+@include('layouts.incFooterScript')
+@yield('script')
 </body>
 </html>

@@ -19,7 +19,7 @@
 <section class="content-header">
 	<h1>รายงานประชากรประจำปี {{ $current_year_th }}</h1>
 	<ol class="breadcrumb">
-		<li><a href="{{ route('dashboard') }}"><i class="fa fa-home"></i> หนัาหลัก</a></li>
+		<li><a href="{{ route('population') }}"><i class="fa fa-home"></i> หนัาหลัก</a></li>
 		<li class="active">รายงานประชากรประจำปี {{ $current_year_th }}</li>
 	</ol>
 </section>

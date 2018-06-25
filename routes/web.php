@@ -19,10 +19,13 @@ Route::get('/', function () {
 });
 */
 Auth::routes();
+/* Login */
 Route::get('/home', 'HomeController@index')->name('home');
-
 /* index */
-Route::get('/', 'PopulationController@index')->name('dashboard');
+Route::get('/', 'DashboardController@index')->name('dashboard');
+
+/* population */
+Route::get('/population', 'PopulationController@index')->name('population');
 /* view by disease */
 Route::get('showbydisease','PopulationController@ShowByDisease')->name('showbydisease');
 // Route::get('showbydisease/{disease_code}/{year}','PopulationController@ShowByDisease')->where(['disease_code' => '[0-9]+','year' => '[0-9]+']);
