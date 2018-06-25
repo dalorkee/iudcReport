@@ -57,7 +57,6 @@ class DiseasesController extends Controller
 			->whereYear('DATESICK', '2017')
 			->whereMonth('DATESICK', '01')
 			->count();
-			dd($count);
 		return $count;
 	}
 }
