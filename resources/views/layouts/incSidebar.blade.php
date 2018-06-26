@@ -34,7 +34,7 @@
 			</a>
 			<ul class="treeview-menu">
 				<li><a href="{{ route('export.form') }}?year=<?php echo $current_year; ?>"><i class="fa fa-circle-o"></i> รายโรค</a></li>
-				<li><a href="#"><i class="fa fa-circle-o"></i> ประชากร</a></li>
+				<li><a href="{{ route('export-population.main') }}"><i class="fa fa-circle-o"></i> ประชากร</a></li>
 			</ul>
 		</li>
 		<li>
