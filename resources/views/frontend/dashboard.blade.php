@@ -50,7 +50,6 @@
 						<select class="form-control select2" style="width: 100%;">
 						<?php
 							$i = 1;
-
 							foreach ($dsgroups as $dsgroup) {
 								if ($i == 1) {
 									echo "<option value=\"".$dsgroup->DISEASE."\" selected=\"selected\">".$dsgroup->DISNAME."</option>\n";
@@ -101,7 +100,7 @@
 					<!-- /.box-header -->
 					<div class="box-body">
 						<div class="row">
-							<div class="col-md-8">
+							<div class="col-md-12">
 								<div class="chart-responsive charts-box">
 									<div class="charts">
 										<canvas id="doughnut-canvas1"></canvas>
@@ -142,7 +141,7 @@
 					<!-- /.box-header -->
 					<div class="box-body">
 						<div class="row">
-							<div class="col-md-8">
+							<div class="col-md-12">
 								<div class="chart-responsive charts-box">
 									<div class="charts">
 										<canvas id="bar-canvas1" width="300" height="300"></canvas>
@@ -169,7 +168,7 @@
 				<!-- /.box -->
 			</div>
 
-			<!-- Left col#1 -->
+			<!-- Left col#2 -->
 			<div class="col-md-6">
 				<div class="box box-success">
 					<div class="box-header with-border">
@@ -183,7 +182,7 @@
 					<!-- /.box-header -->
 					<div class="box-body">
 						<div class="row">
-							<div class="col-md-8">
+							<div class="col-md-12">
 								<div class="chart-responsive charts-box">
 									<div class="charts">
 										<canvas id="line-canvas1" width="300" height="300"></canvas>
@@ -210,7 +209,7 @@
 				<!-- /.box -->
 			</div>
 
-			<!-- Right col#1 -->
+			<!-- Right col#2 -->
 			<div class="col-md-6">
 				<div class="box box-success">
 					<div class="box-header with-border">
@@ -224,10 +223,51 @@
 					<!-- /.box-header -->
 					<div class="box-body">
 						<div class="row">
-							<div class="col-md-8">
+							<div class="col-md-12">
 								<div class="chart-responsive charts-box">
 									<div class="charts">
 										<canvas id="line-canvas2" width="300" height="300"></canvas>
+									</div>
+								</div>
+								<!-- ./chart-responsive -->
+							</div>
+						</div>
+						<!-- /.row -->
+					</div>
+					<!-- /.box-body -->
+					<div class="box-footer no-padding">
+						<ul class="nav nav-pills nav-stacked">
+							<li>
+								<a href="#">สูงสุด <span class="pull-right text-red"><i class="fa fa-angle-up"></i> {{ number_format(0) }}</span></a>
+							</li>
+							<li>
+								<a href="#">ต่ำสุด <span class="pull-right text-green"><i class="fa fa-angle-down"></i> {{ number_format(0) }}</span></a>
+							</li>
+						</ul>
+					</div>
+					<!-- /.footer -->
+				</div>
+				<!-- /.box -->
+			</div>
+
+			<!-- Left col#1 -->
+			<div class="col-md-12">
+				<div class="box box-warning">
+					<div class="box-header with-border">
+						<h3 class="box-title"><span class="ds-box-title">จำนวนผู้ป่วยรายสัปดาห์</span></h3>
+						<div class="box-tools pull-right">
+							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+							</button>
+							<button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+						</div>
+					</div>
+					<!-- /.box-header -->
+					<div class="box-body">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="chart-responsive charts-box">
+									<div class="charts">
+										<canvas id="line-canvas3" width="300" height="300"></canvas>
 									</div>
 								</div>
 								<!-- ./chart-responsive -->
@@ -317,26 +357,14 @@ function createBarChart(id, type, options) {
 		datasets: [{
 			label: 'จำนวน',
 			data: [
-				{{ $cpByAge['g1'] }},
-				{{ $cpByAge['g2'] }},
-				{{ $cpByAge['g3'] }},
-				{{ $cpByAge['g4'] }},
-				{{ $cpByAge['g5'] }},
-				{{ $cpByAge['g6'] }},
-				{{ $cpByAge['g7'] }},
-				{{ $cpByAge['g8'] }},
-				{{ $cpByAge['g9'] }},
+				@foreach ($cpByAge as $val)
+					{!! $val.',' !!}
+				@endforeach
 			],
 			backgroundColor: [
-				'#FF6384',
-				'#FF6384',
-				'#FF6384',
-				'#FF6384',
-				'#FF6384',
-				'#FF6384',
-				'#FF6384',
-				'#FF6384',
-				'#FF6384'
+				@for($i=0; $i<=8; $i++)
+					{!! '"#FF6384"'.',' !!}
+				@endfor
 			]
 		}]
 	};
@@ -354,13 +382,11 @@ function createLineChart1(id, type, options) {
 			label: 'จำนวน',
 			fill: false,
 			borderColor: '#36A2EB',
-			backgroundColor: '#36A2EB',
+			backgroundColor: '#FFFFFF',
 			data: [
-				<?php
-				foreach ($cpPerMonth as $val) {
-					echo $val->amount.",";
-				}
-				?>
+				@foreach ($cpPerMonth as $val)
+					{{ $val->amount."," }}
+				@endforeach
 			]
 		}]
 	};
@@ -378,13 +404,37 @@ function createLineChart2(id, type, options) {
 			label: 'จำนวน',
 			fill: false,
 			borderColor: '#FF6384',
-			backgroundColor: '#FF6384',
+			backgroundColor: '#FFFFFF',
 			data: [
-				<?php
-					/* foreach ($cpPerMonth as $key => $val) {
-						echo $val.",";
-					} */
-				?>
+				@foreach ($cDeadPerMonth as $val)
+					{{ $val->amount.", " }}
+				@endforeach
+			]
+		}]
+	};
+	new Chart(document.getElementById(id), {
+		type: type,
+		data: data,
+		options: options
+	});
+}
+/*  Line chart for case dead per month */
+function createLineChart3(id, type, options) {
+	var data = {
+		labels: [
+			@for ($i=1; $i<=53; $i++)
+				{{ $i.',' }}
+			@endfor
+		],
+		datasets: [{
+			label: 'สัปดาห์',
+			fill: false,
+			borderColor: '#34A853',
+			backgroundColor: '#FFFFFF',
+			data: [
+				@foreach ($cpPerWeek as $val)
+					{{ $val->amount.", " }}
+				@endforeach
 			]
 		}]
 	};
@@ -483,6 +533,33 @@ $('document').ready(function () {
 				scaleLabel: {
 					display: true,
 					labelString: 'จำนวนผู้เสียชีวิต (ราย)'
+				}
+			}]
+		},
+		elements: {
+			line: {
+				tension: 0,
+			}
+		},
+	});
+
+	/* Line chart for case dead per month */
+	createLineChart3('line-canvas3', 'line', {
+		responsive: true,
+		maintainAspectRatio: false,
+		legend: {
+			display: true,
+			position: 'right',
+		},
+		scales: {
+			yAxes: [{
+				stacked: true,
+				ticks: {
+					beginAtZero: true
+				},
+				scaleLabel: {
+					display: true,
+					labelString: 'จำนวนผู้ป่วยรายสัปดาห์ (ราย)'
 				}
 			}]
 		},
