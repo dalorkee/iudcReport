@@ -11,13 +11,17 @@ class dashboardController extends DiseasesController
 		/* get count patient by sex */
 		$countPatientBySex = $this->getCountPatientBySex();
 		$countPatientByAgegroup = $this->getCountPatientByAgegroup();
-		$x = parent::countPatientPerMonth(2017, '02');
+		$countPatientPerMonth = $this->getCountPatientPerMonth();
+		$x = parent::chArrToStr(array('a', 'b', 'c'));
 
 		return view('
 					frontend.dashboard', [
 						'dsgroups' => $dsgroups,
 						'cpBySex' => $countPatientBySex,
-						'cpByAge' => $countPatientByAgegroup
+						'cpByAge' => $countPatientByAgegroup,
+						'cpPerMonth' => $countPatientPerMonth,
+						'x' => $x
+
 					]
 				);
 	}
@@ -55,6 +59,15 @@ class dashboardController extends DiseasesController
 			$result = (int)(100000/$int);
 		} else {
 			$result = 0;
+		}
+		return $result;
+	}
+
+	public function getCountPatientPerMonth() {
+		$result = array();
+		for ($i=1; $i<=12; $i++) {
+			$pt = parent::countPatientPerMonth('2017', '03', $i);
+			$result[$i] = $pt;
 		}
 		return $result;
 	}

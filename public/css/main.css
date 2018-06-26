@@ -9,6 +9,9 @@ body {
   font-family: 'Prompt', promptregular, sans-serif;
   font-size: 1.275em; }
 
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Prompt', promptregular, sans-serif; }
+
 .treegrid-indent {
   width: 0;
   height: 16px;

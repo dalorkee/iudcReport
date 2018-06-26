@@ -28,6 +28,9 @@ body {
 	font-family: 'Prompt', promptregular, sans-serif;
 	font-size: $dfFontSize;
 }
+h1, h2, h3, h4, h5, h6 {
+	font-family: 'Prompt', promptregular, sans-serif;
+}
 .treegrid-indent {@include treegrid}
 .treegrid-expander {
 	@include treegrid;

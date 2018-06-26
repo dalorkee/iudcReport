@@ -50,13 +50,28 @@ class DiseasesController extends Controller
 		return $count;
 	}
 
-	public function countPatientPerMonth($tblYear=null, $diseaseCode=null) {
+	public function countPatientPerMonth($tblYear=null, $diseaseCode=null, $month=0) {
 		// SELECT COUNT(*) FROM ur506_2017 WHERE DISEASE IN('02') AND YEAR(DATESICK) = '2017' AND MONTH(DATESICK) = '01'
 		$count = DB::table('ur506_'.$tblYear)
 			->whereIn('DISEASE', [$diseaseCode])
-			->whereYear('DATESICK', '2017')
-			->whereMonth('DATESICK', '01')
+			->whereYear('DATESICK', $tblYear)
+			->whereMonth('DATESICK', $month)
 			->count();
 		return $count;
+	}
+
+	public function chArrToStr($arr=array()) {
+		$str = null;
+		if (sizeof($arr) > 0) {
+			foreach($arr as $val) {
+				if (is_null($str)) {
+					$str = "";
+				} else {
+					$str = $str.", ";
+				}
+				$str = $str.$val;
+			}
+		}
+		return $str;
 	}
 }

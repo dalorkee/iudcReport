@@ -356,18 +356,11 @@ function createLineChart1(id, type, options) {
 			borderColor: '#36A2EB',
 			backgroundColor: '#36A2EB',
 			data: [
-				{{ $cpByAge['g1'] }},
-				{{ $cpByAge['g2'] }},
-				{{ $cpByAge['g3'] }},
-				{{ $cpByAge['g4'] }},
-				{{ $cpByAge['g5'] }},
-				{{ $cpByAge['g6'] }},
-				{{ $cpByAge['g7'] }},
-				{{ $cpByAge['g8'] }},
-				{{ $cpByAge['g9'] }},
-				{{ 100}},
-				{{ 15 }},
-				{{ 150 }}
+				<?php
+					foreach ($cpPerMonth as $key => $val) {
+						echo $val.",";
+					}
+				?>
 			]
 		}]
 	};
@@ -387,18 +380,11 @@ function createLineChart2(id, type, options) {
 			borderColor: '#FF6384',
 			backgroundColor: '#FF6384',
 			data: [
-				{{ $cpByAge['g1'] }},
-				{{ $cpByAge['g2'] }},
-				{{ $cpByAge['g3'] }},
-				{{ $cpByAge['g4'] }},
-				{{ $cpByAge['g5'] }},
-				{{ $cpByAge['g6'] }},
-				{{ $cpByAge['g7'] }},
-				{{ $cpByAge['g8'] }},
-				{{ $cpByAge['g9'] }},
-				{{ 100}},
-				{{ 15 }},
-				{{ 150 }}
+				<?php
+					/* foreach ($cpPerMonth as $key => $val) {
+						echo $val.",";
+					} */
+				?>
 			]
 		}]
 	};
