@@ -116,4 +116,9 @@ class PopulationController extends Controller
         return $result;
     }
 
+    //Population Menu 2
+    public function population_main(){
+          return view('frontend.population-main');
+      }
+
 }
