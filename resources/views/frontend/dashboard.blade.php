@@ -357,9 +357,9 @@ function createLineChart1(id, type, options) {
 			backgroundColor: '#36A2EB',
 			data: [
 				<?php
-					foreach ($cpPerMonth as $key => $val) {
-						echo $val.",";
-					}
+				foreach ($cpPerMonth as $val) {
+					echo $val->amount.",";
+				}
 				?>
 			]
 		}]

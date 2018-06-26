@@ -13,12 +13,11 @@ class DiseasesController extends Controller
 		return $dsgroups;
 	}
 
-/*
 	public function getPatientByDisease($tblYear=null, $diseaseCode=null) {
 		$patient = DB::table('ur506_'.$tblYear)->where('DISEASE', $diseaseCode)->orderBy('DISNAME')->get();
 		return $patient;
 	}
-*/
+
 	public function countPatientBySex($tblYear=null, $diseaseCode=null, $sex=null) {
 		$count = DB::table('ur506_'.$tblYear)
 			->whereIn('DISEASE', [$diseaseCode])
@@ -50,13 +49,20 @@ class DiseasesController extends Controller
 		return $count;
 	}
 
-	public function countPatientPerMonth($tblYear=null, $diseaseCode=null, $month=0) {
+	public function countPatientPerMonth($tblYear=null, $diseaseCode=null) {
 		// SELECT COUNT(*) FROM ur506_2017 WHERE DISEASE IN('02') AND YEAR(DATESICK) = '2017' AND MONTH(DATESICK) = '01'
-		$count = DB::table('ur506_'.$tblYear)
+		/* $count = DB::table('ur506_'.$tblYear)
 			->whereIn('DISEASE', [$diseaseCode])
-			->whereYear('DATESICK', $tblYear)
 			->whereMonth('DATESICK', $month)
 			->count();
+			*/
+			// SELECT SUM(IF(DISEASE <> "", 1, 0)) AS amount, MONTH(datesick) AS mnt, DISEASE FROM ur506_2017 WHERE DISEASE IN('03') GROUP BY MONTH(datesick)
+			$count = DB::table('ur506_'.$tblYear)
+				->select(DB::raw('SUM(IF(DISEASE <> "", 1, 0)) AS amount, MONTH(datesick) AS mnt, DISEASE As ds'))
+				->whereIn('DISEASE', [$diseaseCode])
+				->groupBy(DB::raw('MONTH(DATESICK)'))
+				->get()->toArray();
+				// dd($count);
 		return $count;
 	}
 

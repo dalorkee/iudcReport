@@ -29,7 +29,6 @@ class dashboardController extends DiseasesController
 	public function getDiseaseGroup() {
 		$result = parent::diseaseGroup();
 		return $result;
-
 	}
 
 	public function getCountPatientBySex() {
@@ -64,11 +63,14 @@ class dashboardController extends DiseasesController
 	}
 
 	public function getCountPatientPerMonth() {
+/*
 		$result = array();
 		for ($i=1; $i<=12; $i++) {
 			$pt = parent::countPatientPerMonth('2017', '03', $i);
 			$result[$i] = $pt;
 		}
+		*/
+		$result = parent::countPatientPerMonth('2017', '03');
 		return $result;
 	}
 
