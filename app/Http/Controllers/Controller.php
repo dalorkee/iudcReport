@@ -59,4 +59,32 @@ class Controller extends BaseController
       $query = Tumbol::pluck('htype','code');
       return $query;
     }
+    //list sector
+    public static function get_pop_sector($sector){
+      //if(empty($sector)) return false;
+      //echo $sector;
+      //exit;
+
+      if($sector=="north-region"){
+        $array_sector = array("50","51","52","58","54","55","56","57","53","63","64","65","67","60","61","62","66");
+      }elseif($sector == "central-region"){
+        $array_sector = array("10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","70","71","72","73","74","75","76","77");
+      }elseif($sector == "north-eastern-region"){
+        $array_sector = array("40","44","45","46","38","39","41","42","43","47","48","30","31","32","36","33","34","35","37","49");
+      }elseif($sector == "southern-region"){
+        $array_sector = array("80","81","82","83","84","85","86","90","91","91","93","94","95","96");
+      }else{
+        $array_sector = array("50","51","52","58","54","55","56","57","53","63","64","65","67","60","61","62","66","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","70","71","72","73","74","75","76","77","40","44","45","46","38","39","41","42","43","47","48","30","31","32","36","33","34","35","37","49","80","81","82","83","84","85","86","90","91","91","93","94","95","96");
+      }
+        return $array_sector;
+    }
+    //List Sector th
+    public static function get_pop_sector_th_name(){
+        //$array_name_th = array();
+        $array_name_th = array("north-region" => "ภาคเหนือ",
+                          "central-region" => "ภาคกลาง",
+                          "north-eastern-region" => "ภาคตะวันออกเฉียงเหนือ",
+                          "southern-region" => "ภาคใต้");
+        return $array_name_th;
+    }
 }
