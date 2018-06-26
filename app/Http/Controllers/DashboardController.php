@@ -12,7 +12,8 @@ class dashboardController extends DiseasesController
 		$countPatientBySex = $this->getCountPatientBySex();
 		$countPatientByAgegroup = $this->getCountPatientByAgegroup();
 		$countPatientPerMonth = $this->getCountPatientPerMonth();
-		$x = parent::chArrToStr(array('a', 'b', 'c'));
+		$countCaseDeadPerMonth = $this->getCountCaseDeadPerMonth();
+		$countPatientPerWeek = $this->getCountPatientPerWeek();
 
 		return view('
 					frontend.dashboard', [
@@ -20,8 +21,8 @@ class dashboardController extends DiseasesController
 						'cpBySex' => $countPatientBySex,
 						'cpByAge' => $countPatientByAgegroup,
 						'cpPerMonth' => $countPatientPerMonth,
-						'x' => $x
-
+						'cDeadPerMonth' => $countCaseDeadPerMonth,
+						'cpPerWeek' => $countPatientPerWeek
 					]
 				);
 	}
@@ -63,14 +64,17 @@ class dashboardController extends DiseasesController
 	}
 
 	public function getCountPatientPerMonth() {
-/*
-		$result = array();
-		for ($i=1; $i<=12; $i++) {
-			$pt = parent::countPatientPerMonth('2017', '03', $i);
-			$result[$i] = $pt;
-		}
-		*/
 		$result = parent::countPatientPerMonth('2017', '03');
+		return $result;
+	}
+
+	public function getCountCaseDeadPerMonth() {
+		$result = parent::countCaseDeadtPerMonth('2017', '31');
+		return $result;
+	}
+
+	public function getCountPatientPerWeek() {
+		$result = parent::countPatientPerWeek('2017', '31');
 		return $result;
 	}
 
