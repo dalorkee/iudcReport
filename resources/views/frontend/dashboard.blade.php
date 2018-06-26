@@ -429,7 +429,7 @@ function createLineChart3(id, type, options) {
 		datasets: [{
 			label: 'สัปดาห์',
 			fill: false,
-			borderColor: '#FF6384',
+			borderColor: '#34A853',
 			backgroundColor: '#FFFFFF',
 			data: [
 				@foreach ($cpPerWeek as $val)
