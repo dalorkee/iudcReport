@@ -33,8 +33,8 @@
 				<span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
 			</a>
 			<ul class="treeview-menu">
-				<li><a href="{{ route('export.form') }}?year=<?php echo $current_year; ?>"><i class="fa fa-circle-o"></i> รายโรค</a></li>
-				<li><a href="{{ route('export-population.main') }}"><i class="fa fa-circle-o"></i> ประชากร</a></li>
+				<li><a href="{{ route('export.form') }}?year=<?php echo $current_year; ?>"><i class="fa fa-circle-o text-red"></i> รายโรค</a></li>
+				<li><a href="{{ route('export-population.main') }}"><i class="fa fa-circle-o text-aqua"></i> ประชากร</a></li>
 			</ul>
 		</li>
 		<li>

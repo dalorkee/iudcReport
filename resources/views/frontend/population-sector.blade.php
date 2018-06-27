@@ -1,37 +1,41 @@
 @extends('layouts.template')
 @section('content')
 <?php
-ini_set('max_execution_time', 300); //300 seconds = 5 minutes
-$get_all_disease =\App\Http\Controllers\Controller::list_disease();
-//dd($get_all_disease);
+use \App\Http\Controllers\Controller as Controller;
+$array_sector_th_name = Controller::get_pop_sector_th_name();
+$get_pop_sector = Controller::get_pop_sector('all');
+//$get_pop_sector('all');
+//dd($array_sector_th_name);
 ?>
 <!-- Content Header (Page header) -->
 <section class="content-header">
-<h1>Export<small></small></h1>
+<h1>จำนวนประชากรจำแนกตามเพศ <small>รายภาค</small></h1>
 <ol class="breadcrumb">
 	<li><a href="{{ route('dashboard') }}"><i class="fa fa-home"></i> หนัาหลัก</a></li>
-	<li><a href="#" class="active">Export</a></li>
+	<li><a href="#">ส่งออกข้อมูล</a></li>
+	<li><a href="{{ route('export-population.main') }}" class="active">ประชากร</a></li>
+	<li><a href="{{ route('export-population.sector') }}" class="active">จำนวนประชากรจำแนกตามเพศ รายภาค</a></li>
 </ol>
 </section>
 <!-- Main content -->
 <section class="content">
 	<div class="row">
-		<div class="col-md-8">
+		<div class="col-md-6">
 			<!-- Default box -->
-			<div class="box">
+			<div class="box box-info">
 				<div class="box-header with-border">
-					<h3 class="box-title">Export to CSV file</h3>
+					<h3 class="box-title">ส่งออกข้อมูล(XLS) - จำนวนประชากรจำแนกตามเพศ <small>รายภาค</small></h3>
 				</div>
 				<div class="box-body">
-				<form action='{{ url('exportbydisease') }}' class="form-horizontal" method="post">
+				<form action='{{ route('post_population_sector') }}' class="form-horizontal" method="post">
 					{{ csrf_field() }}
 					<div class="box-body">
 						<div class="form-group">
-							<label for="input_monthchoose" class="col-sm-3 control-label">โรค</label>
+							<label for="input_monthchoose" class="col-sm-3 control-label">ภาค</label>
 							<div class="col-sm-4">
-								<select class="form-control" name="disease_code" id="disease_code">
-								@foreach ($get_all_disease as $disease_key => $disease_value)
-									<option value="{{ $disease_key }}">{{ $disease_key }} - {{ $disease_value }}</option>
+								<select class="form-control" name="sector" id="sector">
+								@foreach ($array_sector_th_name as $sector_key => $sector_value)
+									<option value="{{ $sector_key }}">{{ $sector_value }}</option>
 								@endforeach
 								</select>
 							</div>
@@ -58,7 +62,7 @@ $get_all_disease =\App\Http\Controllers\Controller::list_disease();
 					</div>
 					<!-- /.box-body -->
 					<div class="box-footer">
-						<button type="submit" class="btn btn-info pull-right">Export CSV Data</button>
+						<button type="submit" class="btn btn-info pull-right">ส่งออกข้อมูล</button>
 					</div>
 					<!-- /.box-footer -->
 				</form>

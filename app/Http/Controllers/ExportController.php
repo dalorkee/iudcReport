@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Excel;
+use Response;
 use App\Population;
 use App\PopulationUrbanSex;
 use Illuminate\Support\Facades\DB;
@@ -15,6 +16,27 @@ class ExportController extends Controller
     // }
 
     //Load View
+    public function export_by_disease(){
+      return view('frontend.exportbydisease');
+    }
+    public function get_files_export_by_disease(Request $request){
+      $current_year = date('Y');
+      $disease_code = (isset($request->disease_code)) ? $request->disease_code : '';
+      $year = (isset($request->select_year)) ? $request->select_year : $current_year ;
+
+      if($disease_code=="26-27-66"){
+        $file_name = 'TOTAL-DHF-Y'.$year.'.csv';
+      }else{
+        $file_name = 'DIS'.$disease_code.'-Y'.$year.'.csv';
+      }
+      $path = storage_path().'/'.'app'.'/report_disease/'.$file_name;
+      if (file_exists($path)) {
+          return Response::download($path);
+      }else{
+          dd("File Not Found");
+          return view('frontend.exportbydisease');
+      }
+    }
 
     //Population MenuSub 2
     public function population_main(){
@@ -22,27 +44,27 @@ class ExportController extends Controller
     }
 
     public function population_sector(){
-          return view('frontend.population_sector');
+          return view('frontend.population-sector');
     }
 
     public function population_area(){
-          return view('frontend.population_area');
+          return view('frontend.population-area');
     }
 
     public function population_municipality(){
-          return view('frontend.population_municipality');
+          return view('frontend.population-municipality');
     }
 
     public function population_province(){
-          return view('frontend.population_province');
+          return view('frontend.population-province');
     }
 
     public function population_sex_age_province(){
-          return view('frontend.sex_age_province');
+          return view('frontend.sex-age-province');
     }
 
     public function population_sex_age_municipality(){
-          return view('frontend.sex_age_municipality');
+          return view('frontend.sex-age-municipality');
     }
 
     public function post_population_sector(Request $request){

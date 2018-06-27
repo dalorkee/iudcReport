@@ -29,9 +29,12 @@ Route::get('/population', 'PopulationController@index')->name('population');
 /* view by disease */
 Route::get('showbydisease','PopulationController@ShowByDisease')->name('showbydisease');
 // Route::get('showbydisease/{disease_code}/{year}','PopulationController@ShowByDisease')->where(['disease_code' => '[0-9]+','year' => '[0-9]+']);
-/* form export */
-Route::get('export-csv', 'PopulationController@export_form')->name('export.form');
-// Export Population
+/* export xls From disease name and year */
+Route::get('export-csv', 'ExportController@export_by_disease')->name('export.form');
+Route::post('exportbydisease','ExportController@get_files_export_by_disease')->name('exportbydisease');
+/* Generate Link to Download Files CSV */
+Route::get('export-csv', 'ExportController@export_by_disease')->name('export.form');
+/* Start Export Population */
 Route::get('export-population', 'ExportController@population_main')->name('export-population.main');
 Route::get('export-population/sector', 'ExportController@population_sector')->name('export-population.sector');
 Route::get('export-population/area', 'ExportController@population_area')->name('export-population.area');
@@ -41,10 +44,8 @@ Route::get('export-population/sex-age-province', 'ExportController@population_se
 Route::get('export-population/sex-age-municipality', 'ExportController@population_sex_age_municipality')->name('export-population.sex-age-municipality');
 
 Route::post('post_population_sector','ExportController@post_population_sector')->name('post_population_sector');
+/* End Export Population */
 
-
-/* export xls From disease name and year */
-Route::post('exportbydisease','PopulationController@ExportByDiseaseXLS')->name('exportbydisease');
 /* Report */
 Route::get('/report', function() {
 	return view('frontend.report');
