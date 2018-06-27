@@ -110,12 +110,95 @@ class ExportController extends Controller
                  $sheet->fromArray($data, null, 'A1', false, false);
              });
          })->download('xlsx');
-  				 //dd($query);
-  		//return $query;
+
       }
 
     }
 
+    public function post_population_area(Request $request){
 
-    //Load View
+        $select_year = $request->select_year;
+        $dpc_th_name = Controller::get_pop_dpc_nameth();
+        $dpc_code = Controller::get_pop_dpc($request->dpc_code);
+        $query = DB::table('pop_urban_sex')
+  				->select(DB::raw('sum(pop_urban_sex.male) as male , sum(pop_urban_sex.female) as female , c_province.prov_name as provincename,pop_urban_sex.prov_code'))
+          ->leftjoin('c_province','pop_urban_sex.prov_code','=','c_province.prov_code')
+  				->whereIn('pop_urban_sex.prov_code', $dpc_code)
+          ->where('pop_urban_sex.pop_year','=',$select_year)
+  				->groupBy(DB::raw('pop_urban_sex.prov_code'))
+          ->orderBy('pop_urban_sex.prov_code','ASC')
+  				->get();
+
+        if(count($query)<1){
+            dd('No Record');
+        }else{
+
+        $data[] = array('ID','PROVINCE','MALE','FEMALE');
+
+        foreach ($query as $value){
+          $data[] = array('ID' => $value->prov_code,'PROVINCE' => $value->provincename,'MALE' => (int)$value->male,'FEMALE' => (int)$value->female);
+        }
+        //filename
+        $year = $select_year+543;
+        $filename = 'จำนวนประชากรจำแนกตามเพศ '.$dpc_th_name[$request->dpc_code].'-ปี'.$year;
+        //sheetname
+        $data2 = $dpc_th_name[$request->dpc_code].'ปี'.$year;
+
+        Excel::create($filename, function($excel) use($data,$data2) {
+            // Set the title
+            $excel->setTitle('UCD-Report');
+            // Chain the setters
+            $excel->setCreator('Talek Team')->setCompany('Talek Team');
+            //description
+            $excel->setDescription('สปคม.');
+            $excel->sheet($data2, function ($sheet) use ($data) {
+                 $sheet->setColumnFormat(array('C'=>'0'));
+                 $sheet->fromArray($data, null, 'A1', false, false);
+             });
+         })->download('xlsx');
+      }
+    }
+
+    public function post_population_province(Request $request){
+
+            $province_name_th = Controller::get_provincename_th();
+            $province_id = $request->provice_code;
+            $select_year = $request->select_year;
+            $query = DB::table('pop_urban_sex')
+      				->select(DB::raw('sum(pop_urban_sex.male) as male , sum(pop_urban_sex.female) as female , c_province.prov_name as provincename,pop_urban_sex.prov_code'))
+              ->leftjoin('c_province','pop_urban_sex.prov_code','=','c_province.prov_code')
+      				->where('pop_urban_sex.prov_code','=' ,$province_id)
+              ->where('pop_urban_sex.pop_year','=',$select_year)
+      				->get();
+            if(count($query)<1){
+                dd('No Record');
+            }else{
+            $data[] = array('ID','PROVINCE','MALE','FEMALE');
+
+            foreach ($query as $value){
+              $data[] = array('ID' => $value->prov_code,'PROVINCE' => $value->provincename,'MALE' => (int)$value->male,'FEMALE' => (int)$value->female);
+            }
+            //filename
+            $year = $select_year+543;
+            $filename = 'จำนวนประชากรจำแนกตามเพศ '.$province_name_th[$province_id].'-ปี'.$year;
+            //sheetname
+            $data2 = $province_name_th[$province_id].'ปี'.$year;
+
+            Excel::create($filename, function($excel) use($data,$data2) {
+                // Set the title
+                $excel->setTitle('UCD-Report');
+                // Chain the setters
+                $excel->setCreator('Talek Team')->setCompany('Talek Team');
+                //description
+                $excel->setDescription('สปคม.');
+                $excel->sheet($data2, function ($sheet) use ($data) {
+                     $sheet->setColumnFormat(array('C'=>'0'));
+                     $sheet->fromArray($data, null, 'A1', false, false);
+                 });
+             })->download('xlsx');
+          }
+
+    }
+
+
 }

@@ -115,6 +115,7 @@ class Controller extends BaseController
       }elseif($dpc_code=='13'){
          $array_dpc_code = array('10');
       }
+      return $array_dpc_code;
     }
     //DCP Name
     public static function get_pop_dpc_nameth(){

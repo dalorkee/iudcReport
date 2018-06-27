@@ -44,6 +44,8 @@ Route::get('export-population/sex-age-province', 'ExportController@population_se
 Route::get('export-population/sex-age-municipality', 'ExportController@population_sex_age_municipality')->name('export-population.sex-age-municipality');
 
 Route::post('post_population_sector','ExportController@post_population_sector')->name('post_population_sector');
+Route::post('post_population_area','ExportController@post_population_area')->name('post_population_area');
+Route::post('post_population_province','ExportController@post_population_province')->name('post_population_province');
 /* End Export Population */
 
 /* Report */
