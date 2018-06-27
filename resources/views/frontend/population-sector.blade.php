@@ -31,8 +31,8 @@ $get_pop_sector = Controller::get_pop_sector('all');
 					{{ csrf_field() }}
 					<div class="box-body">
 						<div class="form-group">
-							<label for="input_monthchoose" class="col-sm-3 control-label">ภาค</label>
-							<div class="col-sm-4">
+							<label for="input_monthchoose" class="col-sm-1 control-label">ภาค</label>
+							<div class="col-sm-5">
 								<select class="form-control" name="sector" id="sector">
 								@foreach ($array_sector_th_name as $sector_key => $sector_value)
 									<option value="{{ $sector_key }}">{{ $sector_value }}</option>
@@ -41,8 +41,8 @@ $get_pop_sector = Controller::get_pop_sector('all');
 							</div>
 						</div>
 						<div class="form-group">
-						<label for="input_yearchoose" class="col-sm-3 control-label">ปี</label>
-							<div class="col-sm-4">
+						<label for="input_yearchoose" class="col-sm-1 control-label">ปี</label>
+							<div class="col-sm-5">
 								<?php
 											$current_year =  (isset($_GET['year']))? $_GET['year']: date('Y');
 											//Current Year
