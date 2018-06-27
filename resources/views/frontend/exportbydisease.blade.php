@@ -23,7 +23,7 @@ array_push_assoc($get_all_disease,'26-27-66',"DHF Total");
 <!-- Main content -->
 <section class="content">
 	<div class="row">
-		<div class="col-md-6">
+		<div class="col-md-8">
 			<!-- Default box -->
 			<div class="box box-danger">
 				<div class="box-header with-border">
