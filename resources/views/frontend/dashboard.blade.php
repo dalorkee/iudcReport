@@ -1,14 +1,16 @@
 @extends('layouts.template')
 @section('style')
-	<!-- daterange picker -->
-	{{ Html::style(('public/AdminLTE-2.4.2/bower_components/bootstrap-daterangepicker/daterangepicker.css')) }}
-	  <!-- Select2 -->
+	<!-- bootstrap datepicker -->
+	{{ Html::style(('public/AdminLTE-2.4.2/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css')) }}
+	<!-- Select2 -->
 	{{ Html::style(('public/AdminLTE-2.4.2/bower_components/select2/dist/css/select2.min.css')) }}
+	{{ Html::style(('https://api.tiles.mapbox.com/mapbox-gl-js/v0.46.0/mapbox-gl.css')) }}
 	<style>
 		.select2 * {
 			moz-border-radius: 0 !important;
 			webkit-border-radius: 0 !important;
 			border-radius: 0 !important;
+			height: 32px !important;
 		}
 		.ds-box-title {
 			font-size: .80em;
@@ -17,11 +19,18 @@
 			min-height: 350px;
 			margin: 20px 0;
 		}
+		.map-box {
+			width: 100%;
+			min-height: 580px;
+			position: relative;
+		}
+		#map { position:absolute; top:0; bottom:0; width:100%; }
 	</style>
 @endsection
 @section('incHeaderScript')
 	{{ Html::script(('public/components/Chart.PieceLabel.js/src/Chart.bundle.min.js')) }}
 	{{ Html::script(('public/components/Chart.PieceLabel.js/src/Chart.PieceLabel.js')) }}
+	{{ Html::script(('https://api.tiles.mapbox.com/mapbox-gl-js/v0.46.0/mapbox-gl.js')) }}
 @endsection
 @section('content')
 <section class="content-header">
@@ -35,7 +44,7 @@
 <section class="content">
 	<div class="box box-primary">
 		<div class="box-header with-border">
-			<h3 class="box-title">Filter</h3>
+			<h3 class="box-title text-primary" style="font-size:1.10em">ค้นหา</h3>
 			<div class="box-tools pull-right">
 				<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
 				<button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>
@@ -43,47 +52,55 @@
 		</div>
 		<!-- /.box-header -->
 		<div class="box-body">
-			<div class="row">
-				<div class="col-md-3">
-					<div class="form-group">
-						<label>เลือกโรค:</label>
-						<select class="form-control select2" style="width: 100%;">
-						<?php
-							$i = 1;
-							foreach ($dsgroups as $dsgroup) {
-								if ($i == 1) {
-									echo "<option value=\"".$dsgroup->DISEASE."\" selected=\"selected\">".$dsgroup->DISNAME."</option>\n";
-								} else {
-									echo "<option value=\"".$dsgroup->DISEASE."\">".$dsgroup->DISNAME."</option>\n";
-								}
-								$i++;
-							}
-						?>
-						</select>
-					</div>
-				</div>
-				<div class="col-md-3">
-					<div class="form-group">
-						<label>วันที่:</label>
-						<div class="input-group">
-							<div class="input-group-addon">
-								<i class="fa fa-calendar"></i>
-							</div>
-							<input type="text" class="form-control pull-right" id="reservation">
+			<form>
+				<div class="row">
+					<div class="col-md-3">
+						<div class="form-group">
+							<label for="selectDisease" class="sr-only">เลือกโรค:</label>
+							<select class="form-control select2" style="width:100%;">
+								<optgroup label="โรคที่มี 1 รหัส">
+								<?php
+									$i = 1;
+									foreach ($dsgroups as $dsgroup) {
+										if ($i == 1) {
+											echo "<option value=\"".$dsgroup->DISEASE."\" selected=\"selected\">".$dsgroup->DISNAME."</option>\n";
+										} else {
+											echo "<option value=\"".$dsgroup->DISEASE."\">".$dsgroup->DISNAME."</option>\n";
+										}
+										$i++;
+									}
+								?>
+								</optgroup>
+								<optgroup label="โรคที่มีหลายรหัส">
+									<option value="-1">DHF+DSS+DF</option>
+									<option value="-2">Dysentery</option>
+									<option value="-3">Encephalitis</option>
+									<option value="-4">Hepatitis</option>
+									<option value="-5">Measles</option>
+									<option value="-6">S.T.I</option>
+									<option value="-7">Tetanus inc.Neo</option>
+									<option value="-8">Tuberculosis</option>
+								</optgroup>
+							</select>
 						</div>
 					</div>
-				</div>
-				<div class="col-md-3">
-					<div class="form-group">
-						{{ Html::link('ds', 'Find', array(
-							'class'=>'btn btn-primary'
-						)) }}
+					<div class="col-md-2">
+						<div class="form-group ds-filter">
+							<label for="selectYear" class="sr-only">ปี:</label>
+							<div class="input-group date">
+								<div class="input-group-addon">
+									<i class="fa fa-calendar"></i>
+								</div>
+								<input type="text" class="form-control pull-right" id="select-year">
+							</div>
+						</div>
 					</div>
+					{{ Html::link('ds', 'ค้นหา', array('class'=>'btn btn-primary')) }}
 				</div>
-			</div>
+			</form>
 		</div>
 	</div>
-	<div class="box" style="border:none;background:none;box-shadow:none;">
+	<div class="main-box" style="border:none;background:none;box-shadow:none;">
 		<!-- /.row -->
 		<div class="row">
 			<!-- Left col#1 -->
@@ -92,8 +109,7 @@
 					<div class="box-header with-border">
 						<h3 class="box-title"><span class="ds-box-title">ร้อยละผู้ป่วยจำแนกตามเพศ</span></h3>
 						<div class="box-tools pull-right">
-							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-							</button>
+							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
 							<button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
 						</div>
 					</div>
@@ -133,8 +149,7 @@
 					<div class="box-header with-border">
 						<h3 class="box-title"><span class="ds-box-title">อัตราป่วยจำแนกตามกลุ่มอายุ</span></h3>
 						<div class="box-tools pull-right">
-							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-							</button>
+							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
 							<button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
 						</div>
 					</div>
@@ -167,10 +182,12 @@
 				</div>
 				<!-- /.box -->
 			</div>
-
+		</div>
+		<!-- /. row -->
+		<div class="row">
 			<!-- Left col#2 -->
 			<div class="col-md-6">
-				<div class="box box-success">
+				<div class="box box-info">
 					<div class="box-header with-border">
 						<h3 class="box-title"><span class="ds-box-title">จำนวนผู้ป่วยรายเดือน</span></h3>
 						<div class="box-tools pull-right">
@@ -211,7 +228,7 @@
 
 			<!-- Right col#2 -->
 			<div class="col-md-6">
-				<div class="box box-success">
+				<div class="box box-info">
 					<div class="box-header with-border">
 						<h3 class="box-title"><span class="ds-box-title">จำนวนผู้เสียชีวิตรายเดือน</span></h3>
 						<div class="box-tools pull-right">
@@ -249,10 +266,12 @@
 				</div>
 				<!-- /.box -->
 			</div>
-
-			<!-- Left col#1 -->
+		</div>
+		<!-- /. row -->
+		<div class="row">
+			<!-- Left col#3 -->
 			<div class="col-md-12">
-				<div class="box box-warning">
+				<div class="box box-success">
 					<div class="box-header with-border">
 						<h3 class="box-title"><span class="ds-box-title">จำนวนผู้ป่วยรายสัปดาห์</span></h3>
 						<div class="box-tools pull-right">
@@ -290,48 +309,74 @@
 				</div>
 				<!-- /.box -->
 			</div>
+		</div>
+		<!-- /. row -->
+		<div class="row">
+			<!-- Left col#4 -->
+			<div class="col-md-12">
+				<div class="box box-info">
+					<div class="box-header with-border">
+						<h3 class="box-title"><span class="ds-box-title">แผนที่</span></h3>
+						<div class="box-tools pull-right">
+							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+							</button>
+							<button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+						</div>
+					</div>
+					<!-- /.box-header -->
+					<div class="box-body">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="map-box">
 
+										<div id="map"></div>
 
+								</div>
+								<!-- ./chart-responsive -->
+							</div>
+						</div>
+						<!-- /.row -->
+					</div>
+					<!-- /.box-body -->
+					<div class="box-footer no-padding">
+						<ul class="nav nav-pills nav-stacked">
+							<li>
+								<a href="#">สูงสุด <span class="pull-right text-red"><i class="fa fa-angle-up"></i> {{ number_format(0) }}</span></a>
+							</li>
+							<li>
+								<a href="#">ต่ำสุด <span class="pull-right text-green"><i class="fa fa-angle-down"></i> {{ number_format(0) }}</span></a>
+							</li>
+						</ul>
+					</div>
+					<!-- /.footer -->
+				</div>
+				<!-- /.box -->
+			</div>
 		</div>
 	<!-- /.row -->
 	</div>
 	<!-- /. box -->
 </section>
 
-
 <!-- /.content -->
 @stop
 @section('script')
 <script>
-	$(function () {
-		/* Initialize Select2 Elements */
-		$('.select2').select2()
-		//Date range picker
-$('#reservation').daterangepicker()
-//Date range picker with time picker
-$('#reservationtime').daterangepicker({ timePicker: true, timePickerIncrement: 30, format: 'MM/DD/YYYY h:mm A' })
-//Date range as a button
-$('#daterange-btn').daterangepicker(
-  {
-	ranges   : {
-	  'Today'       : [moment(), moment()],
-	  'Yesterday'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-	  'Last 7 Days' : [moment().subtract(6, 'days'), moment()],
-	  'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-	  'This Month'  : [moment().startOf('month'), moment().endOf('month')],
-	  'Last Month'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-	},
-	startDate: moment().subtract(29, 'days'),
-	endDate  : moment()
-  },
-  function (start, end) {
-	$('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
-  }
-)
+$(document).ready(function () {
+	/* Initialize Select2 Elements */
+	$('.select2').select2();
+	/* Date picker */
+	$('#select-year').datepicker({
+		format: "yyyy",
+		viewMode: "years",
+		minViewMode: "years",
+		autoclose: true
 	});
+	 $('#select-date').datepicker('setDate', 'toYear');
+});
 </script>
 <script>
-/* sex doughnut chart */
+/* Sex doughnut chart */
 function createDoughnutChart(id, type, options) {
 	var data = {
 		labels: ['ชาย', 'หญิง'],
@@ -363,7 +408,7 @@ function createBarChart(id, type, options) {
 			],
 			backgroundColor: [
 				@for($i=0; $i<=8; $i++)
-					{!! '"#FF6384"'.',' !!}
+					{!! '"#00A65A"'.',' !!}
 				@endfor
 			]
 		}]
@@ -403,7 +448,7 @@ function createLineChart2(id, type, options) {
 		datasets: [{
 			label: 'จำนวน',
 			fill: false,
-			borderColor: '#FF6384',
+			borderColor: '#00A65A',
 			backgroundColor: '#FFFFFF',
 			data: [
 				@foreach ($cDeadPerMonth as $val)
@@ -429,7 +474,7 @@ function createLineChart3(id, type, options) {
 		datasets: [{
 			label: 'สัปดาห์',
 			fill: false,
-			borderColor: '#34A853',
+			borderColor: '#DD4B39',
 			backgroundColor: '#FFFFFF',
 			data: [
 				@foreach ($cpPerWeek as $val)
@@ -465,7 +510,7 @@ $('document').ready(function () {
 		responsive: true,
 		maintainAspectRatio: false,
 		legend: {
-			display: true,
+			display: false,
 			position: 'right',
 		},
 		pieceLabel: {
@@ -484,7 +529,7 @@ $('document').ready(function () {
 				}
 			}],
 			xAxes: [{
-				barPercentage: 1
+				barPercentage: .8
 			}]
 		}
 	});
@@ -494,7 +539,7 @@ $('document').ready(function () {
 		responsive: true,
 		maintainAspectRatio: false,
 		legend: {
-			display: true,
+			display: false,
 			position: 'right',
 		},
 		scales: {
@@ -521,7 +566,7 @@ $('document').ready(function () {
 		responsive: true,
 		maintainAspectRatio: false,
 		legend: {
-			display: true,
+			display: false,
 			position: 'right',
 		},
 		scales: {
@@ -548,7 +593,7 @@ $('document').ready(function () {
 		responsive: true,
 		maintainAspectRatio: false,
 		legend: {
-			display: true,
+			display: false,
 			position: 'right',
 		},
 		scales: {
@@ -571,11 +616,67 @@ $('document').ready(function () {
 	});
 });
 </script>
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoiZGFsb3JrZWUiLCJhIjoiY2pnbmJrajh4MDZ6aTM0cXZkNDQ0MzI5cCJ9.C2REqhILLm2HKIQSn9Wc0A';
 
-<!-- date-range-picker -->
+var map = new mapboxgl.Map({
+	container: 'map',
+	style: 'mapbox://styles/mapbox/streets-v9',
+	center: [100.277405, 13.530735],
+	zoom: 4.5
+});
+// var marker = new mapboxgl.Marker().setLngLat([100.5956886, 13.8715116]).addTo(map);
+map.on('load', function () {
+	map.addLayer({
+		'id': 'mhs',
+		'type': 'fill',
+		'source': {
+			'type': 'geojson',
+			"data": 'public/gis/maehongson.geojson'
+		},
+		'layout': {
+
+		},
+		'paint': {
+			'fill-color': '#489E48',
+			'fill-opacity': 0.8
+		}
+	});
+});
+map.on('load', function () {
+	map.addLayer({
+		'id': 'cm',
+		'type': 'fill',
+		'source': {
+			'type': 'geojson',
+			"data": 'public/gis/chiangmai.geojson'
+		},
+		'layout': {},
+		'paint': {
+			'fill-color': '#D1202E',
+			'fill-opacity': 0.8
+		}
+	});
+});
+map.on('load', function () {
+	map.addLayer({
+		'id': 'psk',
+		'type': 'fill',
+		'source': {
+			'type': 'geojson',
+			"data": 'public/gis/phitsanulok.geojson'
+		},
+		'layout': {},
+		'paint': {
+			'fill-color': '#FBBC05',
+			'fill-opacity': 0.8
+		}
+	});
+});
+</script>
+<!-- bootstrap datepicker -->
 {{ Html::script(('public/AdminLTE-2.4.2/bower_components/moment/min/moment.min.js')) }}
-{{ Html::script(('public/AdminLTE-2.4.2/bower_components/bootstrap-daterangepicker/daterangepicker.js')) }}
+{{ Html::script(('public/AdminLTE-2.4.2/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js')) }}
 <!-- Select2 -->
 {{ Html::script(('public/AdminLTE-2.4.2/bower_components/select2/dist/js/select2.full.min.js')) }}
-
 @endsection
