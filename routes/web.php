@@ -47,6 +47,8 @@ Route::post('post_population_sector','ExportController@post_population_sector')-
 Route::post('post_population_area','ExportController@post_population_area')->name('post_population_area');
 Route::post('post_population_province','ExportController@post_population_province')->name('post_population_province');
 Route::post('post_population_municipality','ExportController@post_population_municipality')->name('post_population_municipality');
+Route::post('post_population_sex_age_province','ExportController@post_population_sex_age_province')->name('post_sex-age-province');
+Route::post('post_population_sex_age_municipality','ExportController@post_population_sex_age_municipality')->name('post_sex-age-municipality');
 /* End Export Population */
 
 /* Report */
