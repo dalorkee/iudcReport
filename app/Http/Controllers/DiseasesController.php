@@ -13,10 +13,10 @@ class DiseasesController extends Controller
 		return $dsgroups;
 	}
 
-	public function getPatientByDisease($tblYear=null, $diseaseCode=null) {
+	/* public function getPatientByDisease($tblYear=null, $diseaseCode=null) {
 		$patient = DB::table('ur506_'.$tblYear)->where('DISEASE', $diseaseCode)->orderBy('DISNAME')->get();
 		return $patient;
-	}
+	} */
 
 	public function countPatientBySex($tblYear=null, $diseaseCode=null, $sex=null) {
 		$count = DB::table('ur506_'.$tblYear)
@@ -26,14 +26,12 @@ class DiseasesController extends Controller
 		return $count;
 	}
 
-	public function countPatientByAgegroup($tblYear=null, $diseaseCode=null, $condition=array('operator', 'value')) {
+	public function countPatientByAgegroup($tblYear=null, $diseaseCode=null, $condition=array()) {
 		switch ($condition[0]) {
 			case "<":
 				$count = DB::table('ur506_'.$tblYear)
-					->where([
-						['DISEASE', '=', $diseaseCode],
-						['age_group', $condition[0], $condition[1]]
-					])
+					->whereIn('DISEASE', [$diseaseCode])
+					->where('age_group', '<', $condition[1])
 					->count();
 				break;
 			case "between":
@@ -44,13 +42,12 @@ class DiseasesController extends Controller
 				break;
 			case ">":
 				$count = DB::table('ur506_'.$tblYear)
-					->where([
-						['DISEASE', '>', $diseaseCode],
-						['age_group', $condition[0], $condition[1]]
-					])
+					->whereIn('DISEASE', [$diseaseCode])
+					->where('age_group', '>', $condition[1])
 					->count();
 				break;
 		}
+		// dd($count);
 		return $count;
 	}
 

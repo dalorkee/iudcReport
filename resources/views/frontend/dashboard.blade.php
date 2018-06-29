@@ -52,20 +52,27 @@
 		</div>
 		<!-- /.box-header -->
 		<div class="box-body">
-			<form>
+			<form method="get" action='{{ route('dashboard') }}'>
 				<div class="row">
 					<div class="col-md-3">
 						<div class="form-group">
 							<label for="selectDisease" class="sr-only">เลือกโรค:</label>
-							<select class="form-control select2" style="width:100%;">
+							<select name="disease" class="form-control select2" style="width:100%;">
 								<optgroup label="โรคที่มี 1 รหัส">
 								<?php
+									if ($selectDs['selected'] == true) {
+										$selected1 = "selected=\"selected\"";
+										$selected2 = null;
+										echo "<option value=\"".$selectDs['disease']."\"".$selected1.">".$dsgroups[$selectDs['disease']]['ds_name']."</option>";
+									} else {
+										$selected2 = "selected=\"selected\"";
+									}
 									$i = 1;
 									foreach ($dsgroups as $dsgroup) {
 										if ($i == 1) {
-											echo "<option value=\"".$dsgroup->DISEASE."\" selected=\"selected\">".$dsgroup->DISNAME."</option>\n";
+											echo "<option value=\"".$dsgroup['ds_id']."\" ".$selected2.">".$dsgroup['ds_name']."</option>\n";
 										} else {
-											echo "<option value=\"".$dsgroup->DISEASE."\">".$dsgroup->DISNAME."</option>\n";
+											echo "<option value=\"".$dsgroup['ds_id']."\">".$dsgroup['ds_name']."</option>\n";
 										}
 										$i++;
 									}
@@ -91,11 +98,11 @@
 								<div class="input-group-addon">
 									<i class="fa fa-calendar"></i>
 								</div>
-								<input type="text" class="form-control pull-right" id="select-year">
+								<input type="text" name="year" class="form-control pull-right" id="select-year">
 							</div>
 						</div>
 					</div>
-					{{ Html::link('ds', 'ค้นหา', array('class'=>'btn btn-primary')) }}
+					{{ Form::submit('ค้นหา', ['class'=>'btn btn-primary']) }}
 				</div>
 			</form>
 		</div>
@@ -107,7 +114,7 @@
 			<div class="col-md-6">
 				<div class="box box-success">
 					<div class="box-header with-border">
-						<h3 class="box-title"><span class="ds-box-title">ร้อยละผู้ป่วยจำแนกตามเพศ</span></h3>
+						<h3 class="box-title"><span class="ds-box-title">{{ $dsgroups[$selectDs['disease']]['ds_name'] }} ร้อยละผู้ป่วยจำแนกตามเพศ</span></h3>
 						<div class="box-tools pull-right">
 							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
 							<button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
@@ -372,7 +379,13 @@ $(document).ready(function () {
 		minViewMode: "years",
 		autoclose: true
 	});
-	 $('#select-date').datepicker('setDate', 'toYear');
+	<?php
+		if ($selectDs['selected'] == true) {
+			echo "$('#select-year').datepicker('setDate', '".$selectDs['selectYear']."');";
+		} else {
+			echo "$('#select-year').datepicker('setDate', 'toYear');";
+		}
+	?>
 });
 </script>
 <script>
@@ -407,7 +420,7 @@ function createBarChart(id, type, options) {
 				@endforeach
 			],
 			backgroundColor: [
-				@for($i=0; $i<=8; $i++)
+				@for($i=1; $i<=9; $i++)
 					{!! '"#00A65A"'.',' !!}
 				@endfor
 			]
