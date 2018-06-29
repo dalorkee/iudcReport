@@ -3,9 +3,7 @@
 <?php
 use \App\Http\Controllers\Controller as Controller;
 $array_sector_th_name = Controller::get_pop_sector_th_name();
-$get_pop_sector = Controller::get_pop_sector('all');
-//$get_pop_sector('all');
-//dd($array_sector_th_name);
+
 ?>
 <!-- Content Header (Page header) -->
 <section class="content-header">

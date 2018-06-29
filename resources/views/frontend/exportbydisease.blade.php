@@ -9,7 +9,6 @@ return $array;
 }
 array_push_assoc($get_all_disease,'26-27-66',"DHF Total");
 
-
 ?>
 <!-- Content Header (Page header) -->
 <section class="content-header">
