@@ -92,7 +92,7 @@ class ExportController extends Controller
                 ->get();
               if(count($query_s1)>0){
                     foreach ($query_s1 as $value_s1){
-                      $data[] = array('REGION' => 'ภาคเหนือ','MALE' => $value_s1->male,'FEMALE' => $value_s1->female);
+                      $data[] = array('REGION' => 'ภาคเหนือ','MALE' => (int)$value_s1->male,'FEMALE' => (int)$value_s1->female);
                     }
               }
               //Total central-region
@@ -108,7 +108,7 @@ class ExportController extends Controller
                     ->get();
                   if(count($query_s1)>0){
                         foreach ($query_s2 as $value_s2){
-                          $data[] = array('REGION' => 'ภาคกลาง','MALE' => $value_s2->male,'FEMALE' => $value_s2->female);
+                          $data[] = array('REGION' => 'ภาคกลาง','MALE' => (int)$value_s2->male,'FEMALE' => (int)$value_s2->female);
                         }
                   }
                   //Total north-eastern-region
@@ -124,7 +124,7 @@ class ExportController extends Controller
                         ->get();
                       if(count($query_s3)>0){
                             foreach ($query_s3 as $value_s3){
-                              $data[] = array('REGION' => 'ภาคตะวันออกเฉียงเหนือ','MALE' => $value_s3->male,'FEMALE' => $value_s3->female);
+                              $data[] = array('REGION' => 'ภาคตะวันออกเฉียงเหนือ','MALE' => (int)$value_s3->male,'FEMALE' => (int)$value_s3->female);
                             }
                       }
                       //Total north-eastern-region
@@ -140,7 +140,7 @@ class ExportController extends Controller
                             ->get();
                           if(count($query_s4)>0){
                                 foreach ($query_s4 as $value_s4){
-                                  $data[] = array('REGION' => 'ภาคใต้','MALE' => $value_s4->male,'FEMALE' => $value_s4->female);
+                                  $data[] = array('REGION' => 'ภาคใต้','MALE' => (int)$value_s4->male,'FEMALE' => (int)$value_s4->female);
                                 }
                           }
                           $year = $select_year+543;
