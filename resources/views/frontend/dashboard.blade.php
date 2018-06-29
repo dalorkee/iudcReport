@@ -102,7 +102,11 @@
 							</div>
 						</div>
 					</div>
-					{{ Form::submit('ค้นหา', ['class'=>'btn btn-primary']) }}
+					<div class="col-md-2">
+						<div class="form-group">
+							{{ Form::submit('ค้นหา', ['class'=>'btn btn-primary']) }}
+						</div>
+					</div>
 				</div>
 			</form>
 		</div>
@@ -114,7 +118,7 @@
 			<div class="col-md-6">
 				<div class="box box-success">
 					<div class="box-header with-border">
-						<h3 class="box-title"><span class="ds-box-title">{{ $dsgroups[$selectDs['disease']]['ds_name'] }} ร้อยละผู้ป่วยจำแนกตามเพศ</span></h3>
+						<h3 class="box-title"><span class="ds-box-title">ร้อยละผู้ป่วยจำแนกตามเพศ</span></h3>
 						<div class="box-tools pull-right">
 							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
 							<button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>

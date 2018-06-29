@@ -5,12 +5,12 @@
 		<li class="header">เมนูหลัก</li>
 		<li class="active treeview">
 			<a href="#">
-				<i class="fa fa-cloud-download"></i> <span>Dashboard</span>
+				<i class="fa fa-tachometer" aria-hidden="true"></i> <span>Dashboard</span>
 			</a>
 		</li>
 		<li class="treeview">
 			<a href="#">
-				<i class="fa fa-calendar-check-o"></i> <span>รายการข้อมูล</span>
+				<i class="fa fa-list-ol" aria-hidden="true"></i> <span>รายการข้อมูล</span>
 				<span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
 			</a>
 			<ul class="treeview-menu">

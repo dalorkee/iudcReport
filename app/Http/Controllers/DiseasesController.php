@@ -31,19 +31,19 @@ class DiseasesController extends Controller
 			case "<":
 				$count = DB::table('ur506_'.$tblYear)
 					->whereIn('DISEASE', [$diseaseCode])
-					->where('age_group', '<', $condition[1])
+					->where('YEAR', '<', $condition[1])
 					->count();
 				break;
 			case "between":
 				$count = DB::table('ur506_'.$tblYear)
 					->where('DISEASE', $diseaseCode)
-					->whereBetween('age_group', [$condition[1], $condition[2]])
+					->whereBetween('YEAR', [$condition[1], $condition[2]])
 					->count();
 				break;
 			case ">":
 				$count = DB::table('ur506_'.$tblYear)
 					->whereIn('DISEASE', [$diseaseCode])
-					->where('age_group', '>', $condition[1])
+					->where('YEAR', '>', $condition[1])
 					->count();
 				break;
 		}
