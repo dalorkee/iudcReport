@@ -56,6 +56,7 @@ class DiseasesController extends Controller
 			->select(DB::raw('SUM(IF(DISEASE <> "", 1, 0)) AS amount, MONTH(datesick) AS month, DISEASE As disease'))
 			->whereIn('DISEASE', [$diseaseCode])
 			->groupBy(DB::raw('MONTH(DATESICK)'))
+			->orderBy(DB::raw('MONTH(DATESICK)'))
 			->get()
 			->toArray();
 		return $count;
@@ -67,6 +68,7 @@ class DiseasesController extends Controller
 			->where('RESULT', 2)
 			->whereIn('DISEASE', [$diseaseCode])
 			->groupBy(DB::raw('MONTH(DATEDEATH)'))
+			->orderBy(DB::raw('MONTH(DATEDEATH)'))
 			->get()
 			->toArray();
 		return $count;
@@ -77,6 +79,7 @@ class DiseasesController extends Controller
 			->select(DB::raw('SUM(IF(DISEASE <> "", 1, 0)) AS amount, week_no AS weeks, DISEASE As disease'))
 			->whereIn('DISEASE', [$diseaseCode])
 			->groupBy('week_no')
+			->orderBy('week_no')
 			->get()
 			->toArray();
 		return $count;

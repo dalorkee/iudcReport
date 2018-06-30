@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
+use DateTime;
 
 class dashboardController extends DiseasesController
 {
@@ -68,17 +69,42 @@ class dashboardController extends DiseasesController
 	}
 
 	public function getCountPatientPerMonth($tblYear, $diseaseCode) {
-		$result = parent::countPatientPerMonth($tblYear, $diseaseCode);
+		$result = $this->setDefaultMonth($tblYear);
+		$count_arr = parent::countPatientPerMonth($tblYear, $diseaseCode);
+		foreach ($count_arr as $val) {
+			$result[$val->month] = (int)$val->amount;
+		}
 		return $result;
 	}
 
 	public function getCountCaseDeadPerMonth($tblYear, $diseaseCode) {
-		$result = parent::countCaseDeadtPerMonth($tblYear, $diseaseCode);
+		$result = $this->setDefaultMonth($tblYear);
+		$count_arr = parent::countCaseDeadtPerMonth($tblYear, $diseaseCode);
+		foreach ($count_arr as $val) {
+			$result[$val->month] = (int)$val->amount;
+		}
 		return $result;
 	}
 
 	public function getCountPatientPerWeek($tblYear, $diseaseCode) {
-		$result = parent::countPatientPerWeek($tblYear, $diseaseCode);
+		/* get this week */
+		$date = new DateTime();
+		$nowYear = $date->format('Y');
+		$nowWeek = $date->format('W');
+		$iweek = 53;
+		if ($tblYear == $nowYear) {
+			$iweek = $nowWeek;
+		}
+
+		$result = array();
+		for ($i=1; $i<=$iweek; $i++) {
+			$result[$i] = 0;
+		}
+		$count_arr = parent::countPatientPerWeek($tblYear, $diseaseCode);
+		foreach ($count_arr as $val) {
+			$iweek = (int)$val->weeks;
+			$result[$iweek] = $val->amount;
+		}
 		return $result;
 	}
 
@@ -90,8 +116,20 @@ class dashboardController extends DiseasesController
 			$tmpVal = array('ds_id' => $val->DISEASE, 'ds_name'=>$val->DISNAME, 'ds_group'=>$val->gr);
 			$result[(int)$tmpKey] = $tmpVal;
 		}
-		//dd($result);
 		return $result;
 	}
 
+	public function setDefaultMonth($year=null) {
+		$result = array();
+		$nowYear = date('Y');
+		$nowMonth = date('n');
+		$iMonth = 12;
+		if ($year == $nowYear) {
+			$iMonth = $nowMonth;
+		}
+		for ($i=1; $i<=$iMonth; $i++) {
+			$result[$i] = 0;
+		}
+		return $result;
+	}
 }

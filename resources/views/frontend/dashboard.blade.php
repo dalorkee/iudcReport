@@ -447,7 +447,7 @@ function createLineChart1(id, type, options) {
 			backgroundColor: '#FFFFFF',
 			data: [
 				@foreach ($cpPerMonth as $val)
-					{{ $val->amount."," }}
+					{{ $val."," }}
 				@endforeach
 			]
 		}]
@@ -465,11 +465,11 @@ function createLineChart2(id, type, options) {
 		datasets: [{
 			label: 'จำนวน',
 			fill: false,
-			borderColor: '#00A65A',
+			borderColor: '#D1202E',
 			backgroundColor: '#FFFFFF',
 			data: [
 				@foreach ($cDeadPerMonth as $val)
-					{{ $val->amount.", " }}
+					{{ $val.", " }}
 				@endforeach
 			]
 		}]
@@ -491,11 +491,11 @@ function createLineChart3(id, type, options) {
 		datasets: [{
 			label: 'สัปดาห์',
 			fill: false,
-			borderColor: '#DD4B39',
+			borderColor: '#FF7900',
 			backgroundColor: '#FFFFFF',
 			data: [
 				@foreach ($cpPerWeek as $val)
-					{{ $val->amount.", " }}
+					{{ $val.", " }}
 				@endforeach
 			]
 		}]
