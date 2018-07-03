@@ -7,8 +7,9 @@ use DateTime;
 class dashboardController extends DiseasesController
 {
 	public function index(Request $request) {
+		$dsgroups = $this->getDsNameByDsGroup();
+		$thProv = $this->getThProvince();
 		if (isset($request) && isset($request->year)) {
-			$dsgroups = $this->getDsNameByDsGroup();
 			$countPatientBySex = $this->getCountPatientBySex($request->year, $request->disease);
 			$countPatientByAgegroup = $this->getCountPatientByAgegroup($request->year, $request->disease);
 			$countPatientPerMonth = $this->getCountPatientPerMonth($request->year, $request->disease);
@@ -16,7 +17,6 @@ class dashboardController extends DiseasesController
 			$countPatientPerWeek = $this->getCountPatientPerWeek($request->year, $request->disease);
 			$selectDs = array('disease'=>$request->disease, 'selectYear'=>$request->year, 'selected'=>true);
 		} else {
-			$dsgroups = $this->getDsNameByDsGroup();
 			$countPatientBySex = $this->getCountPatientBySex('2018', 78);
 			$countPatientByAgegroup = $this->getCountPatientByAgegroup('2018', 78);
 			$countPatientPerMonth = $this->getCountPatientPerMonth('2018', 78);
@@ -28,6 +28,7 @@ class dashboardController extends DiseasesController
 		return view('
 					frontend.dashboard', [
 						'dsgroups' => $dsgroups,
+						'thProv' => $thProv,
 						'cpBySex' => $countPatientBySex,
 						'cpByAge' => $countPatientByAgegroup,
 						'cpPerMonth' => $countPatientPerMonth,
@@ -130,6 +131,11 @@ class dashboardController extends DiseasesController
 		for ($i=1; $i<=$iMonth; $i++) {
 			$result[$i] = 0;
 		}
+		return $result;
+	}
+
+	public function getThProvince() {
+		$result = parent::thProvince();
 		return $result;
 	}
 }

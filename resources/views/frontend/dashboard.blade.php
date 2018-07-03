@@ -633,63 +633,41 @@ $('document').ready(function () {
 	});
 });
 </script>
+<?php
+	$color = ['#489E48', '#D1202E', '#FBBC05'];
+	$htm = "";
+	$i = 1;
+	foreach ($thProv as $val) {
+		$ranColor = $color[mt_rand(0, count($color) - 1)];
+		$htm .= "map.on('load', function () {
+			map.addLayer({
+				'id': 'mhs".$i."',
+				'type': 'fill',
+				'source': {
+					'type': 'geojson',
+					'data': 'public/gis/".$val->prov_name_en.".geojson'
+				},
+				'layout': {
+
+				},
+				'paint': {
+					'fill-color': '".$ranColor."',
+					'fill-opacity': 0.8
+				}
+			});
+		});\n";
+		$i++;
+	}
+	?>
 <script>
 mapboxgl.accessToken = 'pk.eyJ1IjoiZGFsb3JrZWUiLCJhIjoiY2pnbmJrajh4MDZ6aTM0cXZkNDQ0MzI5cCJ9.C2REqhILLm2HKIQSn9Wc0A';
-
 var map = new mapboxgl.Map({
 	container: 'map',
 	style: 'mapbox://styles/mapbox/streets-v9',
 	center: [100.277405, 13.530735],
 	zoom: 4.5
 });
-// var marker = new mapboxgl.Marker().setLngLat([100.5956886, 13.8715116]).addTo(map);
-map.on('load', function () {
-	map.addLayer({
-		'id': 'mhs',
-		'type': 'fill',
-		'source': {
-			'type': 'geojson',
-			"data": 'public/gis/maehongson.geojson'
-		},
-		'layout': {
-
-		},
-		'paint': {
-			'fill-color': '#489E48',
-			'fill-opacity': 0.8
-		}
-	});
-});
-map.on('load', function () {
-	map.addLayer({
-		'id': 'cm',
-		'type': 'fill',
-		'source': {
-			'type': 'geojson',
-			"data": 'public/gis/chiangmai.geojson'
-		},
-		'layout': {},
-		'paint': {
-			'fill-color': '#D1202E',
-			'fill-opacity': 0.8
-		}
-	});
-});
-map.on('load', function () {
-	map.addLayer({
-		'id': 'psk',
-		'type': 'fill',
-		'source': {
-			'type': 'geojson',
-			"data": 'public/gis/phitsanulok.geojson'
-		},
-		'layout': {},
-		'paint': {
-			'fill-color': '#FBBC05',
-			'fill-opacity': 0.8
-		}
-	});
-});
+{!! $htm !!}
 </script>
 <!-- bootstrap datepicker -->
 {{ Html::script(('public/AdminLTE-2.4.2/bower_components/moment/min/moment.min.js')) }}

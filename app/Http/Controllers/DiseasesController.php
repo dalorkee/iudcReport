@@ -99,4 +99,8 @@ class DiseasesController extends Controller
 		}
 		return $str;
 	}
+
+	public function thProvince() {
+		return $result = DB::table('c_province')->get()->toArray();
+	}
 }
