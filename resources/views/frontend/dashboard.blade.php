@@ -182,10 +182,10 @@
 					<div class="box-footer no-padding">
 						<ul class="nav nav-pills nav-stacked">
 							<li>
-								<a href="#">สูงสุด <span class="pull-right text-red"><i class="fa fa-angle-up"></i> {{ number_format(0) }}</span></a>
+								<a href="#">อัตราสูงสุดช่วงอายุ <span class="pull-right text-red"> {{ $ageRange[array_search(max($cpByAge), $cpByAge)] }}</span></a>
 							</li>
 							<li>
-								<a href="#">ต่ำสุด <span class="pull-right text-green"><i class="fa fa-angle-down"></i> {{ number_format(0) }}</span></a>
+								<a href="#">จำนวน <span class="pull-right text-green"> {{ number_format(max(array_unique($cpByAge))) }}</span></a>
 							</li>
 						</ul>
 					</div>
@@ -222,17 +222,6 @@
 						<!-- /.row -->
 					</div>
 					<!-- /.box-body -->
-					<div class="box-footer no-padding">
-						<ul class="nav nav-pills nav-stacked">
-							<li>
-								<a href="#">สูงสุด <span class="pull-right text-red"><i class="fa fa-angle-up"></i> {{ number_format(0) }}</span></a>
-							</li>
-							<li>
-								<a href="#">ต่ำสุด <span class="pull-right text-green"><i class="fa fa-angle-down"></i> {{ number_format(0) }}</span></a>
-							</li>
-						</ul>
-					</div>
-					<!-- /.footer -->
 				</div>
 				<!-- /.box -->
 			</div>
@@ -263,17 +252,6 @@
 						<!-- /.row -->
 					</div>
 					<!-- /.box-body -->
-					<div class="box-footer no-padding">
-						<ul class="nav nav-pills nav-stacked">
-							<li>
-								<a href="#">สูงสุด <span class="pull-right text-red"><i class="fa fa-angle-up"></i> {{ number_format(0) }}</span></a>
-							</li>
-							<li>
-								<a href="#">ต่ำสุด <span class="pull-right text-green"><i class="fa fa-angle-down"></i> {{ number_format(0) }}</span></a>
-							</li>
-						</ul>
-					</div>
-					<!-- /.footer -->
 				</div>
 				<!-- /.box -->
 			</div>
@@ -306,17 +284,6 @@
 						<!-- /.row -->
 					</div>
 					<!-- /.box-body -->
-					<div class="box-footer no-padding">
-						<ul class="nav nav-pills nav-stacked">
-							<li>
-								<a href="#">สูงสุด <span class="pull-right text-red"><i class="fa fa-angle-up"></i> {{ number_format(0) }}</span></a>
-							</li>
-							<li>
-								<a href="#">ต่ำสุด <span class="pull-right text-green"><i class="fa fa-angle-down"></i> {{ number_format(0) }}</span></a>
-							</li>
-						</ul>
-					</div>
-					<!-- /.footer -->
 				</div>
 				<!-- /.box -->
 			</div>
@@ -349,17 +316,6 @@
 						<!-- /.row -->
 					</div>
 					<!-- /.box-body -->
-					<div class="box-footer no-padding">
-						<ul class="nav nav-pills nav-stacked">
-							<li>
-								<a href="#">สูงสุด <span class="pull-right text-red"><i class="fa fa-angle-up"></i> {{ number_format(0) }}</span></a>
-							</li>
-							<li>
-								<a href="#">ต่ำสุด <span class="pull-right text-green"><i class="fa fa-angle-down"></i> {{ number_format(0) }}</span></a>
-							</li>
-						</ul>
-					</div>
-					<!-- /.footer -->
 				</div>
 				<!-- /.box -->
 			</div>
@@ -439,7 +395,15 @@ function createBarChart(id, type, options) {
 /*  Line chart for patient per month */
 function createLineChart1(id, type, options) {
 	var data = {
-		labels: ['มค.', 'กพ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'],
+		labels: [
+			@for ($i=1; $i<=count($monthLabel); $i++)
+				@if ($i != count($monthLabel))
+					{!! "'".$monthLabel[$i]."'," !!}
+				@else
+					{!! "'".$monthLabel[$i]."'" !!}
+				@endif
+			@endfor
+		],
 		datasets: [{
 			label: 'จำนวน',
 			fill: false,
@@ -461,7 +425,15 @@ function createLineChart1(id, type, options) {
 /*  Line chart for case dead per month */
 function createLineChart2(id, type, options) {
 	var data = {
-		labels: ['มค.', 'กพ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'],
+		labels: [
+			@for ($i=1; $i<=count($monthLabel); $i++)
+				@if ($i != count($monthLabel))
+					{!! "'".$monthLabel[$i]."'," !!}
+				@else
+					{!! "'".$monthLabel[$i]."'" !!}
+				@endif
+			@endfor
+		],
 		datasets: [{
 			label: 'จำนวน',
 			fill: false,

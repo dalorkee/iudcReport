@@ -8,6 +8,8 @@ class dashboardController extends DiseasesController
 {
 	public function index(Request $request) {
 		$dsgroups = $this->getDsNameByDsGroup();
+		$ageRange = parent::setAgeRange();
+		$monthLabel = parent::setMonthLabel();
 		$thProv = $this->getThProvince();
 		if (isset($request) && isset($request->year)) {
 			$countPatientBySex = $this->getCountPatientBySex($request->year, $request->disease);
@@ -34,7 +36,9 @@ class dashboardController extends DiseasesController
 				'cpPerMonth'=>$countPatientPerMonth,
 				'cDeadPerMonth'=>$countCaseDeadPerMonth,
 				'cpPerWeek'=>$countPatientPerWeek,
-				'selectDs'=>$selectDs
+				'selectDs'=>$selectDs,
+				'ageRange' => $ageRange,
+				'monthLabel' => $monthLabel
 			]
 		);
 	}

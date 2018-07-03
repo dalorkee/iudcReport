@@ -113,4 +113,37 @@ class DiseasesController extends Controller
 		->toArray();
 		return $result;
 	}
+
+	public function setAgeRange() {
+		$range = array(
+			'g1'=>'<5',
+			'g2'=>'5-9',
+			'g3'=>'10-14',
+			'g4'=>'15-24',
+			'g5'=>'25-34',
+			'g6'=>'35-44',
+			'g7'=>'45-54',
+			'g8'=>'55-64',
+			'g9'=>'65>'
+		);
+		return $range;
+	}
+
+	public function setMonthLabel() {
+		$lblMonth = array(
+			1=>'มค.',
+			2=>'กพ.',
+			3=>'มี.ค.',
+			4=>'เม.ย.',
+			5=>'พ.ค.',
+			6=>'มิ.ย.',
+			7=>'ก.ค.',
+			8=>'ส.ค.',
+			9=>'ก.ย.',
+			10=>'ต.ค.',
+			11=>'พ.ย.',
+			12=>'ธ.ค.'
+		);
+		return $lblMonth;
+	}
 }
