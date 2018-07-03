@@ -25,18 +25,18 @@ class dashboardController extends DiseasesController
 			$selectDs = array('disease'=>78, 'selectYear'=>'2018', 'selected'=>false);
 		}
 
-		return view('
-					frontend.dashboard', [
-						'dsgroups' => $dsgroups,
-						'thProv' => $thProv,
-						'cpBySex' => $countPatientBySex,
-						'cpByAge' => $countPatientByAgegroup,
-						'cpPerMonth' => $countPatientPerMonth,
-						'cDeadPerMonth' => $countCaseDeadPerMonth,
-						'cpPerWeek' => $countPatientPerWeek,
-						'selectDs' => $selectDs
-					]
-				);
+		return view('frontend.dashboard',
+			[
+				'dsgroups'=>$dsgroups,
+				'thProv'=>$thProv,
+				'cpBySex'=>$countPatientBySex,
+				'cpByAge'=>$countPatientByAgegroup,
+				'cpPerMonth'=>$countPatientPerMonth,
+				'cDeadPerMonth'=>$countCaseDeadPerMonth,
+				'cpPerWeek'=>$countPatientPerWeek,
+				'selectDs'=>$selectDs
+			]
+		);
 	}
 
 	public function getCountPatientBySex($tblYear, $diseaseCode) {

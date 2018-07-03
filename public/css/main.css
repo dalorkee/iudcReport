@@ -106,4 +106,10 @@ table.iudc-tbl tr:first-child th:last-child,
 table.iudc-tbl tr td:last-child {
   border-right: none; }
 
+.sidebar-menu {
+  line-height: 1.20em !important; }
+
+.nav-level2 a {
+  font-size: 1em !important; }
+
 /*# sourceMappingURL=main.css.map */

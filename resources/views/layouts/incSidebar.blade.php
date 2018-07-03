@@ -2,7 +2,7 @@
 <section class="sidebar">
 	<!-- sidebar menu: : style can be found in sidebar.less -->
 	<ul class="sidebar-menu" data-widget="tree">
-		<li class="header">เมนูหลัก</li>
+		<li class="header" style="font-size:1em;color:#fff;">เมนูหลัก</li>
 		<li class="active treeview">
 			<a href="#">
 				<i class="fa fa-tachometer" aria-hidden="true"></i> <span>Dashboard</span>
@@ -37,10 +37,28 @@
 				<li><a href="{{ route('export-population.main') }}"><i class="fa fa-circle-o text-aqua"></i> ประชากร</a></li>
 			</ul>
 		</li>
-		<li>
-			<a href="{{ route('report') }}">
-				<i class="fa fa-area-chart"></i> <span>รายงาน</span>
+		<li class="treeview">
+			<a href="#">
+				<i class="fa fa-pie-chart"></i>
+				<span>รายงาน</span>
+				<span class="pull-right-container">
+					<i class="fa fa-angle-left pull-right"></i>
+				</span>
 			</a>
+			<ul class="treeview-menu nav-level2">
+				<li><a href="{{ route('report') }}"><i class="fa fa-caret-right"></i> รายงาน1</a></li>
+				<li class="treeview">
+					<a href="#"><i class="fa fa-caret-right"></i> รายงานรายสัปดาห์
+						<span class="pull-right-container">
+							<i class="fa fa-angle-left pull-right"></i>
+						</span>
+					</a>
+					<ul class="treeview-menu">
+						<li><a href="{{ route('top10DsPt') }}">- 10 อันดับโรค</a></li>
+						<li><a href="#">- รายสัปดาห์</a></li>
+					</ul>
+				</li>
+			</ul>
 		</li>
 	</ul>
 </section>

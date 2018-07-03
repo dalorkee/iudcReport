@@ -103,4 +103,14 @@ class DiseasesController extends Controller
 	public function thProvince() {
 		return $result = DB::table('c_province')->get()->toArray();
 	}
+
+	public function top10DiseasePatient($year=null) {
+		$result = DB::table('ur_count_all')
+		->where('c_year', $year)
+		->orderBy('total', 'desc')
+		->limit(10)
+		->get()
+		->toArray();
+		return $result;
+	}
 }
