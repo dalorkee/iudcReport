@@ -4,7 +4,7 @@
 	<ul class="sidebar-menu" data-widget="tree">
 		<li class="header" style="font-size:1em;color:#fff;">เมนูหลัก</li>
 		<li class="active treeview">
-			<a href="#">
+			<a href="{{ route('dashboard') }}">
 				<i class="fa fa-tachometer" aria-hidden="true"></i> <span>Dashboard</span>
 			</a>
 		</li>

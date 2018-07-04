@@ -47,7 +47,6 @@ class DiseasesController extends Controller
 					->count();
 				break;
 		}
-		// dd($count);
 		return $count;
 	}
 
@@ -145,5 +144,21 @@ class DiseasesController extends Controller
 			12=>'ธ.ค.'
 		);
 		return $lblMonth;
+	}
+
+	public function totalPopByAgegroup($year=0) {
+		$result = DB::table('pop_urban_age_group')
+		->where('year_', $year)
+		->get()
+		->toArray();
+		return $result;
+	}
+
+	public function getLastWeek($year=0) {
+		$result = DB::table('ur506_'.$year)
+		->select(DB::raw('MAX(week_no) AS lastweek'))
+		->get()
+		->toArray();
+		return $result;
 	}
 }

@@ -185,7 +185,7 @@
 								<a href="#">อัตราสูงสุดช่วงอายุ <span class="pull-right text-red"> {{ $ageRange[array_search(max($cpByAge), $cpByAge)] }}</span></a>
 							</li>
 							<li>
-								<a href="#">จำนวน <span class="pull-right text-green"> {{ number_format(max(array_unique($cpByAge))) }}</span></a>
+								<a href="#">อัตรา <span class="pull-right text-green"> {{ number_format(max(array_unique($cpByAge)), 2) }}</span></a>
 							</li>
 						</ul>
 					</div>
@@ -373,7 +373,7 @@ function createBarChart(id, type, options) {
 	var data = {
 		labels: ['<5', '5-9', '10-14', '15-24', '25-34', '35-44', '45-54', '55-64', '65>'],
 		datasets: [{
-			label: 'จำนวน',
+			label: 'อัตรา',
 			data: [
 				@foreach ($cpByAge as $val)
 					{!! $val.',' !!}
@@ -461,7 +461,7 @@ function createLineChart3(id, type, options) {
 			@endfor
 		],
 		datasets: [{
-			label: 'สัปดาห์',
+			label: 'จำนวน',
 			fill: false,
 			borderColor: '#FF7900',
 			backgroundColor: '#FFFFFF',
