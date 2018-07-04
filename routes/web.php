@@ -23,7 +23,7 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 /* index */
 Route::get('/', 'DashboardController@index')->name('dashboard');
-Route::get('/dashboard', 'DashboardController@index');
+Route::get('/dbd', 'DashboardController@index')->name('dbd');
 
 /* population */
 Route::get('/population', 'PopulationController@index')->name('population');

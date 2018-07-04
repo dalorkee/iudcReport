@@ -3,8 +3,8 @@
 	<!-- sidebar menu: : style can be found in sidebar.less -->
 	<ul class="sidebar-menu" data-widget="tree">
 		<li class="header" style="font-size:1em;color:#fff;">เมนูหลัก</li>
-		<li class="active treeview">
-			<a href="{{ route('dashboard') }}">
+		<li>
+			<a href="{{ route('dbd') }}">
 				<i class="fa fa-tachometer" aria-hidden="true"></i> <span>Dashboard</span>
 			</a>
 		</li>
@@ -46,17 +46,8 @@
 				</span>
 			</a>
 			<ul class="treeview-menu nav-level2">
-				<li><a href="{{ route('report') }}"><i class="fa fa-caret-right"></i> รายงาน1</a></li>
 				<li class="treeview">
-					<a href="#"><i class="fa fa-caret-right"></i> รายงานรายสัปดาห์
-						<span class="pull-right-container">
-							<i class="fa fa-angle-left pull-right"></i>
-						</span>
-					</a>
-					<ul class="treeview-menu">
-						<li><a href="{{ route('top10DsPt') }}">- 10 อันดับโรค</a></li>
-						<li><a href="#">- รายสัปดาห์</a></li>
-					</ul>
+					<a href="{{ route('top10DsPt') }}">- 10 อันดับโรค</a>
 				</li>
 			</ul>
 		</li>
