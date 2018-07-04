@@ -13,14 +13,17 @@
 	$total_group_of_disease = count($get_group_of_disease);
 	$current_year =  (isset($_GET['year']))? $_GET['year']: date('Y');
 	$current_year_th = $current_year+543;
-	//dd($current_year);
+
+	$total_all_pop = PopulationController::all_population($current_year);
+	//dd($total_all_pop);
+//	echo $total_all_pop;
 ?>
 <!-- Content Header (Page header) -->
 <section class="content-header">
-	<h1>รายงานประชากรประจำปี {{ $current_year_th }}</h1>
+	<h1>รายงาน.....ประจำปี {{ $current_year_th }}</h1>
 	<ol class="breadcrumb">
 		<li><a href="{{ route('population') }}"><i class="fa fa-home"></i> หนัาหลัก</a></li>
-		<li class="active">รายงานประชากรประจำปี {{ $current_year_th }}</li>
+		<li class="active">รายงาน....ประจำปี {{ $current_year_th }}</li>
 	</ol>
 </section>
 <!-- Main content -->
@@ -76,10 +79,10 @@
 							<tr>
 								<td><a href="showbydisease?disease_code={{ $total_by_disease['DISEASE'] }}&year={{ $current_year }}"><?php echo $total_by_disease['DISNAME'];?></a></td>
 								<td><?php echo number_format($total_by_disease['total']);?></td>
+								<td><?php $total_sick = $total_by_disease['total']*100000/$total_all_pop; echo number_format($total_sick,2);?></td>
 								<td><?php echo number_format($total_by_disease['totald']);?></td>
-								<td><?php echo number_format($total_by_disease['total']);?></td>
-								<td><?php echo number_format($total_by_disease['totald']);?></td>
-								<td>ddd</td>
+								<td><?php $total_death = $total_by_disease['totald']*100000/$total_all_pop; echo number_format($total_death,2);?></td>
+								<td><?php if($total_by_disease['totald']>'0') { $total_ratio = ($total_by_disease['totald']*100)/$total_by_disease['total']; echo number_format($total_ratio,2);}else{ echo "0";}?></td>
 							</tr>
 							<?php $j++; endforeach; ?>
 						</tbody>

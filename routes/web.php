@@ -28,7 +28,8 @@ Route::get('/', 'DashboardController@index')->name('dashboard');
 Route::get('/population', 'PopulationController@index')->name('population');
 /* view by disease */
 Route::get('showbydisease','PopulationController@ShowByDisease')->name('showbydisease');
-// Route::get('showbydisease/{disease_code}/{year}','PopulationController@ShowByDisease')->where(['disease_code' => '[0-9]+','year' => '[0-9]+']);
+Route::get('showbydisease_xls','PopulationController@ShowByDisease_Export')->name('export_total_disease');
+//Route::get('showbydisease/{disease_code}/{year}','PopulationController@ShowByDisease')->where(['disease_code' => '[0-9]+','year' => '[0-9]+'])->name('export_total_disease');
 /* export xls From disease name and year */
 Route::get('export-csv', 'ExportController@export_by_disease')->name('export.form');
 Route::post('exportbydisease','ExportController@get_files_export_by_disease')->name('exportbydisease');

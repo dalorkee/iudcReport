@@ -204,43 +204,103 @@ class ExportController extends Controller
 
         $select_year = $request->select_year;
         $dpc_th_name = Controller::get_pop_dpc_nameth();
-        $dpc_code = Controller::get_pop_dpc($request->dpc_code);
-        $query = DB::table('pop_urban_sex')
-  				->select(DB::raw('sum(pop_urban_sex.male) as male , sum(pop_urban_sex.female) as female , c_province.prov_name as provincename,pop_urban_sex.prov_code'))
-          ->leftjoin('c_province','pop_urban_sex.prov_code','=','c_province.prov_code')
-  				->whereIn('pop_urban_sex.prov_code', $dpc_code)
-          ->where('pop_urban_sex.pop_year','=',$select_year)
-  				->groupBy(DB::raw('pop_urban_sex.prov_code'))
-          ->orderBy('pop_urban_sex.prov_code','ASC')
-  				->get();
 
-        if(count($query)<1){
-            dd('No Record');
+
+        if($request->dpc_code=='dpc99'){
+
+          //dd('fdfdfdf');
+          $data[] = array('DPC','MALE','FEMALE');
+          $array_dpc_code_group = Controller::get_pop_dpc_group();
+
+          for($i=1; $i <= count($array_dpc_code_group); $i++ ){
+            $num_padded = 'dpc'.sprintf("%02d", $i);
+            //var_dump($array_dpc_code_group[$num_padded]);
+            $arr_prov_id = $array_dpc_code_group[$num_padded];
+            $query[$num_padded] = DB::table('pop_urban_sex')
+              ->select(DB::raw('sum(pop_urban_sex.male) as male , sum(pop_urban_sex.female) as female'))
+              ->leftjoin('c_province','pop_urban_sex.prov_code','=','c_province.prov_code')
+              ->whereIn('pop_urban_sex.prov_code', $arr_prov_id)
+              ->where('pop_urban_sex.pop_year','=',$select_year)
+              ->get()->toArray();
+          }
+
+
+          if(count($query)<1){
+              dd('No Record');
+          }else{
+
+            foreach ($query as $key => $value){
+              $data[] = array('DPC' => $dpc_th_name[$key],'MALE' => (int)$value['0']->male,'FEMALE' => (int)$value['0']->female);
+            }
+
+            //$data[] = array('Total');
+            //filename
+            $year = $select_year+543;
+            $filename = 'ป.จำแนกตามเพศรวมทุก สคร.-ปี'.$year;
+            //sheetname
+            $data2 = 'ป.จำแนกตามเพศรวมทุก สคร.-ปี'.$year;
+
+            Excel::create($filename, function($excel) use($data,$data2) {
+                // Set the title
+                $excel->setTitle('UCD-Report');
+                // Chain the setters
+                $excel->setCreator('Talek Team')->setCompany('Talek Team');
+                //description
+                $excel->setDescription('สปคม.');
+                $excel->sheet($data2, function ($sheet) use ($data) {
+                     $sheet->fromArray($data, null, 'A1', false, false);
+                     //$sheet->setCellValue('B15','=SUM(B2:B14)');
+                     //$sheet->setCellValue('C15','=SUM(C2:C14)');
+                 });
+             })->download('xlsx');
+            //dd($data);
+          }
+
+
         }else{
+              $dpc_code = Controller::get_pop_dpc($request->dpc_code);
+              $query = DB::table('pop_urban_sex')
+        				->select(DB::raw('sum(pop_urban_sex.male) as male , sum(pop_urban_sex.female) as female , c_province.prov_name as provincename,pop_urban_sex.prov_code'))
+                ->leftjoin('c_province','pop_urban_sex.prov_code','=','c_province.prov_code')
+        				->whereIn('pop_urban_sex.prov_code', $dpc_code)
+                ->where('pop_urban_sex.pop_year','=',$select_year)
+        				->groupBy(DB::raw('pop_urban_sex.prov_code'))
+                ->orderBy('pop_urban_sex.prov_code','ASC')
+        				->get();
 
-        $data[] = array('ID','PROVINCE','MALE','FEMALE');
+              if(count($query)<1){
+                  dd('No Record');
+              }else{
+              $data[] = array('ID','PROVINCE','MALE','FEMALE');
 
-        foreach ($query as $value){
-          $data[] = array('ID' => $value->prov_code,'PROVINCE' => $value->provincename,'MALE' => (int)$value->male,'FEMALE' => (int)$value->female);
+              foreach ($query as $value){
+                $data[] = array('ID' => $value->prov_code,'PROVINCE' => $value->provincename,'MALE' => (int)$value->male,'FEMALE' => (int)$value->female);
+              }
+              //filename
+              $year = $select_year+543;
+              $filename = 'จำนวนประชากรจำแนกตามเพศ '.$dpc_th_name[$request->dpc_code].'-ปี'.$year;
+              //sheetname
+              $data2 = $dpc_th_name[$request->dpc_code].'ปี'.$year;
+
+              Excel::create($filename, function($excel) use($data,$data2) {
+                  // Set the title
+                  $excel->setTitle('UCD-Report');
+                  // Chain the setters
+                  $excel->setCreator('Talek Team')->setCompany('Talek Team');
+                  //description
+                  $excel->setDescription('สปคม.');
+                  $excel->sheet($data2, function ($sheet) use ($data) {
+                       $sheet->fromArray($data, null, 'A1', false, false);
+                   });
+               })->download('xlsx');
+            }
         }
-        //filename
-        $year = $select_year+543;
-        $filename = 'จำนวนประชากรจำแนกตามเพศ '.$dpc_th_name[$request->dpc_code].'-ปี'.$year;
-        //sheetname
-        $data2 = $dpc_th_name[$request->dpc_code].'ปี'.$year;
 
-        Excel::create($filename, function($excel) use($data,$data2) {
-            // Set the title
-            $excel->setTitle('UCD-Report');
-            // Chain the setters
-            $excel->setCreator('Talek Team')->setCompany('Talek Team');
-            //description
-            $excel->setDescription('สปคม.');
-            $excel->sheet($data2, function ($sheet) use ($data) {
-                 $sheet->fromArray($data, null, 'A1', false, false);
-             });
-         })->download('xlsx');
-      }
+
+
+
+
+
     }
 
     public function post_population_province(Request $request){

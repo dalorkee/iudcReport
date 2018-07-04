@@ -19,7 +19,7 @@ $current_year_th = $current_year+543;
 <ol class="breadcrumb">
 	<li><a href="{{ route('dashboard') }}"><i class="fa fa-home"></i> หน้าหลัก</a></li>
 	<li><a href="{{ route('dashboard') }}?year=<?php echo $current_year; ?>">ข้อมูลปี <?php echo $current_year_th; ?></a></li>
-	<li class="active"><a href="showbydisease?disease_code={{ $disease_code }}&year={{ $current_year }}"> <?php echo $get_list_disease[$disease_code]; ?></a></li>
+	<li class="active"><a href="showbydisease?disease_code={{ $disease_code }}&year={{ $current_year }}"> โรค <?php echo $get_list_disease[$disease_code]; ?></a></li>
 </ol>
 </section>
 <!-- Main content -->
@@ -61,6 +61,9 @@ $current_year_th = $current_year+543;
 							<ul class="pagination">
 								{!! $datas_province->appends(Request::all())->render() !!}
 							</ul>
+					</div>
+					<div class="text-right">
+						<a type="button" href="{{ route('export_total_disease') }}?disease_code={{$disease_code}}&year={{$current_year}}" class="btn btn-info pull-right">ส่งออกข้อมูล</a>
 					</div>
 			  </div>
 		</div>

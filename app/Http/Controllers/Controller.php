@@ -101,53 +101,84 @@ class Controller extends BaseController
                           "all-region" => "รวมทุกภาค");
         return $array_name_th;
     }
+    //DPC code group
+    public static function get_pop_dpc_group(){
+
+          $array_dpc_code['dpc01'] = array('50','51','52','54','55','56','57','58');
+
+          $array_dpc_code['dpc02'] = array('53','63','64','65','67');
+
+          $array_dpc_code['dpc03'] = array('18','60','61','62','66');
+
+          $array_dpc_code['dpc04'] = array('12','13','14','15','16','17','19','26');
+
+          $array_dpc_code['dpc05'] = array('70','71','72','73','74','75','76','77');
+
+          $array_dpc_code['dpc06'] = array('11','20','21','22','23','24','25','27');
+
+          $array_dpc_code['dpc07'] = array('40','44','45','46');
+
+          $array_dpc_code['dpc08'] = array('38','39','41','42','43','47','48');
+
+          $array_dpc_code['dpc09'] = array('30','31','32','36');
+
+          $array_dpc_code['dpc10'] = array('33','34','35','37','49');
+
+          $array_dpc_code['dpc11'] = array('80','81','82','83','84','85','86');
+
+          $array_dpc_code['dpc12'] = array('90','91','92','93','94','95','96');
+
+          $array_dpc_code['dpc13'] = array('10');
+
+      return $array_dpc_code;
+    }
     //DPC code
     public static function get_pop_dpc($dpc_code){
-      if($dpc_code=='01'){
+      if($dpc_code=='dpc01'){
           $array_dpc_code = array('50','51','52','54','55','56','57','58');
-      }elseif($dpc_code=='02'){
+      }elseif($dpc_code=='dpc02'){
           $array_dpc_code = array('53','63','64','65','67');
-      }elseif($dpc_code=='03'){
+      }elseif($dpc_code=='dpc03'){
           $array_dpc_code = array('18','60','61','62','66');
-      }elseif($dpc_code=='04'){
+      }elseif($dpc_code=='dpc04'){
          $array_dpc_code = array('12','13','14','15','16','17','19','26');
-      }elseif($dpc_code=='05'){
+      }elseif($dpc_code=='dpc05'){
          $array_dpc_code = array('70','71','72','73','74','75','76','77');
-      }elseif($dpc_code=='06'){
+      }elseif($dpc_code=='dpc06'){
          $array_dpc_code = array('11','20','21','22','23','24','25','27');
-      }elseif($dpc_code=='07'){
+      }elseif($dpc_code=='dpc07'){
          $array_dpc_code = array('40','44','45','46');
-      }elseif($dpc_code=='08'){
+      }elseif($dpc_code=='dpc08'){
          $array_dpc_code = array('38','39','41','42','43','47','48');
-      }elseif($dpc_code=='09'){
+      }elseif($dpc_code=='dpc09'){
          $array_dpc_code = array('30','31','32','36');
-      }elseif($dpc_code=='10'){
+      }elseif($dpc_code=='dpc10'){
          $array_dpc_code = array('33','34','35','37','49');
-      }elseif($dpc_code=='11'){
+      }elseif($dpc_code=='dpc11'){
          $array_dpc_code = array('80','81','82','83','84','85','86');
-      }elseif($dpc_code=='12'){
+      }elseif($dpc_code=='dpc12'){
          $array_dpc_code = array('90','91','92','93','94','95','96');
-      }elseif($dpc_code=='13'){
+      }elseif($dpc_code=='dpc13'){
          $array_dpc_code = array('10');
       }
       return $array_dpc_code;
     }
     //DCP Name
     public static function get_pop_dpc_nameth(){
-      return array('01' => 'สคร.1',
-                   '02' => 'สคร.2',
-                   '03' => 'สคร.3',
-                   '04' => 'สคร.4',
-                   '05' => 'สคร.5',
-                   '06' => 'สคร.6',
-                   '07' => 'สคร.7',
-                   '08' => 'สคร.8',
-                   '09' => 'สคร.9',
-                   '10' => 'สคร.10',
-                   '11' => 'สคร.11',
-                   '12' => 'สคร.12',
-                   '13' => 'สปคม.',
-                   '99' => 'รวมทุก สคร.'
+      return array('dpc01' => 'สคร.1',
+                   'dpc02' => 'สคร.2',
+                   'dpc03' => 'สคร.3',
+                   'dpc04' => 'สคร.4',
+                   'dpc05' => 'สคร.5',
+                   'dpc06' => 'สคร.6',
+                   'dpc07' => 'สคร.7',
+                   'dpc08' => 'สคร.8',
+                   'dpc09' => 'สคร.9',
+                   'dpc10' => 'สคร.10',
+                   'dpc11' => 'สคร.11',
+                   'dpc12' => 'สคร.12',
+                   'dpc13' => 'สปคม.',
+                   'dpc99' => 'รวมทุก สคร.'
                  );
     }
 

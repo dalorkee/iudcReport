@@ -3,6 +3,10 @@
 <?php
 use \App\Http\Controllers\Controller as Controller;
 $array_dpc_th_name = Controller::get_pop_dpc_nameth();
+
+
+$array_dpc_code_group = Controller::get_pop_dpc_group();
+ //dd($array_dpc_code_group);
 ?>
 <!-- Content Header (Page header) -->
 <section class="content-header">
