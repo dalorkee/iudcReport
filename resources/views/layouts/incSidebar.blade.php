@@ -46,7 +46,7 @@
 				</span>
 			</a>
 			<ul class="treeview-menu nav-level2">
-				<li class="treeview">
+				<li>
 					<a href="{{ route('top10DsPt') }}">- 10 อันดับโรค</a>
 				</li>
 			</ul>

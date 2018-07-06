@@ -56,31 +56,31 @@ class dashboardController extends DiseasesController
 		if ($popTotalByAgegroup != 0) {
 			/* gruop1 */
 			$g1 = parent::countPatientByAgegroup($tblYear, $diseaseCode, array('<', 5));
-			$g1 = number_format((((int)$g1*100000)/(int)$popTotalByAgegroup[0]->age_0_4), 2);
+			$g1 = number_format((((int)$g1*100000)/(int)$popTotalByAgegroup[0]->age_0_4), 2, '.', '');
 			/* group2 */
 			$g2 = parent::countPatientByAgegroup($tblYear, $diseaseCode, array('between', 5, 9));
-			$g2 = number_format((((int)$g2*100000)/(int)$popTotalByAgegroup[0]->age_5_9), 2);
+			$g2 = number_format((((int)$g2*100000)/(int)$popTotalByAgegroup[0]->age_5_9), 2, '.', '');
 			/* group3 */
 			$g3 = parent::countPatientByAgegroup($tblYear, $diseaseCode, array('between', 10, 14));
-			$g3 = number_format((((int)$g3*100000)/(int)$popTotalByAgegroup[0]->age_10_14), 2);
+			$g3 = number_format((((int)$g3*100000)/(int)$popTotalByAgegroup[0]->age_10_14), 2, '.', '');
 			/* group4 */
 			$g4 = parent::countPatientByAgegroup($tblYear, $diseaseCode, array('between', 15, 24));
-			$g4 = number_format((((int)$g4*100000)/(int)$popTotalByAgegroup[0]->age_15_24), 2);
+			$g4 = number_format((((int)$g4*100000)/(int)$popTotalByAgegroup[0]->age_15_24), 2, '.', '');
 			/* group5 */
 			$g5 = parent::countPatientByAgegroup($tblYear, $diseaseCode, array('between', 25, 34));
-			$g5 = number_format((((int)$g5*100000)/(int)$popTotalByAgegroup[0]->age_25_34), 2);
+			$g5 = number_format((((int)$g5*100000)/(int)$popTotalByAgegroup[0]->age_25_34), 2, '.', '');
 			/* group6 */
 			$g6 = parent::countPatientByAgegroup($tblYear, $diseaseCode, array('between', 35, 44));
-			$g6 = number_format((((int)$g6*100000)/(int)$popTotalByAgegroup[0]->age_35_44), 2);
+			$g6 = number_format((((int)$g6*100000)/(int)$popTotalByAgegroup[0]->age_35_44), 2, '.', '');
 			/* group7 */
 			$g7 = parent::countPatientByAgegroup($tblYear, $diseaseCode, array('between', 45, 54));
-			$g7 = number_format((((int)$g7*100000)/(int)$popTotalByAgegroup[0]->age_45_54), 2);
 			/* group8 */
+			$g7 = number_format((((int)$g7*100000)/(int)$popTotalByAgegroup[0]->age_45_54), 2, '.', '');
 			$g8 = parent::countPatientByAgegroup($tblYear, $diseaseCode, array('between', 55, 64));
-			$g8 = number_format((((int)$g8*100000)/(int)$popTotalByAgegroup[0]->age_55_64), 2);
+			$g8 = number_format((((int)$g8*100000)/(int)$popTotalByAgegroup[0]->age_55_64), 2, '.', '');
 			/* group9 */
 			$g9 = parent::countPatientByAgegroup($tblYear, $diseaseCode, array('>', 64));
-			$g9 = number_format((((int)$g9*100000)/(int)$popTotalByAgegroup[0]->age_65_up), 2);
+			$g9 = number_format((((int)$g9*100000)/(int)$popTotalByAgegroup[0]->age_65_up), 2, '.', '');
 			$result = array('g1'=>$g1, 'g2'=>$g2, 'g3'=>$g3, 'g4'=>$g4, 'g5'=>$g5, 'g6'=>$g6, 'g7'=>$g7, 'g8'=>$g8, 'g9'=>$g9);
 		} else {
 			$result = array('g1'=>0, 'g2'=>0, 'g3'=>0, 'g4'=>0, 'g5'=>0, 'g6'=>0, 'g7'=>0, 'g8'=>0, 'g9'=>0);

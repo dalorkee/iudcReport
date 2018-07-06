@@ -148,6 +148,7 @@ class DiseasesController extends Controller
 
 	public function totalPopByAgegroup($year=0) {
 		$result = DB::table('pop_urban_age_group')
+		->select('age_0_4', 'age_5_9', 'age_10_14', 'age_15_24', 'age_25_34', 'age_35_44', 'age_45_54', 'age_55_64', 'age_65_up' )
 		->where('year_', $year)
 		->get()
 		->toArray();

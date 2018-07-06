@@ -103,42 +103,20 @@
 /*  bar chart1 */
 function createBarChart(id, type, options) {
 	var data = {
-		labels: ['x1', 'x2', 'x3', 'x4', 'x5', 'x6', 'x7', 'x8', 'x9', 'x10'],
-		datasets: [{
-			label: 'จำนวน',
-			data: [
-				5, 7, 6, 3, 6, 9, 3, 0, 3, 10
-			],
-			backgroundColor: [
-				@for($i=1; $i<=9; $i++)
-					{!! '"#00A65A"'.',' !!}
-				@endfor
-			]
-		}]
-	};
-	new Chart(document.getElementById(id), {
-		type: type,
-		data: data,
-		options: options
-	});
-}
-/*  bar chart1 */
-function createBarChart(id, type, options) {
-	var data = {
 		labels: [
-			@foreach ($top10DsPt as $val)
-				{!! "'".$val->DISNAME."'," !!}
+			@foreach ($top10DsPt as $key=>$val)
+				{!! "'".$key."'," !!}
 			@endforeach
 		],
 		datasets: [{
-			label: 'จำนวน',
+			label: 'อัตรา',
 			data: [
-				@foreach ($top10DsPt as $val)
-					{!! "'".$val->total."'," !!}
+				@foreach ($top10DsPt as $key=>$val)
+					{!! "'".number_format($val, 2, '.', '' )."'," !!}
 				@endforeach
 			],
 			backgroundColor: [
-				@for($i=1; $i<=9; $i++)
+				@for($i=1; $i<=10; $i++)
 					{!! '"#00A65A"'.',' !!}
 				@endfor
 			]
@@ -168,15 +146,17 @@ $('document').ready(function () {
 		},
 		scales: {
 			yAxes: [{
-				ticks: {
-					beginAtZero: true
-				},
 				scaleLabel: {
 					display: true,
 					labelString: 'อัตราป่วย (ต่อแสน)'
-				}
+				},
+				stacked: true
 			}],
 			xAxes: [{
+				ticks: {
+					beginAtZero: true
+				},
+				stacked: true,
 				barPercentage: .8
 			}]
 		}
