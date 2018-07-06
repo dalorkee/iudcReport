@@ -57,6 +57,14 @@
 						<!-- /.row -->
 					</div>
 					<!-- /.box-body -->
+					<div class="box-footer no-padding">
+						<ul class="nav nav-pills nav-stacked">
+							<li>
+								<a href="#">อัตราป่วยสะสม<span class="hidden-xs hidden-sm">ด้วยโรคที่เฝ้าระวัง</span> 10 อันดับ <span class="hidden-xs hidden-sm">ในพื้นที่เขตเมือง ปี พ.ศ. 2560</span> <span class="pull-right text-red"> {{ '1 ม.ค. - 21 ก.ค. 60' }}</span></a>
+							</li>
+						</ul>
+					</div>
+					<!-- /.footer -->
 				</div>
 				<!-- /.box -->
 			</div>
@@ -87,6 +95,14 @@
 						<!-- /.row -->
 					</div>
 					<!-- /.box-body -->
+					<div class="box-footer no-padding">
+						<ul class="nav nav-pills nav-stacked">
+							<li>
+								<a href="#">อัตราป่วย<span class="hidden-xs hidden-sm">ด้วยโรคที่เฝ้าระวัง</span> 10 อันดับ <span class="hidden-xs hidden-sm">ในพื้นที่เขตเมือง ปี พ.ศ. 2560</span> <span class="pull-right text-red"> {{ 'สัปดาห์ที่ 36, 25 ก.ค. - 31 ก.ค. 60' }}</span></a>
+							</li>
+						</ul>
+					</div>
+					<!-- /.footer -->
 				</div>
 				<!-- /.box -->
 			</div>
@@ -104,14 +120,14 @@
 function createBarChart(id, type, options) {
 	var data = {
 		labels: [
-			@foreach ($top10DsPt as $key=>$val)
+			@foreach ($top10DsPtYear as $key=>$val)
 				{!! "'".$key."'," !!}
 			@endforeach
 		],
 		datasets: [{
 			label: 'อัตรา',
 			data: [
-				@foreach ($top10DsPt as $key=>$val)
+				@foreach ($top10DsPtYear as $key=>$val)
 					{!! "'".number_format($val, 2, '.', '' )."'," !!}
 				@endforeach
 			],

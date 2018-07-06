@@ -103,13 +103,26 @@ class DiseasesController extends Controller
 		return $result = DB::table('c_province')->get()->toArray();
 	}
 
-	public function top10DiseasePatient($year=null) {
+	public function top10DiseasePatientYear($year=0) {
 		$result = DB::table('ur_count_all')
 		->where('c_year', $year)
 		->orderBy('total', 'desc')
 		->limit(10)
 		->get()
 		->toArray();
+		return $result;
+	}
+
+	public function top10DiseasePatientWeek($tblYear=0, $week=0) {
+		$result =  DB::table('ur506_'.$tblYear)
+		// $result = DB::select('select DISEASE,week_no,sum(if(week_no="" or week_no is not null,1,0)) as total_week from ? where week_no=? group by DISEASE order by sum(if(week_no = "" or week_no is not null,1,0)) desc limit 10', [$tbl,$week]);
+		->select('DISEASE', 'week_no', DB::raw('sum(if(week_no="" or week_no is not null, 1, 0)) as total_week'))
+		->where('week_no', $week)
+		->groupBy('DISEASE')
+		->orderBy(DB::raw('sum(if(week_no="" or week_no is not null,1,0))'), 'desc')
+		->limit(10)
+		->get();
+		dd($result);
 		return $result;
 	}
 

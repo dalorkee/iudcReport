@@ -8,8 +8,14 @@ class WeekReportController extends DiseasesController
 	 * Display a listing of the resource.
 	 * @return \Illuminate\Http\Response
 	*/
-	public function index() {
-		//
+	public function index(Request $request) {
+		$x = parent::top10DiseasePatientWeek('2018', '05');
+		$top10DsPtYear = $this->top10DsPtYear($request);
+		return view('frontend.top10DiseasePatient',
+			[
+				'top10DsPtYear'=>$top10DsPtYear
+			]
+		);
 	}
 
 	/*
@@ -66,7 +72,7 @@ class WeekReportController extends DiseasesController
 		//
 	}
 
-	public function top10DsPt(Request $request) {
+	public function top10DsPtYear($request) {
 		if (isset($request->year) || !empty($request->year)) {
 			$year = $request->year;
 		} else {
@@ -79,17 +85,12 @@ class WeekReportController extends DiseasesController
 			$sumPopTotalByAgegroup += (int)$val;
 		}
 
-		$Rawtop10DsPt = parent::top10DiseasePatient($year);
+		$Rawtop10DsPt = parent::top10DiseasePatientYear($year);
 		$top10DsPt = array();
 		foreach ($Rawtop10DsPt as $val) {
 			$top10DsPt[$val->DISNAME] = (((int)$val->total*100000)/$sumPopTotalByAgegroup);
 		}
-
-		return view('frontend.top10DiseasePatient',
-			[
-				'top10DsPt'=>$top10DsPt
-			]
-		);
+		return $top10DsPt;
 	}
 
 	public function getTotalPopByAgegroup($year=0) {
