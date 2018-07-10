@@ -3,6 +3,12 @@
 <?php
 use \App\Http\Controllers\Controller as Controller;
 $array_provincename_th = Controller::get_provincename_th();
+//add array
+function array_push_assoc($array, $key, $value){
+$array[$key] = $value;
+return $array;
+}
+array_push_assoc($array_provincename_th,'All',"รวมทุกจังหวัด");
 ?>
 <!-- Content Header (Page header) -->
 <section class="content-header">

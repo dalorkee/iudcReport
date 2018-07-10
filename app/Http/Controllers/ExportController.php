@@ -308,12 +308,33 @@ class ExportController extends Controller
             $province_name_th = Controller::get_provincename_th();
             $province_id = $request->provice_code;
             $select_year = $request->select_year;
+            $year = $select_year+543;
+
+            //dd($province_id);
+
+          if($province_id=='All'){
+            $filename = 'จำนวนประชากรจำแนกตามเพศรวมทุกจังหวัด-ปี'.$year;
+            //sheetname
+            $data2 = 'รวมทุกจังหวัด-ปี'.$year;
+            $query = DB::table('pop_urban_sex')
+      				->select(DB::raw('sum(pop_urban_sex.male) as male , sum(pop_urban_sex.female) as female , c_province.prov_name as provincename,pop_urban_sex.prov_code'))
+              ->leftjoin('c_province','pop_urban_sex.prov_code','=','c_province.prov_code')
+              ->where('pop_urban_sex.pop_year','=',$select_year)
+              ->groupBy(DB::raw('pop_urban_sex.prov_code'))
+              ->orderBy('pop_urban_sex.prov_code','ASC')
+      				->get();
+          }else{
+            $filename = 'จำนวนประชากรจำแนกตามเพศ '.$province_name_th[$province_id].'-ปี'.$year;
+            //sheetname
+            $data2 = $province_name_th[$province_id].'ปี'.$year;
             $query = DB::table('pop_urban_sex')
       				->select(DB::raw('sum(pop_urban_sex.male) as male , sum(pop_urban_sex.female) as female , c_province.prov_name as provincename,pop_urban_sex.prov_code'))
               ->leftjoin('c_province','pop_urban_sex.prov_code','=','c_province.prov_code')
       				->where('pop_urban_sex.prov_code','=' ,$province_id)
               ->where('pop_urban_sex.pop_year','=',$select_year)
       				->get();
+          }
+
             if(count($query)<1){
                 dd('No Record');
             }else{
@@ -323,10 +344,10 @@ class ExportController extends Controller
               $data[] = array('ID' => $value->prov_code,'PROVINCE' => $value->provincename,'MALE' => (int)$value->male,'FEMALE' => (int)$value->female);
             }
             //filename
-            $year = $select_year+543;
-            $filename = 'จำนวนประชากรจำแนกตามเพศ '.$province_name_th[$province_id].'-ปี'.$year;
+            //$year = $select_year+543;
+            //$filename = 'จำนวนประชากรจำแนกตามเพศ '.$province_name_th[$province_id].'-ปี'.$year;
             //sheetname
-            $data2 = $province_name_th[$province_id].'ปี'.$year;
+            //$data2 = $province_name_th[$province_id].'ปี'.$year;
 
             Excel::create($filename, function($excel) use($data,$data2) {
                 // Set the title
@@ -382,116 +403,241 @@ class ExportController extends Controller
       $province_name_th = Controller::get_provincename_th();
       $province_id = $request->provice_code;
       $select_year = $request->select_year;
-      $query = DB::table('pop_urban_age')
-        //->select(DB::raw('sum(pop_urban_sex.male) as male , sum(pop_urban_sex.female) as female , c_province.prov_name as provincename,pop_urban_sex.prov_code'))
-        ->select(DB::raw('sum(pop_urban_age.m_age_0) as male_0,sum(pop_urban_age.f_age_0) as female_0,
-                          sum(pop_urban_age.m_age_1) as male_1,sum(pop_urban_age.f_age_1) as female_1,
-                          sum(pop_urban_age.m_age_2) as male_2,sum(pop_urban_age.f_age_2) as female_2,
-                          sum(pop_urban_age.m_age_3) as male_3,sum(pop_urban_age.f_age_3) as female_3,
-                          sum(pop_urban_age.m_age_4) as male_4,sum(pop_urban_age.f_age_4) as female_4,
-                          sum(pop_urban_age.m_age_5) as male_5,sum(pop_urban_age.f_age_5) as female_5,
-                          sum(pop_urban_age.m_age_6) as male_6,sum(pop_urban_age.f_age_6) as female_6,
-                          sum(pop_urban_age.m_age_7) as male_7,sum(pop_urban_age.f_age_7) as female_7,
-                          sum(pop_urban_age.m_age_8) as male_8,sum(pop_urban_age.f_age_8) as female_8,
-                          sum(pop_urban_age.m_age_9) as male_9,sum(pop_urban_age.f_age_9) as female_9,
-                          sum(pop_urban_age.m_age_10) as male_10,sum(pop_urban_age.f_age_10) as female_10,
-                          sum(pop_urban_age.m_age_11) as male_11,sum(pop_urban_age.f_age_11) as female_11,
-                          sum(pop_urban_age.m_age_12) as male_12,sum(pop_urban_age.f_age_12) as female_12,
-                          sum(pop_urban_age.m_age_13) as male_13,sum(pop_urban_age.f_age_13) as female_13,
-                          sum(pop_urban_age.m_age_14) as male_14,sum(pop_urban_age.f_age_14) as female_14,
-                          sum(pop_urban_age.m_age_15) as male_15,sum(pop_urban_age.f_age_15) as female_15,
-                          sum(pop_urban_age.m_age_16) as male_16,sum(pop_urban_age.f_age_16) as female_16,
-                          sum(pop_urban_age.m_age_17) as male_17,sum(pop_urban_age.f_age_17) as female_17,
-                          sum(pop_urban_age.m_age_18) as male_18,sum(pop_urban_age.f_age_18) as female_18,
-                          sum(pop_urban_age.m_age_19) as male_19,sum(pop_urban_age.f_age_19) as female_19,
-                          sum(pop_urban_age.m_age_20) as male_20,sum(pop_urban_age.f_age_20) as female_20,
-                          sum(pop_urban_age.m_age_21) as male_21,sum(pop_urban_age.f_age_21) as female_21,
-                          sum(pop_urban_age.m_age_22) as male_22,sum(pop_urban_age.f_age_22) as female_22,
-                          sum(pop_urban_age.m_age_23) as male_23,sum(pop_urban_age.f_age_23) as female_23,
-                          sum(pop_urban_age.m_age_24) as male_24,sum(pop_urban_age.f_age_24) as female_24,
-                          sum(pop_urban_age.m_age_25) as male_25,sum(pop_urban_age.f_age_25) as female_25,
-                          sum(pop_urban_age.m_age_26) as male_26,sum(pop_urban_age.f_age_26) as female_26,
-                          sum(pop_urban_age.m_age_27) as male_27,sum(pop_urban_age.f_age_27) as female_27,
-                          sum(pop_urban_age.m_age_28) as male_28,sum(pop_urban_age.f_age_28) as female_28,
-                          sum(pop_urban_age.m_age_29) as male_29,sum(pop_urban_age.f_age_29) as female_29,
-                          sum(pop_urban_age.m_age_30) as male_30,sum(pop_urban_age.f_age_30) as female_30,
-                          sum(pop_urban_age.m_age_31) as male_31,sum(pop_urban_age.f_age_31) as female_31,
-                          sum(pop_urban_age.m_age_32) as male_32,sum(pop_urban_age.f_age_32) as female_32,
-                          sum(pop_urban_age.m_age_33) as male_33,sum(pop_urban_age.f_age_33) as female_33,
-                          sum(pop_urban_age.m_age_34) as male_34,sum(pop_urban_age.f_age_34) as female_34,
-                          sum(pop_urban_age.m_age_35) as male_35,sum(pop_urban_age.f_age_35) as female_35,
-                          sum(pop_urban_age.m_age_36) as male_36,sum(pop_urban_age.f_age_36) as female_36,
-                          sum(pop_urban_age.m_age_37) as male_37,sum(pop_urban_age.f_age_37) as female_37,
-                          sum(pop_urban_age.m_age_38) as male_38,sum(pop_urban_age.f_age_38) as female_38,
-                          sum(pop_urban_age.m_age_39) as male_39,sum(pop_urban_age.f_age_39) as female_39,
-                          sum(pop_urban_age.m_age_40) as male_40,sum(pop_urban_age.f_age_40) as female_40,
-                          sum(pop_urban_age.m_age_41) as male_41,sum(pop_urban_age.f_age_41) as female_41,
-                          sum(pop_urban_age.m_age_42) as male_42,sum(pop_urban_age.f_age_42) as female_42,
-                          sum(pop_urban_age.m_age_43) as male_43,sum(pop_urban_age.f_age_43) as female_43,
-                          sum(pop_urban_age.m_age_44) as male_44,sum(pop_urban_age.f_age_44) as female_44,
-                          sum(pop_urban_age.m_age_45) as male_45,sum(pop_urban_age.f_age_45) as female_45,
-                          sum(pop_urban_age.m_age_46) as male_46,sum(pop_urban_age.f_age_46) as female_46,
-                          sum(pop_urban_age.m_age_47) as male_47,sum(pop_urban_age.f_age_47) as female_47,
-                          sum(pop_urban_age.m_age_48) as male_48,sum(pop_urban_age.f_age_48) as female_48,
-                          sum(pop_urban_age.m_age_49) as male_49,sum(pop_urban_age.f_age_49) as female_49,
-                          sum(pop_urban_age.m_age_50) as male_50,sum(pop_urban_age.f_age_50) as female_50,
-                          sum(pop_urban_age.m_age_51) as male_51,sum(pop_urban_age.f_age_51) as female_51,
-                          sum(pop_urban_age.m_age_52) as male_52,sum(pop_urban_age.f_age_52) as female_52,
-                          sum(pop_urban_age.m_age_53) as male_53,sum(pop_urban_age.f_age_53) as female_53,
-                          sum(pop_urban_age.m_age_54) as male_54,sum(pop_urban_age.f_age_54) as female_54,
-                          sum(pop_urban_age.m_age_55) as male_55,sum(pop_urban_age.f_age_55) as female_55,
-                          sum(pop_urban_age.m_age_56) as male_56,sum(pop_urban_age.f_age_56) as female_56,
-                          sum(pop_urban_age.m_age_57) as male_57,sum(pop_urban_age.f_age_57) as female_57,
-                          sum(pop_urban_age.m_age_58) as male_58,sum(pop_urban_age.f_age_58) as female_58,
-                          sum(pop_urban_age.m_age_59) as male_59,sum(pop_urban_age.f_age_59) as female_59,
-                          sum(pop_urban_age.m_age_60) as male_60,sum(pop_urban_age.f_age_60) as female_60,
-                          sum(pop_urban_age.m_age_61) as male_61,sum(pop_urban_age.f_age_61) as female_61,
-                          sum(pop_urban_age.m_age_62) as male_62,sum(pop_urban_age.f_age_62) as female_62,
-                          sum(pop_urban_age.m_age_63) as male_63,sum(pop_urban_age.f_age_63) as female_63,
-                          sum(pop_urban_age.m_age_64) as male_64,sum(pop_urban_age.f_age_64) as female_64,
-                          sum(pop_urban_age.m_age_65) as male_65,sum(pop_urban_age.f_age_65) as female_65,
-                          sum(pop_urban_age.m_age_66) as male_66,sum(pop_urban_age.f_age_66) as female_66,
-                          sum(pop_urban_age.m_age_67) as male_67,sum(pop_urban_age.f_age_67) as female_67,
-                          sum(pop_urban_age.m_age_68) as male_68,sum(pop_urban_age.f_age_68) as female_68,
-                          sum(pop_urban_age.m_age_69) as male_69,sum(pop_urban_age.f_age_69) as female_69,
-                          sum(pop_urban_age.m_age_70) as male_70,sum(pop_urban_age.f_age_70) as female_70,
-                          sum(pop_urban_age.m_age_71) as male_71,sum(pop_urban_age.f_age_71) as female_71,
-                          sum(pop_urban_age.m_age_72) as male_72,sum(pop_urban_age.f_age_72) as female_72,
-                          sum(pop_urban_age.m_age_73) as male_73,sum(pop_urban_age.f_age_73) as female_73,
-                          sum(pop_urban_age.m_age_74) as male_74,sum(pop_urban_age.f_age_74) as female_74,
-                          sum(pop_urban_age.m_age_75) as male_75,sum(pop_urban_age.f_age_75) as female_75,
-                          sum(pop_urban_age.m_age_76) as male_76,sum(pop_urban_age.f_age_76) as female_76,
-                          sum(pop_urban_age.m_age_77) as male_77,sum(pop_urban_age.f_age_77) as female_77,
-                          sum(pop_urban_age.m_age_78) as male_78,sum(pop_urban_age.f_age_78) as female_78,
-                          sum(pop_urban_age.m_age_79) as male_79,sum(pop_urban_age.f_age_79) as female_79,
-                          sum(pop_urban_age.m_age_80) as male_80,sum(pop_urban_age.f_age_80) as female_80,
-                          sum(pop_urban_age.m_age_81) as male_81,sum(pop_urban_age.f_age_81) as female_81,
-                          sum(pop_urban_age.m_age_82) as male_82,sum(pop_urban_age.f_age_82) as female_82,
-                          sum(pop_urban_age.m_age_83) as male_83,sum(pop_urban_age.f_age_83) as female_83,
-                          sum(pop_urban_age.m_age_84) as male_84,sum(pop_urban_age.f_age_84) as female_84,
-                          sum(pop_urban_age.m_age_85) as male_85,sum(pop_urban_age.f_age_85) as female_85,
-                          sum(pop_urban_age.m_age_86) as male_86,sum(pop_urban_age.f_age_86) as female_86,
-                          sum(pop_urban_age.m_age_87) as male_87,sum(pop_urban_age.f_age_87) as female_87,
-                          sum(pop_urban_age.m_age_88) as male_88,sum(pop_urban_age.f_age_88) as female_88,
-                          sum(pop_urban_age.m_age_89) as male_89,sum(pop_urban_age.f_age_89) as female_89,
-                          sum(pop_urban_age.m_age_90) as male_90,sum(pop_urban_age.f_age_90) as female_90,
-                          sum(pop_urban_age.m_age_91) as male_91,sum(pop_urban_age.f_age_91) as female_91,
-                          sum(pop_urban_age.m_age_92) as male_92,sum(pop_urban_age.f_age_92) as female_92,
-                          sum(pop_urban_age.m_age_93) as male_93,sum(pop_urban_age.f_age_93) as female_93,
-                          sum(pop_urban_age.m_age_94) as male_94,sum(pop_urban_age.f_age_94) as female_94,
-                          sum(pop_urban_age.m_age_95) as male_95,sum(pop_urban_age.f_age_95) as female_95,
-                          sum(pop_urban_age.m_age_96) as male_96,sum(pop_urban_age.f_age_96) as female_96,
-                          sum(pop_urban_age.m_age_97) as male_97,sum(pop_urban_age.f_age_97) as female_97,
-                          sum(pop_urban_age.m_age_98) as male_98,sum(pop_urban_age.f_age_98) as female_98,
-                          sum(pop_urban_age.m_age_99) as male_99,sum(pop_urban_age.f_age_99) as female_99,
-                          sum(pop_urban_age.m_age_100) as male_100,sum(pop_urban_age.f_age_100) as female_100,
-                          sum(pop_urban_age.m_age_101) as male_101,sum(pop_urban_age.f_age_101) as female_101
-                          ,c_province.prov_name as provincename,pop_urban_age.prov_code')
-                )
-        ->leftjoin('c_province','pop_urban_age.prov_code','=','c_province.prov_code')
-        ->where('pop_urban_age.prov_code','=' ,$province_id)
-        ->where('pop_urban_age.pop_year','=',$select_year)
-        ->get();
+
+      if($province_id=='All'){
+        //filename
+        $year = $select_year+543;
+        $filename = 'ป.จำแนกตามอายุและเพศทุกจังหวัด-ปี'.$year;
+        //sheetname
+        $data2 = 'อายุและเพศทุกจังหวัด-ปี'.$year;
+        $query = DB::table('pop_urban_age')
+          ->select(DB::raw('sum(pop_urban_age.m_age_0) as male_0,sum(pop_urban_age.f_age_0) as female_0,
+                            sum(pop_urban_age.m_age_1) as male_1,sum(pop_urban_age.f_age_1) as female_1,
+                            sum(pop_urban_age.m_age_2) as male_2,sum(pop_urban_age.f_age_2) as female_2,
+                            sum(pop_urban_age.m_age_3) as male_3,sum(pop_urban_age.f_age_3) as female_3,
+                            sum(pop_urban_age.m_age_4) as male_4,sum(pop_urban_age.f_age_4) as female_4,
+                            sum(pop_urban_age.m_age_5) as male_5,sum(pop_urban_age.f_age_5) as female_5,
+                            sum(pop_urban_age.m_age_6) as male_6,sum(pop_urban_age.f_age_6) as female_6,
+                            sum(pop_urban_age.m_age_7) as male_7,sum(pop_urban_age.f_age_7) as female_7,
+                            sum(pop_urban_age.m_age_8) as male_8,sum(pop_urban_age.f_age_8) as female_8,
+                            sum(pop_urban_age.m_age_9) as male_9,sum(pop_urban_age.f_age_9) as female_9,
+                            sum(pop_urban_age.m_age_10) as male_10,sum(pop_urban_age.f_age_10) as female_10,
+                            sum(pop_urban_age.m_age_11) as male_11,sum(pop_urban_age.f_age_11) as female_11,
+                            sum(pop_urban_age.m_age_12) as male_12,sum(pop_urban_age.f_age_12) as female_12,
+                            sum(pop_urban_age.m_age_13) as male_13,sum(pop_urban_age.f_age_13) as female_13,
+                            sum(pop_urban_age.m_age_14) as male_14,sum(pop_urban_age.f_age_14) as female_14,
+                            sum(pop_urban_age.m_age_15) as male_15,sum(pop_urban_age.f_age_15) as female_15,
+                            sum(pop_urban_age.m_age_16) as male_16,sum(pop_urban_age.f_age_16) as female_16,
+                            sum(pop_urban_age.m_age_17) as male_17,sum(pop_urban_age.f_age_17) as female_17,
+                            sum(pop_urban_age.m_age_18) as male_18,sum(pop_urban_age.f_age_18) as female_18,
+                            sum(pop_urban_age.m_age_19) as male_19,sum(pop_urban_age.f_age_19) as female_19,
+                            sum(pop_urban_age.m_age_20) as male_20,sum(pop_urban_age.f_age_20) as female_20,
+                            sum(pop_urban_age.m_age_21) as male_21,sum(pop_urban_age.f_age_21) as female_21,
+                            sum(pop_urban_age.m_age_22) as male_22,sum(pop_urban_age.f_age_22) as female_22,
+                            sum(pop_urban_age.m_age_23) as male_23,sum(pop_urban_age.f_age_23) as female_23,
+                            sum(pop_urban_age.m_age_24) as male_24,sum(pop_urban_age.f_age_24) as female_24,
+                            sum(pop_urban_age.m_age_25) as male_25,sum(pop_urban_age.f_age_25) as female_25,
+                            sum(pop_urban_age.m_age_26) as male_26,sum(pop_urban_age.f_age_26) as female_26,
+                            sum(pop_urban_age.m_age_27) as male_27,sum(pop_urban_age.f_age_27) as female_27,
+                            sum(pop_urban_age.m_age_28) as male_28,sum(pop_urban_age.f_age_28) as female_28,
+                            sum(pop_urban_age.m_age_29) as male_29,sum(pop_urban_age.f_age_29) as female_29,
+                            sum(pop_urban_age.m_age_30) as male_30,sum(pop_urban_age.f_age_30) as female_30,
+                            sum(pop_urban_age.m_age_31) as male_31,sum(pop_urban_age.f_age_31) as female_31,
+                            sum(pop_urban_age.m_age_32) as male_32,sum(pop_urban_age.f_age_32) as female_32,
+                            sum(pop_urban_age.m_age_33) as male_33,sum(pop_urban_age.f_age_33) as female_33,
+                            sum(pop_urban_age.m_age_34) as male_34,sum(pop_urban_age.f_age_34) as female_34,
+                            sum(pop_urban_age.m_age_35) as male_35,sum(pop_urban_age.f_age_35) as female_35,
+                            sum(pop_urban_age.m_age_36) as male_36,sum(pop_urban_age.f_age_36) as female_36,
+                            sum(pop_urban_age.m_age_37) as male_37,sum(pop_urban_age.f_age_37) as female_37,
+                            sum(pop_urban_age.m_age_38) as male_38,sum(pop_urban_age.f_age_38) as female_38,
+                            sum(pop_urban_age.m_age_39) as male_39,sum(pop_urban_age.f_age_39) as female_39,
+                            sum(pop_urban_age.m_age_40) as male_40,sum(pop_urban_age.f_age_40) as female_40,
+                            sum(pop_urban_age.m_age_41) as male_41,sum(pop_urban_age.f_age_41) as female_41,
+                            sum(pop_urban_age.m_age_42) as male_42,sum(pop_urban_age.f_age_42) as female_42,
+                            sum(pop_urban_age.m_age_43) as male_43,sum(pop_urban_age.f_age_43) as female_43,
+                            sum(pop_urban_age.m_age_44) as male_44,sum(pop_urban_age.f_age_44) as female_44,
+                            sum(pop_urban_age.m_age_45) as male_45,sum(pop_urban_age.f_age_45) as female_45,
+                            sum(pop_urban_age.m_age_46) as male_46,sum(pop_urban_age.f_age_46) as female_46,
+                            sum(pop_urban_age.m_age_47) as male_47,sum(pop_urban_age.f_age_47) as female_47,
+                            sum(pop_urban_age.m_age_48) as male_48,sum(pop_urban_age.f_age_48) as female_48,
+                            sum(pop_urban_age.m_age_49) as male_49,sum(pop_urban_age.f_age_49) as female_49,
+                            sum(pop_urban_age.m_age_50) as male_50,sum(pop_urban_age.f_age_50) as female_50,
+                            sum(pop_urban_age.m_age_51) as male_51,sum(pop_urban_age.f_age_51) as female_51,
+                            sum(pop_urban_age.m_age_52) as male_52,sum(pop_urban_age.f_age_52) as female_52,
+                            sum(pop_urban_age.m_age_53) as male_53,sum(pop_urban_age.f_age_53) as female_53,
+                            sum(pop_urban_age.m_age_54) as male_54,sum(pop_urban_age.f_age_54) as female_54,
+                            sum(pop_urban_age.m_age_55) as male_55,sum(pop_urban_age.f_age_55) as female_55,
+                            sum(pop_urban_age.m_age_56) as male_56,sum(pop_urban_age.f_age_56) as female_56,
+                            sum(pop_urban_age.m_age_57) as male_57,sum(pop_urban_age.f_age_57) as female_57,
+                            sum(pop_urban_age.m_age_58) as male_58,sum(pop_urban_age.f_age_58) as female_58,
+                            sum(pop_urban_age.m_age_59) as male_59,sum(pop_urban_age.f_age_59) as female_59,
+                            sum(pop_urban_age.m_age_60) as male_60,sum(pop_urban_age.f_age_60) as female_60,
+                            sum(pop_urban_age.m_age_61) as male_61,sum(pop_urban_age.f_age_61) as female_61,
+                            sum(pop_urban_age.m_age_62) as male_62,sum(pop_urban_age.f_age_62) as female_62,
+                            sum(pop_urban_age.m_age_63) as male_63,sum(pop_urban_age.f_age_63) as female_63,
+                            sum(pop_urban_age.m_age_64) as male_64,sum(pop_urban_age.f_age_64) as female_64,
+                            sum(pop_urban_age.m_age_65) as male_65,sum(pop_urban_age.f_age_65) as female_65,
+                            sum(pop_urban_age.m_age_66) as male_66,sum(pop_urban_age.f_age_66) as female_66,
+                            sum(pop_urban_age.m_age_67) as male_67,sum(pop_urban_age.f_age_67) as female_67,
+                            sum(pop_urban_age.m_age_68) as male_68,sum(pop_urban_age.f_age_68) as female_68,
+                            sum(pop_urban_age.m_age_69) as male_69,sum(pop_urban_age.f_age_69) as female_69,
+                            sum(pop_urban_age.m_age_70) as male_70,sum(pop_urban_age.f_age_70) as female_70,
+                            sum(pop_urban_age.m_age_71) as male_71,sum(pop_urban_age.f_age_71) as female_71,
+                            sum(pop_urban_age.m_age_72) as male_72,sum(pop_urban_age.f_age_72) as female_72,
+                            sum(pop_urban_age.m_age_73) as male_73,sum(pop_urban_age.f_age_73) as female_73,
+                            sum(pop_urban_age.m_age_74) as male_74,sum(pop_urban_age.f_age_74) as female_74,
+                            sum(pop_urban_age.m_age_75) as male_75,sum(pop_urban_age.f_age_75) as female_75,
+                            sum(pop_urban_age.m_age_76) as male_76,sum(pop_urban_age.f_age_76) as female_76,
+                            sum(pop_urban_age.m_age_77) as male_77,sum(pop_urban_age.f_age_77) as female_77,
+                            sum(pop_urban_age.m_age_78) as male_78,sum(pop_urban_age.f_age_78) as female_78,
+                            sum(pop_urban_age.m_age_79) as male_79,sum(pop_urban_age.f_age_79) as female_79,
+                            sum(pop_urban_age.m_age_80) as male_80,sum(pop_urban_age.f_age_80) as female_80,
+                            sum(pop_urban_age.m_age_81) as male_81,sum(pop_urban_age.f_age_81) as female_81,
+                            sum(pop_urban_age.m_age_82) as male_82,sum(pop_urban_age.f_age_82) as female_82,
+                            sum(pop_urban_age.m_age_83) as male_83,sum(pop_urban_age.f_age_83) as female_83,
+                            sum(pop_urban_age.m_age_84) as male_84,sum(pop_urban_age.f_age_84) as female_84,
+                            sum(pop_urban_age.m_age_85) as male_85,sum(pop_urban_age.f_age_85) as female_85,
+                            sum(pop_urban_age.m_age_86) as male_86,sum(pop_urban_age.f_age_86) as female_86,
+                            sum(pop_urban_age.m_age_87) as male_87,sum(pop_urban_age.f_age_87) as female_87,
+                            sum(pop_urban_age.m_age_88) as male_88,sum(pop_urban_age.f_age_88) as female_88,
+                            sum(pop_urban_age.m_age_89) as male_89,sum(pop_urban_age.f_age_89) as female_89,
+                            sum(pop_urban_age.m_age_90) as male_90,sum(pop_urban_age.f_age_90) as female_90,
+                            sum(pop_urban_age.m_age_91) as male_91,sum(pop_urban_age.f_age_91) as female_91,
+                            sum(pop_urban_age.m_age_92) as male_92,sum(pop_urban_age.f_age_92) as female_92,
+                            sum(pop_urban_age.m_age_93) as male_93,sum(pop_urban_age.f_age_93) as female_93,
+                            sum(pop_urban_age.m_age_94) as male_94,sum(pop_urban_age.f_age_94) as female_94,
+                            sum(pop_urban_age.m_age_95) as male_95,sum(pop_urban_age.f_age_95) as female_95,
+                            sum(pop_urban_age.m_age_96) as male_96,sum(pop_urban_age.f_age_96) as female_96,
+                            sum(pop_urban_age.m_age_97) as male_97,sum(pop_urban_age.f_age_97) as female_97,
+                            sum(pop_urban_age.m_age_98) as male_98,sum(pop_urban_age.f_age_98) as female_98,
+                            sum(pop_urban_age.m_age_99) as male_99,sum(pop_urban_age.f_age_99) as female_99,
+                            sum(pop_urban_age.m_age_100) as male_100,sum(pop_urban_age.f_age_100) as female_100,
+                            sum(pop_urban_age.m_age_101) as male_101,sum(pop_urban_age.f_age_101) as female_101
+                            ,c_province.prov_name as provincename,pop_urban_age.prov_code')
+                  )
+          ->leftjoin('c_province','pop_urban_age.prov_code','=','c_province.prov_code')
+          ->where('pop_urban_age.pop_year','=',$select_year)
+          ->groupBy(DB::raw('pop_urban_age.prov_code'))
+          ->orderBy('pop_urban_age.prov_code','ASC')
+          ->get();
+      }else{
+        //filename
+        $year = $select_year+543;
+        $filename = 'ป.จำแนกตามอายุและเพศ '.$province_name_th[$province_id].'-ปี'.$year;
+        //sheetname
+        $data2 = $province_name_th[$province_id].'ปี'.$year;
+        $query = DB::table('pop_urban_age')
+          ->select(DB::raw('sum(pop_urban_age.m_age_0) as male_0,sum(pop_urban_age.f_age_0) as female_0,
+                            sum(pop_urban_age.m_age_1) as male_1,sum(pop_urban_age.f_age_1) as female_1,
+                            sum(pop_urban_age.m_age_2) as male_2,sum(pop_urban_age.f_age_2) as female_2,
+                            sum(pop_urban_age.m_age_3) as male_3,sum(pop_urban_age.f_age_3) as female_3,
+                            sum(pop_urban_age.m_age_4) as male_4,sum(pop_urban_age.f_age_4) as female_4,
+                            sum(pop_urban_age.m_age_5) as male_5,sum(pop_urban_age.f_age_5) as female_5,
+                            sum(pop_urban_age.m_age_6) as male_6,sum(pop_urban_age.f_age_6) as female_6,
+                            sum(pop_urban_age.m_age_7) as male_7,sum(pop_urban_age.f_age_7) as female_7,
+                            sum(pop_urban_age.m_age_8) as male_8,sum(pop_urban_age.f_age_8) as female_8,
+                            sum(pop_urban_age.m_age_9) as male_9,sum(pop_urban_age.f_age_9) as female_9,
+                            sum(pop_urban_age.m_age_10) as male_10,sum(pop_urban_age.f_age_10) as female_10,
+                            sum(pop_urban_age.m_age_11) as male_11,sum(pop_urban_age.f_age_11) as female_11,
+                            sum(pop_urban_age.m_age_12) as male_12,sum(pop_urban_age.f_age_12) as female_12,
+                            sum(pop_urban_age.m_age_13) as male_13,sum(pop_urban_age.f_age_13) as female_13,
+                            sum(pop_urban_age.m_age_14) as male_14,sum(pop_urban_age.f_age_14) as female_14,
+                            sum(pop_urban_age.m_age_15) as male_15,sum(pop_urban_age.f_age_15) as female_15,
+                            sum(pop_urban_age.m_age_16) as male_16,sum(pop_urban_age.f_age_16) as female_16,
+                            sum(pop_urban_age.m_age_17) as male_17,sum(pop_urban_age.f_age_17) as female_17,
+                            sum(pop_urban_age.m_age_18) as male_18,sum(pop_urban_age.f_age_18) as female_18,
+                            sum(pop_urban_age.m_age_19) as male_19,sum(pop_urban_age.f_age_19) as female_19,
+                            sum(pop_urban_age.m_age_20) as male_20,sum(pop_urban_age.f_age_20) as female_20,
+                            sum(pop_urban_age.m_age_21) as male_21,sum(pop_urban_age.f_age_21) as female_21,
+                            sum(pop_urban_age.m_age_22) as male_22,sum(pop_urban_age.f_age_22) as female_22,
+                            sum(pop_urban_age.m_age_23) as male_23,sum(pop_urban_age.f_age_23) as female_23,
+                            sum(pop_urban_age.m_age_24) as male_24,sum(pop_urban_age.f_age_24) as female_24,
+                            sum(pop_urban_age.m_age_25) as male_25,sum(pop_urban_age.f_age_25) as female_25,
+                            sum(pop_urban_age.m_age_26) as male_26,sum(pop_urban_age.f_age_26) as female_26,
+                            sum(pop_urban_age.m_age_27) as male_27,sum(pop_urban_age.f_age_27) as female_27,
+                            sum(pop_urban_age.m_age_28) as male_28,sum(pop_urban_age.f_age_28) as female_28,
+                            sum(pop_urban_age.m_age_29) as male_29,sum(pop_urban_age.f_age_29) as female_29,
+                            sum(pop_urban_age.m_age_30) as male_30,sum(pop_urban_age.f_age_30) as female_30,
+                            sum(pop_urban_age.m_age_31) as male_31,sum(pop_urban_age.f_age_31) as female_31,
+                            sum(pop_urban_age.m_age_32) as male_32,sum(pop_urban_age.f_age_32) as female_32,
+                            sum(pop_urban_age.m_age_33) as male_33,sum(pop_urban_age.f_age_33) as female_33,
+                            sum(pop_urban_age.m_age_34) as male_34,sum(pop_urban_age.f_age_34) as female_34,
+                            sum(pop_urban_age.m_age_35) as male_35,sum(pop_urban_age.f_age_35) as female_35,
+                            sum(pop_urban_age.m_age_36) as male_36,sum(pop_urban_age.f_age_36) as female_36,
+                            sum(pop_urban_age.m_age_37) as male_37,sum(pop_urban_age.f_age_37) as female_37,
+                            sum(pop_urban_age.m_age_38) as male_38,sum(pop_urban_age.f_age_38) as female_38,
+                            sum(pop_urban_age.m_age_39) as male_39,sum(pop_urban_age.f_age_39) as female_39,
+                            sum(pop_urban_age.m_age_40) as male_40,sum(pop_urban_age.f_age_40) as female_40,
+                            sum(pop_urban_age.m_age_41) as male_41,sum(pop_urban_age.f_age_41) as female_41,
+                            sum(pop_urban_age.m_age_42) as male_42,sum(pop_urban_age.f_age_42) as female_42,
+                            sum(pop_urban_age.m_age_43) as male_43,sum(pop_urban_age.f_age_43) as female_43,
+                            sum(pop_urban_age.m_age_44) as male_44,sum(pop_urban_age.f_age_44) as female_44,
+                            sum(pop_urban_age.m_age_45) as male_45,sum(pop_urban_age.f_age_45) as female_45,
+                            sum(pop_urban_age.m_age_46) as male_46,sum(pop_urban_age.f_age_46) as female_46,
+                            sum(pop_urban_age.m_age_47) as male_47,sum(pop_urban_age.f_age_47) as female_47,
+                            sum(pop_urban_age.m_age_48) as male_48,sum(pop_urban_age.f_age_48) as female_48,
+                            sum(pop_urban_age.m_age_49) as male_49,sum(pop_urban_age.f_age_49) as female_49,
+                            sum(pop_urban_age.m_age_50) as male_50,sum(pop_urban_age.f_age_50) as female_50,
+                            sum(pop_urban_age.m_age_51) as male_51,sum(pop_urban_age.f_age_51) as female_51,
+                            sum(pop_urban_age.m_age_52) as male_52,sum(pop_urban_age.f_age_52) as female_52,
+                            sum(pop_urban_age.m_age_53) as male_53,sum(pop_urban_age.f_age_53) as female_53,
+                            sum(pop_urban_age.m_age_54) as male_54,sum(pop_urban_age.f_age_54) as female_54,
+                            sum(pop_urban_age.m_age_55) as male_55,sum(pop_urban_age.f_age_55) as female_55,
+                            sum(pop_urban_age.m_age_56) as male_56,sum(pop_urban_age.f_age_56) as female_56,
+                            sum(pop_urban_age.m_age_57) as male_57,sum(pop_urban_age.f_age_57) as female_57,
+                            sum(pop_urban_age.m_age_58) as male_58,sum(pop_urban_age.f_age_58) as female_58,
+                            sum(pop_urban_age.m_age_59) as male_59,sum(pop_urban_age.f_age_59) as female_59,
+                            sum(pop_urban_age.m_age_60) as male_60,sum(pop_urban_age.f_age_60) as female_60,
+                            sum(pop_urban_age.m_age_61) as male_61,sum(pop_urban_age.f_age_61) as female_61,
+                            sum(pop_urban_age.m_age_62) as male_62,sum(pop_urban_age.f_age_62) as female_62,
+                            sum(pop_urban_age.m_age_63) as male_63,sum(pop_urban_age.f_age_63) as female_63,
+                            sum(pop_urban_age.m_age_64) as male_64,sum(pop_urban_age.f_age_64) as female_64,
+                            sum(pop_urban_age.m_age_65) as male_65,sum(pop_urban_age.f_age_65) as female_65,
+                            sum(pop_urban_age.m_age_66) as male_66,sum(pop_urban_age.f_age_66) as female_66,
+                            sum(pop_urban_age.m_age_67) as male_67,sum(pop_urban_age.f_age_67) as female_67,
+                            sum(pop_urban_age.m_age_68) as male_68,sum(pop_urban_age.f_age_68) as female_68,
+                            sum(pop_urban_age.m_age_69) as male_69,sum(pop_urban_age.f_age_69) as female_69,
+                            sum(pop_urban_age.m_age_70) as male_70,sum(pop_urban_age.f_age_70) as female_70,
+                            sum(pop_urban_age.m_age_71) as male_71,sum(pop_urban_age.f_age_71) as female_71,
+                            sum(pop_urban_age.m_age_72) as male_72,sum(pop_urban_age.f_age_72) as female_72,
+                            sum(pop_urban_age.m_age_73) as male_73,sum(pop_urban_age.f_age_73) as female_73,
+                            sum(pop_urban_age.m_age_74) as male_74,sum(pop_urban_age.f_age_74) as female_74,
+                            sum(pop_urban_age.m_age_75) as male_75,sum(pop_urban_age.f_age_75) as female_75,
+                            sum(pop_urban_age.m_age_76) as male_76,sum(pop_urban_age.f_age_76) as female_76,
+                            sum(pop_urban_age.m_age_77) as male_77,sum(pop_urban_age.f_age_77) as female_77,
+                            sum(pop_urban_age.m_age_78) as male_78,sum(pop_urban_age.f_age_78) as female_78,
+                            sum(pop_urban_age.m_age_79) as male_79,sum(pop_urban_age.f_age_79) as female_79,
+                            sum(pop_urban_age.m_age_80) as male_80,sum(pop_urban_age.f_age_80) as female_80,
+                            sum(pop_urban_age.m_age_81) as male_81,sum(pop_urban_age.f_age_81) as female_81,
+                            sum(pop_urban_age.m_age_82) as male_82,sum(pop_urban_age.f_age_82) as female_82,
+                            sum(pop_urban_age.m_age_83) as male_83,sum(pop_urban_age.f_age_83) as female_83,
+                            sum(pop_urban_age.m_age_84) as male_84,sum(pop_urban_age.f_age_84) as female_84,
+                            sum(pop_urban_age.m_age_85) as male_85,sum(pop_urban_age.f_age_85) as female_85,
+                            sum(pop_urban_age.m_age_86) as male_86,sum(pop_urban_age.f_age_86) as female_86,
+                            sum(pop_urban_age.m_age_87) as male_87,sum(pop_urban_age.f_age_87) as female_87,
+                            sum(pop_urban_age.m_age_88) as male_88,sum(pop_urban_age.f_age_88) as female_88,
+                            sum(pop_urban_age.m_age_89) as male_89,sum(pop_urban_age.f_age_89) as female_89,
+                            sum(pop_urban_age.m_age_90) as male_90,sum(pop_urban_age.f_age_90) as female_90,
+                            sum(pop_urban_age.m_age_91) as male_91,sum(pop_urban_age.f_age_91) as female_91,
+                            sum(pop_urban_age.m_age_92) as male_92,sum(pop_urban_age.f_age_92) as female_92,
+                            sum(pop_urban_age.m_age_93) as male_93,sum(pop_urban_age.f_age_93) as female_93,
+                            sum(pop_urban_age.m_age_94) as male_94,sum(pop_urban_age.f_age_94) as female_94,
+                            sum(pop_urban_age.m_age_95) as male_95,sum(pop_urban_age.f_age_95) as female_95,
+                            sum(pop_urban_age.m_age_96) as male_96,sum(pop_urban_age.f_age_96) as female_96,
+                            sum(pop_urban_age.m_age_97) as male_97,sum(pop_urban_age.f_age_97) as female_97,
+                            sum(pop_urban_age.m_age_98) as male_98,sum(pop_urban_age.f_age_98) as female_98,
+                            sum(pop_urban_age.m_age_99) as male_99,sum(pop_urban_age.f_age_99) as female_99,
+                            sum(pop_urban_age.m_age_100) as male_100,sum(pop_urban_age.f_age_100) as female_100,
+                            sum(pop_urban_age.m_age_101) as male_101,sum(pop_urban_age.f_age_101) as female_101
+                            ,c_province.prov_name as provincename,pop_urban_age.prov_code')
+                  )
+          ->leftjoin('c_province','pop_urban_age.prov_code','=','c_province.prov_code')
+          ->where('pop_urban_age.prov_code','=' ,$province_id)
+          ->where('pop_urban_age.pop_year','=',$select_year)
+          ->orderBy('pop_urban_age.prov_code','ASC')
+          ->get();
+      }
+
       if(count($query)<1){
           dd('No Record');
       }else{
@@ -603,11 +749,6 @@ class ExportController extends Controller
                         "M_AGE_100" => (int)$value->male_100,"F_AGE_100" => (int)$value->female_100,
                         "M_AGE_101" => (int)$value->male_101,"F_AGE_101" => (int)$value->female_101);
       }
-      //filename
-      $year = $select_year+543;
-      $filename = 'จำนวนประชากรจำแนกตามอายุและเพศ '.$province_name_th[$province_id].'-ปี'.$year;
-      //sheetname
-      $data2 = $province_name_th[$province_id].'ปี'.$year;
 
       Excel::create($filename, function($excel) use($data,$data2) {
           // Set the title
