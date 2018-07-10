@@ -115,14 +115,12 @@ class DiseasesController extends Controller
 
 	public function top10DiseasePatientWeek($tblYear=0, $week=0) {
 		$result =  DB::table('ur506_'.$tblYear)
-		// $result = DB::select('select DISEASE,week_no,sum(if(week_no="" or week_no is not null,1,0)) as total_week from ? where week_no=? group by DISEASE order by sum(if(week_no = "" or week_no is not null,1,0)) desc limit 10', [$tbl,$week]);
 		->select('DISEASE', 'week_no', DB::raw('sum(if(week_no="" or week_no is not null, 1, 0)) as total_week'))
 		->where('week_no', $week)
 		->groupBy('DISEASE')
 		->orderBy(DB::raw('sum(if(week_no="" or week_no is not null,1,0))'), 'desc')
 		->limit(10)
 		->get();
-		dd($result);
 		return $result;
 	}
 
@@ -168,11 +166,65 @@ class DiseasesController extends Controller
 		return $result;
 	}
 
+	public function getFirstWeek($year=0) {
+		$result = DB::table('ur506_'.$year)
+		->select(DB::raw('MIN(week_no) AS firstweek'))
+		->get()
+		->toArray();
+		return $result;
+	}
 	public function getLastWeek($year=0) {
 		$result = DB::table('ur506_'.$year)
 		->select(DB::raw('MAX(week_no) AS lastweek'))
 		->get()
 		->toArray();
 		return $result;
+	}
+
+	public function listUr506WeekFromYear($year) {
+		$minWeek = $this->getFirstWeek($year);
+		$maxWeek = $this->getLastWeek($year);
+
+		$result = DB::table('ur506_'.$year)
+		->select('DATESICK', 'week_no')
+		->where('DATESICK', '<>', "" )
+		->whereBetween('week_no',[$minWeek[0]->firstweek, $maxWeek[0]->lastweek])
+		->groupBy('week_no')
+		->orderBy('week_no')
+		->get()
+		->toArray();
+		return $result;
+	}
+
+	public function getDiseaseName() {
+		$dsGroup = $this->diseaseGroup();
+		foreach ($dsGroup as $val) {
+			$dsName[(int)$val->DISEASE] = $val->DISNAME;
+		}
+		ksort($dsName);
+		return $dsName;
+	}
+
+	public function getUr506TblName() {
+		$tbl=array();
+		$result = $tables = DB::select('select table_name from information_schema.tables where table_name like "ur506%"');
+		foreach ($tables as $table) {
+			foreach ($table as $key => $value) {
+				array_push($tbl, $value);
+			}
+		}
+		return $tbl;
+	}
+
+	public function getLastUr506Year() {
+		$dsTbl = $this->getUr506TblName();
+		$year = array();
+		foreach ($dsTbl as $val) {
+			$exp = explode("_", $val);
+			array_push($year, (int)$exp[1]);
+		}
+		sort($year);
+		$lastYear = $year[(count($year))-1];
+		return $lastYear;
 	}
 }

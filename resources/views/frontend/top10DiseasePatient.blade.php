@@ -60,7 +60,7 @@
 					<div class="box-footer no-padding">
 						<ul class="nav nav-pills nav-stacked">
 							<li>
-								<a href="#">อัตราป่วยสะสม<span class="hidden-xs hidden-sm">ด้วยโรคที่เฝ้าระวัง</span> 10 อันดับ <span class="hidden-xs hidden-sm">ในพื้นที่เขตเมือง ปี พ.ศ. 2560</span> <span class="pull-right text-red"> {{ '1 ม.ค. - 21 ก.ค. 60' }}</span></a>
+								<a href="#">อัตราป่วยสะสม<span class="hidden-xs hidden-sm">ด้วยโรคที่เฝ้าระวัง</span> 10 อันดับ <span class="hidden-xs hidden-sm">ในพื้นที่เขตเมือง ปี {{ $listWeek['year'] }}</span> <span class="pull-right text-red"> {{ $listWeek['firstWeek']->DATESICK.' - '.$listWeek['lastWeek']->DATESICK }}</span></a>
 							</li>
 						</ul>
 					</div>
@@ -71,7 +71,7 @@
 
 			<!-- Right col#2 -->
 			<div class="col-md-12">
-				<div class="box box-info">
+				<div class="box box-danger">
 					<div class="box-header with-border">
 						<h3 class="box-title"><span class="ds-box-title">อัตราป่วยสะสมด้วยโรคที่เฝ้าระวัง 10 อันดับ</span></h3>
 						<div class="box-tools pull-right">
@@ -86,7 +86,7 @@
 							<div class="col-md-12">
 								<div class="chart-responsive charts-box">
 									<div class="charts">
-										<canvas id="line-canvas2" width="300" height="300"></canvas>
+										<canvas id="bar-chart2" width="300" height="300"></canvas>
 									</div>
 								</div>
 								<!-- ./chart-responsive -->
@@ -98,7 +98,7 @@
 					<div class="box-footer no-padding">
 						<ul class="nav nav-pills nav-stacked">
 							<li>
-								<a href="#">อัตราป่วย<span class="hidden-xs hidden-sm">ด้วยโรคที่เฝ้าระวัง</span> 10 อันดับ <span class="hidden-xs hidden-sm">ในพื้นที่เขตเมือง ปี พ.ศ. 2560</span> <span class="pull-right text-red"> {{ 'สัปดาห์ที่ 36, 25 ก.ค. - 31 ก.ค. 60' }}</span></a>
+								<a href="#">อัตราป่วย<span class="hidden-xs hidden-sm">ด้วยโรคที่เฝ้าระวัง</span> 10 อันดับ <span class="hidden-xs hidden-sm">ในพื้นที่เขตเมือง ปี {{ $listWeek['year'] }}</span> <span class="pull-right text-red">สัปดาห์ที่ {{ $listWeek['lastWeek']->week_no }}</span></a>
 							</li>
 						</ul>
 					</div>
@@ -117,7 +117,7 @@
 @section('script')
 <script>
 /*  bar chart1 */
-function createBarChart(id, type, options) {
+function createBarChart1(id, type, options) {
 	var data = {
 		labels: [
 			@foreach ($top10DsPtYear as $key=>$val)
@@ -133,7 +133,35 @@ function createBarChart(id, type, options) {
 			],
 			backgroundColor: [
 				@for($i=1; $i<=10; $i++)
-					{!! '"#00A65A"'.',' !!}
+					{!! '"#4285F4"'.',' !!}
+				@endfor
+			]
+		}]
+	};
+	new Chart(document.getElementById(id), {
+		type: type,
+		data: data,
+		options: options
+	});
+}
+/*  bar chart2 */
+function createBarChart2(id, type, options) {
+	var data = {
+		labels: [
+			@foreach ($top10DsPtWeek as $key=>$val)
+				{!! "'".$dsName[$key]."'," !!}
+			@endforeach
+		],
+		datasets: [{
+			label: 'อัตรา',
+			data: [
+				@foreach ($top10DsPtWeek as $key=>$val)
+					{!! "'".number_format($val, 2, '.', '' )."'," !!}
+				@endforeach
+			],
+			backgroundColor: [
+				@for($i=1; $i<=10; $i++)
+					{!! '"#EA4335"'.',' !!}
 				@endfor
 			]
 		}]
@@ -147,8 +175,38 @@ function createBarChart(id, type, options) {
 </script>
 <script>
 $('document').ready(function () {
-	/* Sex doughnut chart */
-	createBarChart('bar-chart1', 'horizontalBar', {
+	/* barchart1 */
+	createBarChart1('bar-chart1', 'horizontalBar', {
+		responsive: true,
+		maintainAspectRatio: false,
+		legend: {
+			display: false,
+			position: 'right',
+		},
+		pieceLabel: {
+			render: 'value',
+			precision: 2,
+			overlap: true,
+		},
+		scales: {
+			yAxes: [{
+				scaleLabel: {
+					display: true,
+					labelString: 'อัตราป่วย (ต่อแสน)'
+				},
+				stacked: true
+			}],
+			xAxes: [{
+				ticks: {
+					beginAtZero: true
+				},
+				stacked: true,
+				barPercentage: .8
+			}]
+		}
+	});
+	/* barchart2 */
+	createBarChart2('bar-chart2', 'horizontalBar', {
 		responsive: true,
 		maintainAspectRatio: false,
 		legend: {

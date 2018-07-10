@@ -9,11 +9,17 @@ class WeekReportController extends DiseasesController
 	 * @return \Illuminate\Http\Response
 	*/
 	public function index(Request $request) {
-		$x = parent::top10DiseasePatientWeek('2018', '05');
+		$dsName = parent::getDiseaseName();
 		$top10DsPtYear = $this->top10DsPtYear($request);
+		$top10DsPtWeek = $this->top10DsPtWeek($request);
+		$listWeek = $this->getListUr506WeekFromYear($request);
+
 		return view('frontend.top10DiseasePatient',
 			[
-				'top10DsPtYear'=>$top10DsPtYear
+				'dsName'=>$dsName,
+				'top10DsPtYear'=>$top10DsPtYear,
+				'top10DsPtWeek'=>$top10DsPtWeek,
+				'listWeek'=>$listWeek
 			]
 		);
 	}
@@ -76,7 +82,7 @@ class WeekReportController extends DiseasesController
 		if (isset($request->year) || !empty($request->year)) {
 			$year = $request->year;
 		} else {
-			$year = date('Y');
+			$year = parent::getLastUr506Year();
 		}
 		/* get Pop for sum pop */
 		$popTotalByAgegroup = $this->getTotalPopByAgegroup($year);
@@ -91,6 +97,27 @@ class WeekReportController extends DiseasesController
 			$top10DsPt[$val->DISNAME] = (((int)$val->total*100000)/$sumPopTotalByAgegroup);
 		}
 		return $top10DsPt;
+	}
+
+	public function top10DsPtWeek($request) {
+		if (isset($request->year) || !empty($request->year)) {
+			$year = $request->year;
+		} else {
+			$year = parent::getLastUr506Year();
+		}
+		/* get Pop for sum pop */
+		$popTotalByAgegroup = $this->getTotalPopByAgegroup($year);
+		$sumPopTotalByAgegroup = 0;
+		foreach ($popTotalByAgegroup[0] as $key=>$val) {
+			$sumPopTotalByAgegroup += (int)$val;
+		}
+
+		$Rawtop10DsPtWeek = parent::top10DiseasePatientWeek($year, '05');
+		$top10DsPtWeek = array();
+		foreach ($Rawtop10DsPtWeek as $val) {
+			$top10DsPtWeek[(int)$val->DISEASE] = (((int)$val->total_week*100000)/$sumPopTotalByAgegroup);
+		}
+		return $top10DsPtWeek;
 	}
 
 	public function getTotalPopByAgegroup($year=0) {
@@ -108,5 +135,21 @@ class WeekReportController extends DiseasesController
 			}
 		}
 		return $total;
+	}
+
+	public function getListUr506WeekFromYear($request) {
+		if (isset($request->year) || !empty($request->year)) {
+			$year = $request->year;
+		} else {
+			$year = parent::getLastUr506Year();
+		}
+		$listWeekFromYear = array();
+		$listWeek = parent::listUr506WeekFromYear($year);
+		$cntListWeek = count($listWeek);
+		$listWeekFromYear['year'] = $year;
+		$listWeekFromYear['firstWeek'] = $listWeek[0];
+		$listWeekFromYear['lastWeek'] = $listWeek[($cntListWeek-1)];
+		$listWeekFromYear['allWeek'] = $listWeek;
+		return $listWeekFromYear;
 	}
 }
