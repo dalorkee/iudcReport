@@ -145,11 +145,26 @@ class WeekReportController extends DiseasesController
 		}
 		$listWeekFromYear = array();
 		$listWeek = parent::listUr506WeekFromYear($year);
+		$i = 0;
+		foreach ($listWeek as $val) {
+			$cv = parent::cvDateToTH($val->DATESICK);
+			$listWeek[$i]->DATESICK = $cv;
+			$i++;
+		}
 		$cntListWeek = count($listWeek);
 		$listWeekFromYear['year'] = $year;
 		$listWeekFromYear['firstWeek'] = $listWeek[0];
 		$listWeekFromYear['lastWeek'] = $listWeek[($cntListWeek-1)];
 		$listWeekFromYear['allWeek'] = $listWeek;
+
+		$lastWeekDateRage = parent::getDateRangeByWeek($year, $listWeekFromYear['lastWeek']->week_no);
+		$i = 0;
+		foreach ($lastWeekDateRage as $val) {
+			$cv = parent::cvDateToTH($val->DATESICK);
+			$lastWeekDateRage[$i]->DATESICK = $cv;
+			$i++;
+		}
+		$listWeekFromYear['lastWeekAllDate'] = $lastWeekDateRage;
 		return $listWeekFromYear;
 	}
 }

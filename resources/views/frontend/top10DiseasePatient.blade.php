@@ -60,7 +60,7 @@
 					<div class="box-footer no-padding">
 						<ul class="nav nav-pills nav-stacked">
 							<li>
-								<a href="#">อัตราป่วยสะสม<span class="hidden-xs hidden-sm">ด้วยโรคที่เฝ้าระวัง</span> 10 อันดับ <span class="hidden-xs hidden-sm">ในพื้นที่เขตเมือง ปี {{ $listWeek['year'] }}</span> <span class="pull-right text-red"> {{ $listWeek['firstWeek']->DATESICK.' - '.$listWeek['lastWeek']->DATESICK }}</span></a>
+								<a href="#">อัตราป่วยสะสม<span class="hidden-xs hidden-sm">ด้วยโรคที่เฝ้าระวัง</span> 10 อันดับ <span class="hidden-xs hidden-sm">ในพื้นที่เขตเมือง ปี {{ ((int)$listWeek['year']+543) }}</span> <span class="pull-right text-red"> {{ $listWeek['firstWeek']->DATESICK.' - '.$listWeek['lastWeek']->DATESICK }}</span></a>
 							</li>
 						</ul>
 					</div>
@@ -98,7 +98,18 @@
 					<div class="box-footer no-padding">
 						<ul class="nav nav-pills nav-stacked">
 							<li>
-								<a href="#">อัตราป่วย<span class="hidden-xs hidden-sm">ด้วยโรคที่เฝ้าระวัง</span> 10 อันดับ <span class="hidden-xs hidden-sm">ในพื้นที่เขตเมือง ปี {{ $listWeek['year'] }}</span> <span class="pull-right text-red">สัปดาห์ที่ {{ $listWeek['lastWeek']->week_no }}</span></a>
+								<a href="#">อัตราป่วย<span class="hidden-xs hidden-sm">ด้วยโรคที่เฝ้าระวัง</span> 10 อันดับ
+									<span class="hidden-xs hidden-sm">
+										<?php
+											echo "ในพื้นที่เขตเมือง ปี ".((int)$listWeek['year']+543)."</span>";
+											echo "<span class=\"pull-right text-red\">";
+											echo "สัปดาห์ที่ ".$listWeek['lastWeek']->week_no.", ";
+											echo $listWeek['lastWeekAllDate'][0]->DATESICK." - ";
+											$cntDate = count($listWeek['lastWeekAllDate']);
+											echo $listWeek['lastWeekAllDate'][((int)$cntDate-1)]->DATESICK;
+										?>
+									</span>
+								</a>
 							</li>
 						</ul>
 					</div>

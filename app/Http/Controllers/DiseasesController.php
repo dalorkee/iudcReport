@@ -188,6 +188,7 @@ class DiseasesController extends Controller
 		$result = DB::table('ur506_'.$year)
 		->select('DATESICK', 'week_no')
 		->where('DATESICK', '<>', "" )
+		->where('week_no', '<>', "")
 		->whereBetween('week_no',[$minWeek[0]->firstweek, $maxWeek[0]->lastweek])
 		->groupBy('week_no')
 		->orderBy('week_no')
@@ -226,5 +227,24 @@ class DiseasesController extends Controller
 		sort($year);
 		$lastYear = $year[(count($year))-1];
 		return $lastYear;
+	}
+
+	public function getDateRangeByWeek($year=0, $week_no=0) {
+		$result = DB::table('ur506_'.$year)
+		->select('DATESICK')
+		->where('week_no', $week_no)
+		->where('DATESICK', '<>', "")
+		->groupBy('DATESICK')
+		->orderBy('DATESICK')
+		->get()
+		->toArray();
+		return $result;
+	}
+
+	public function cvDateToTH($mysql_date='0000-00-00') {
+		$thMonth = $this->setMonthLabel();
+		$exp = explode("-", $mysql_date);
+		$result = $exp[2]." ".$thMonth[(int)$exp[1]]." ".((int)$exp[0]+543);
+		return $result;
 	}
 }
