@@ -47,7 +47,10 @@
 			</a>
 			<ul class="treeview-menu nav-level2">
 				<li>
-					<a href="{{ route('top10DsPt') }}">- 10 อันดับโรคที่มีอัตราป่วยสูงสุด</a>
+					<a href="{{ route('top10DsPt') }}"><i class="fa fa-circle-o text-red"></i> 10 อันดับโรคที่มีอัตราป่วยสูงสุด</a>
+				</li>
+				<li>
+					<a href="{{ route('export-patient-data.main') }}"><i class="fa fa-circle-o text-aqua"></i> รายงานข้อมูลผู้ป่วย </a>
 				</li>
 			</ul>
 		</li>
