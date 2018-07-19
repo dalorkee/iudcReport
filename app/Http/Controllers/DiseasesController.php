@@ -8,17 +8,20 @@ use App\Http\Controllers\Controller;
 
 class DiseasesController extends Controller
 {
-	public function diseaseGroup() {
+	protected function diseaseGroup() {
 		$dsgroups = DB::table('dsgr')->orderBy('DISNAME')->get();
 		return $dsgroups;
 	}
 
-	/* public function getPatientByDisease($tblYear=null, $diseaseCode=null) {
-		$patient = DB::table('ur506_'.$tblYear)->where('DISEASE', $diseaseCode)->orderBy('DISNAME')->get();
+	protected function getPatientByDisease($tblYear=null, $diseaseCode=null) {
+		$patient = DB::table('ur506_'.$tblYear)
+		->where('DISEASE', $diseaseCode)
+		->orderBy('DISNAME')
+		->get();
 		return $patient;
-	} */
+	}
 
-	public function countPatientBySex($tblYear=null, $diseaseCode=null, $sex=null) {
+	protected function countPatientBySex($tblYear=null, $diseaseCode=null, $sex=null) {
 		$count = DB::table('ur506_'.$tblYear)
 			->whereIn('DISEASE', [$diseaseCode])
 			->where('SEX', $sex)
@@ -26,7 +29,7 @@ class DiseasesController extends Controller
 		return $count;
 	}
 
-	public function countPatientByAgegroup($tblYear=null, $diseaseCode=null, $condition=array()) {
+	protected function countPatientByAgegroup($tblYear=null, $diseaseCode=null, $condition=array()) {
 		switch ($condition[0]) {
 			case "<":
 				$count = DB::table('ur506_'.$tblYear)
@@ -50,7 +53,7 @@ class DiseasesController extends Controller
 		return $count;
 	}
 
-	public function countPatientPerMonth($tblYear=null, $diseaseCode=null) {
+	protected function countPatientPerMonth($tblYear=null, $diseaseCode=null) {
 		$count = DB::table('ur506_'.$tblYear)
 			->select(DB::raw('SUM(IF(DISEASE <> "", 1, 0)) AS amount, MONTH(datesick) AS month, DISEASE As disease'))
 			->whereIn('DISEASE', [$diseaseCode])
@@ -245,6 +248,38 @@ class DiseasesController extends Controller
 		$thMonth = $this->setMonthLabel();
 		$exp = explode("-", $mysql_date);
 		$result = $exp[2]." ".$thMonth[(int)$exp[1]]." ".((int)$exp[0]+543);
+		return $result;
+	}
+
+	protected function patientByYear($year=0, $diseaseCode=0) {
+		$result = DB::table('ur506_'.$year)
+		->select(DB::RAW('MIN(DATESICK) AS minDate, MAX(DATESICK) AS maxDate, COUNT(datesick) AS patient'))
+		->where('DISEASE', $diseaseCode)
+		->get()
+		->toArray();
+		return $result;
+	}
+
+	protected function countPatientPerProv($year=0, $diseaseCode=0) {
+		$result = DB::table('ur506_'.$year)
+		->select(DB::RAW('COUNT(DATESICK) AS patient, province'))
+		->where('DISEASE', $diseaseCode)
+		->groupBy('PROVINCE')
+		->orderBy('PROVINCE')
+		->get()
+		->toArray();
+		return $result;
+	}
+
+	protected function countCaseResultPerProv($year=0, $diseaseCode=0, $result=0) {
+		$result = DB::table('ur506_'.$year)
+		->select(DB::RAW('COUNT(DATESICK) AS patient, province'))
+		->where('DISEASE', $diseaseCode)
+		->where('RESULT', $result)
+		->groupBy('PROVINCE')
+		->orderBy('PROVINCE', 'ASC')
+		->get()
+		->toArray();
 		return $result;
 	}
 }

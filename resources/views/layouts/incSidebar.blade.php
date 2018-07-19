@@ -46,9 +46,8 @@
 				</span>
 			</a>
 			<ul class="treeview-menu nav-level2">
-				<li>
-					<a href="{{ route('top10DsPt') }}">- 10 อันดับโรคที่มีอัตราป่วยสูงสุด</a>
-				</li>
+				<li><a href="{{ route('top10DsPt') }}">- 10 อันดับโรคที่มีอัตราป่วยสูงสุด</a></li>
+				<li><a href="{{ route('onePage') }}">- One page report</a></li>
 			</ul>
 		</li>
 	</ul>

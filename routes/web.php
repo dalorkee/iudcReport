@@ -59,6 +59,8 @@ Route::get('/report', function() {
 })->name('report');
 /* Top 10 Disease Patient */
 Route::get('/top10DsPt', 'WeekReportController@index')->name('top10DsPt');
+/* One page */
+Route::get('/onePage', 'OnePageController@index')->name('onePage');
 /* ******** backend ******** */
 Route::get('/backend', function() {
 	return view('backend/index');

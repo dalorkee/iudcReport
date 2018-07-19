@@ -112,7 +112,6 @@
 		</div>
 	</div>
 	<div class="main-box" style="border:none;background:none;box-shadow:none;">
-		<!-- /.row -->
 		<div class="row">
 			<!-- Left col#1 -->
 			<div class="col-md-6">
@@ -324,7 +323,6 @@
 	</div>
 	<!-- /. box -->
 </section>
-
 <!-- /.content -->
 @stop
 @section('script')

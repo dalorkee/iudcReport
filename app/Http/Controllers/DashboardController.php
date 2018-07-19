@@ -19,7 +19,7 @@ class dashboardController extends DiseasesController
 			$countPatientPerWeek = $this->getCountPatientPerWeek($request->year, $request->disease);
 			$selectDs = array('disease'=>$request->disease, 'selectYear'=>$request->year, 'selected'=>true);
 		} else {
-			$nowYear = date('Y');
+			$nowYear = parent::getLastUr506Year();
 			$countPatientBySex = $this->getCountPatientBySex($nowYear, 78);
 			$countPatientByAgegroup = $this->getCountPatientByAgegroup($nowYear, 78);
 			$countPatientPerMonth = $this->getCountPatientPerMonth($nowYear, 78);

@@ -164,7 +164,6 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
 		Collective\Html\HtmlServiceProvider::class,
-		'Barryvdh\Debugbar\ServiceProvider',
 
         /*
          * Package Service Providers...
@@ -182,7 +181,7 @@ return [
         //ConsoleTVs\Charts\ChartsServiceProvider::class,
 		Khill\Lavacharts\Laravel\LavachartsServiceProvider::class,
         //Debug Bar
-        //Barryvdh\Debugbar\ServiceProvider::class,
+        Barryvdh\Debugbar\ServiceProvider::class,
         //Laravel Excel
         Maatwebsite\Excel\ExcelServiceProvider::class,
     ],
@@ -237,12 +236,11 @@ return [
         //'Charts' => ConsoleTVs\Charts\Facades\Charts::class,
 		'Lava' => Khill\Lavacharts\Laravel\LavachartsFacade::class,
         //Debug Bar
-        //'Debugbar' => Barryvdh\Debugbar\Facade::class,
+        'Debugbar' => Barryvdh\Debugbar\Facade::class,
         //Laravel Excel
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
 		'Form' => Collective\Html\FormFacade::class,
 		'Html' => Collective\Html\HtmlFacade::class,
-		'Debugbar' => 'Barryvdh\Debugbar\Facade',
 
     ],
 
