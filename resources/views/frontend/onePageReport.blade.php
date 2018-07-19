@@ -114,13 +114,31 @@
 					<div class="box-body">
 						<div class="row">
 							<div class="col-md-12">
-								<article>
-									ข้อมูลเฝ้าระวังโรคในเขตเมือง ตั้งแต่วันที่ {{ $patientOnYear['minDate'] }} - {{ $patientOnYear['maxDate'] }} พบผู้ป่วย {{ $patientOnYear['patientThisYear'] }} ราย
-									จาก {{ $patientPerProv['cntProv'] }} จังหวัด เสียชีวิต {{ number_format((int)$caseDead['caseDead']) }} ราย อัตราป่วย {{ number_format(((int)$patientOnYear['patientThisYear']*100)/100000, 2) }} ต่อประชากรแสนคน
-									อัตราตาย {{ number_format(((int)$caseDead['caseDead']*100)/100000, 2) }} ต่อประชากรแสนคน
-									อัตราส่วนเพศชายต่อเพศหญิง {{ $patientBySex['ratio'] }} กลุ่มอายุที่พบมากที่สุด เรียงตามลำดับ คือ xx-xx ปี (xx.xx%)
-									สัญชาติเป็นไทยร้อยละ xx.xx พม่าร้อยละ xx.xx อื่นๆ ร้อยละ xx.xx อาชีพส่วนใหญ่คือ xx ร้อยละ xx.xx
-
+								<article class="onepage">
+									<div style="text-indent: 50px;">
+										ข้อมูลเฝ้าระวังโรคในเขตเมือง ตั้งแต่วันที่ {{ $patientOnYear['minDate'] }} - {{ $patientOnYear['maxDate'] }}
+										พบผู้ป่วย {{ $patientOnYear['patientThisYear'] }} ราย
+										จาก {{ $patientPerProv['cntProv'] }} จังหวัด
+										เสียชีวิต {{ number_format((int)$caseDead['caseDead']) }} ราย
+										อัตราป่วย {{ number_format(((int)$patientOnYear['patientThisYear']*100)/100000, 2) }} ต่อประชากรแสนคน
+										อัตราตาย {{ number_format(((int)$caseDead['caseDead']*100)/100000, 2) }} ต่อประชากรแสนคน
+										อัตราส่วนเพศชายต่อเพศหญิง {{ $patientBySex['ratio'] }}
+										กลุ่มอายุที่พบมากที่สุด เรียงตามลำดับ คือ
+										@foreach ($patientByAgeGroup as $key=>$val)
+											{{ $key." ปี (".$val."%)" }}
+										@endforeach
+										@foreach ($patientByNation as $key => $val)
+											@if ($key == 'ไทย')
+												{{ "สัญชาติเป็น".$key." ร้อยละ ".$val." " }}
+											@else
+												{{ $key." ร้อยละ ".$val." " }}
+											@endif
+										@endforeach
+										อาชีพส่วนใหญ่คือ
+										@foreach ($patientByOccupation  as $key=>$val)
+											{{ $key. " ร้อยละ ".$val." " }}
+										@endforeach
+									</div>
 								</article>
 
 							</div>

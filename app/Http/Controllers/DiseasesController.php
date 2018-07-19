@@ -64,7 +64,7 @@ class DiseasesController extends Controller
 		return $count;
 	}
 
-	public function countCaseDeadtPerMonth($tblYear=null, $diseaseCode=null) {
+	protected function countCaseDeadtPerMonth($tblYear=null, $diseaseCode=null) {
 		$count = DB::table('ur506_'.$tblYear)
 			->select(DB::raw('SUM(IF(DISEASE <> "", 1, 0)) AS amount, MONTH(DATEDEATH) AS month, DISEASE As disease'))
 			->where('RESULT', 2)
@@ -76,7 +76,7 @@ class DiseasesController extends Controller
 		return $count;
 	}
 
-	public function countPatientPerWeek($tblYear=null, $diseaseCode=null) {
+	protected function countPatientPerWeek($tblYear=null, $diseaseCode=null) {
 		$count = DB::table('ur506_'.$tblYear)
 			->select(DB::raw('SUM(IF(DISEASE <> "", 1, 0)) AS amount, week_no AS weeks, DISEASE As disease'))
 			->whereIn('DISEASE', [$diseaseCode])
@@ -87,7 +87,7 @@ class DiseasesController extends Controller
 		return $count;
 	}
 
-	public function chArrToStr($arr=array()) {
+	protected function chArrToStr($arr=array()) {
 		$str = null;
 		if (sizeof($arr) > 0) {
 			foreach($arr as $val) {
@@ -102,11 +102,11 @@ class DiseasesController extends Controller
 		return $str;
 	}
 
-	public function thProvince() {
+	protected function thProvince() {
 		return $result = DB::table('c_province')->get()->toArray();
 	}
 
-	public function top10DiseasePatientYear($year=0) {
+	protected function top10DiseasePatientYear($year=0) {
 		$result = DB::table('ur_count_all')
 		->where('c_year', $year)
 		->orderBy('total', 'desc')
@@ -116,7 +116,7 @@ class DiseasesController extends Controller
 		return $result;
 	}
 
-	public function top10DiseasePatientWeek($tblYear=0, $week=0) {
+	protected function top10DiseasePatientWeek($tblYear=0, $week=0) {
 		$result =  DB::table('ur506_'.$tblYear)
 		->select('DISEASE', 'week_no', DB::raw('sum(if(week_no="" or week_no is not null, 1, 0)) as total_week'))
 		->where('week_no', $week)
@@ -127,7 +127,7 @@ class DiseasesController extends Controller
 		return $result;
 	}
 
-	public function setAgeRange() {
+	protected function setAgeRange() {
 		$range = array(
 			'g1'=>'<5',
 			'g2'=>'5-9',
@@ -142,7 +142,7 @@ class DiseasesController extends Controller
 		return $range;
 	}
 
-	public function setMonthLabel() {
+	protected function setMonthLabel() {
 		$lblMonth = array(
 			1=>'มค.',
 			2=>'กพ.',
@@ -160,7 +160,7 @@ class DiseasesController extends Controller
 		return $lblMonth;
 	}
 
-	public function totalPopByAgegroup($year=0) {
+	protected function totalPopByAgegroup($year=0) {
 		$result = DB::table('pop_urban_age_group')
 		->select('age_0_4', 'age_5_9', 'age_10_14', 'age_15_24', 'age_25_34', 'age_35_44', 'age_45_54', 'age_55_64', 'age_65_up' )
 		->where('year_', $year)
@@ -169,14 +169,15 @@ class DiseasesController extends Controller
 		return $result;
 	}
 
-	public function getFirstWeek($year=0) {
+	protected function getFirstWeek($year=0) {
 		$result = DB::table('ur506_'.$year)
 		->select(DB::raw('MIN(week_no) AS firstweek'))
 		->get()
 		->toArray();
 		return $result;
 	}
-	public function getLastWeek($year=0) {
+
+	protected function getLastWeek($year=0) {
 		$result = DB::table('ur506_'.$year)
 		->select(DB::raw('MAX(week_no) AS lastweek'))
 		->get()
@@ -184,10 +185,9 @@ class DiseasesController extends Controller
 		return $result;
 	}
 
-	public function listUr506WeekFromYear($year) {
+	protected function listUr506WeekFromYear($year) {
 		$minWeek = $this->getFirstWeek($year);
 		$maxWeek = $this->getLastWeek($year);
-
 		$result = DB::table('ur506_'.$year)
 		->select('DATESICK', 'week_no')
 		->where('DATESICK', '<>', "" )
@@ -200,7 +200,7 @@ class DiseasesController extends Controller
 		return $result;
 	}
 
-	public function getDiseaseName() {
+	protected function getDiseaseName() {
 		$dsGroup = $this->diseaseGroup();
 		foreach ($dsGroup as $val) {
 			$dsName[(int)$val->DISEASE] = $val->DISNAME;
@@ -209,7 +209,7 @@ class DiseasesController extends Controller
 		return $dsName;
 	}
 
-	public function getUr506TblName() {
+	protected function getUr506TblName() {
 		$tbl=array();
 		$result = $tables = DB::select('select table_name from information_schema.tables where table_name like "ur506%"');
 		foreach ($tables as $table) {
@@ -220,7 +220,7 @@ class DiseasesController extends Controller
 		return $tbl;
 	}
 
-	public function getLastUr506Year() {
+	protected function getLastUr506Year() {
 		$dsTbl = $this->getUr506TblName();
 		$year = array();
 		foreach ($dsTbl as $val) {
@@ -232,7 +232,7 @@ class DiseasesController extends Controller
 		return $lastYear;
 	}
 
-	public function getDateRangeByWeek($year=0, $week_no=0) {
+	protected function getDateRangeByWeek($year=0, $week_no=0) {
 		$result = DB::table('ur506_'.$year)
 		->select('DATESICK')
 		->where('week_no', $week_no)
@@ -244,7 +244,7 @@ class DiseasesController extends Controller
 		return $result;
 	}
 
-	public function cvDateToTH($mysql_date='0000-00-00') {
+	protected function cvDateToTH($mysql_date='0000-00-00') {
 		$thMonth = $this->setMonthLabel();
 		$exp = explode("-", $mysql_date);
 		$result = $exp[2]." ".$thMonth[(int)$exp[1]]." ".((int)$exp[0]+543);
@@ -282,4 +282,44 @@ class DiseasesController extends Controller
 		->toArray();
 		return $result;
 	}
+
+	protected function getNation() {
+		$result = DB::table('c_nation')
+		->orderBy('cdnation')
+		->get()
+		->toArray();
+		return $result;
+	}
+
+	protected function getOccupation($year=0, $diseaseCode=0) {
+		$result = DB::table('c_occ')
+		->orderBy('cdocc')
+		->get()
+		->toArray();
+		return $result;
+	}
+
+	protected function cntPatientByNation($year=0, $diseaseCode=0) {
+		$result = DB::table('ur506_'.$year)
+		->select(DB::RAW('COUNT(DATESICK) AS patient, RACE'))
+		->where('DISEASE', $diseaseCode)
+		->groupBy('RACE')
+		->orderBy('RACE')
+		->get()
+		->toArray();
+		return $result;
+	}
+
+	protected function cntPatientByOccupation($year=0, $diseaseCode=0) {
+		$result = DB::table('ur506_'.$year)
+		->select(DB::RAW('COUNT(DATESICK) AS patient, OCCUPAT'))
+		->where('DISEASE', $diseaseCode)
+		->groupBy('OCCUPAT')
+		->orderBy('OCCUPAT')
+		->get()
+		->toArray();
+		return $result;
+	}
+
+
 }
