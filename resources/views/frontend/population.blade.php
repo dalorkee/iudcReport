@@ -82,7 +82,7 @@
 								<td><?php $total_sick = $total_by_disease['total']*100000/$total_all_pop; echo number_format($total_sick,2);?></td>
 								<td><?php echo number_format($total_by_disease['totald']);?></td>
 								<td><?php $total_death = $total_by_disease['totald']*100000/$total_all_pop; echo number_format($total_death,2);?></td>
-								<td><?php if($total_by_disease['totald']>'0') { $total_ratio = ($total_by_disease['totald']*100)/$total_by_disease['total']; echo number_format($total_ratio,2);}else{ echo "0";}?></td>
+								<td><?php if($total_by_disease['totald']>'0') { $total_ratio = ($total_by_disease['totald']*100)/$total_by_disease['total']; echo number_format($total_ratio,2);}else{ echo "0.00";}?></td>
 							</tr>
 							<?php $j++; endforeach; ?>
 						</tbody>
