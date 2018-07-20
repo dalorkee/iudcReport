@@ -64,6 +64,8 @@ Route::get('export-patient/sick-death-by-nation', 'ExportPatientController@patie
 Route::get('export-patient/sick-by-occupation', 'ExportPatientController@patient_sick_by_occupation')->name('export-patient.sick-by-occupation');
 Route::get('export-patient/sick-by-sex', 'ExportPatientController@patient_sick_by_sex')->name('export-patient.sick-by-sex');
 //Post Action
+// API call Data
+Route::get('get_patient_sick_death_by_month','ExportPatientController@get_patient_sick_death_by_month')->name('get_patient_sick_death_by_month');
 /* End Export Patient Data */
 /* Report */
 Route::get('/report', function() {
