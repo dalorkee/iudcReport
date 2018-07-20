@@ -27,6 +27,9 @@ class OnePageController extends DiseasesController
 		arsort($patientByNation);
 		$patientByOccupation = $this->getPatientByOccupation('2017', '02');
 		arsort($patientByOccupation);
+		$top5PtByYear = $this->getTop5PtByYear('2017', '02');
+
+		$patientByProvRegion = $this->lstPatientByProvRegion('2017', '02');
 		return view(
 			'frontend.onePageReport',
 			[
@@ -38,7 +41,11 @@ class OnePageController extends DiseasesController
 				'patientBySex'=>$patientBySex,
 				'patientByAgeGroup'=>$patientByAgeGroup,
 				'patientByNation'=>$patientByNation,
-				'patientByOccupation'=>$patientByOccupation 
+				'patientByOccupation'=>$patientByOccupation,
+				'top5PtByYear'=>$top5PtByYear,
+				'patientByProvRegion'=>$patientByProvRegion
+
+
 			]
 		);
 	}
@@ -260,7 +267,7 @@ class OnePageController extends DiseasesController
 		return $result;
 	}
 
-	private function getPatientByNation($year=0, $diseaseCode=0) {
+	private function getPatientByNation($year, $diseaseCode) {
 		$c_nation = parent::getNation();
 		foreach ($c_nation as $val) {
 			$nation[$val->cdnation] = $val->nation;
@@ -277,7 +284,7 @@ class OnePageController extends DiseasesController
 		return $result;
 	}
 
-	private function getPatientByOccupation($year=0, $diseaseCode=0) {
+	private function getPatientByOccupation($year, $diseaseCode) {
 		$occ = parent::getOccupation();
 		foreach ($occ as $val) {
 			$occupation[$val->cdocc] = $val->occu;
@@ -295,5 +302,68 @@ class OnePageController extends DiseasesController
 
 	}
 
+	private function getTop5PtByYear($year, $diseaseCode) {
+		$getProv = parent::getProvince();
+		$top5Pt = parent::cntTop5PatientPerYear($year, $diseaseCode);
+		foreach ($getProv as $val) {
+			$prov[$val->prov_code] = $val->prov_name;
+		}
+
+		$lstPopPerProv = parent::totalPopPerProv($year);
+		foreach ($lstPopPerProv as $val) {
+			$ptPerProv[$val->prov_code] = (int)$val->pop;
+		}
+		foreach ($top5Pt as $val) {
+			$tmp = (($val->amount*100000)/$ptPerProv[$val->PROVINCE]);
+			$result[$prov[$val->PROVINCE]] = number_format($tmp, 2);
+		}
+		return $result;
+	}
+
+	private function lstPatientByProvRegion($year, $diseaseCode) {
+		/* get provice */
+		$lstProv = parent::getProvince();
+
+		/* split prov_code per region */
+		$north = array();
+		$central = array();
+		$northEastern = array();
+		$sourhern = array();
+		foreach ($lstProv as $val) {
+			switch ($val->prov_zone) {
+				case 'North':
+					array_push($north, $val->prov_code);
+					break;
+				case 'Central':
+					array_push($central, $val->prov_code);
+					break;
+				case 'North-Eastern':
+					array_push($northEastern, $val->prov_code);
+					break;
+				case 'Sourhern':
+					array_push($sourhern, $val->prov_code);
+					break;
+			}
+		}
+
+		/* patient per region */
+		$nPt = parent::countPatientByProv($year, $north, $diseaseCode);
+		$cPt = parent::countPatientByProv($year, $central, $diseaseCode);
+		$nePt = parent::countPatientByProv($year, $northEastern, $diseaseCode);
+		$sPt = parent::countPatientByProv($year, $sourhern, $diseaseCode);
+
+		/* pop per region */
+		$nPop = parent::sumPopByProvCode($north, $year);
+		$cPop = parent::sumPopByProvCode($central, $year);
+		$nePop = parent::sumPopByProvCode($northEastern, $year);
+		$sPop = parent::sumPopByProvCode($sourhern, $year);
+
+		/* result */
+		$nRegion = (((int)$nPt[0]->amount*100000)/(int)$nPop[0]->pop);
+		$cRegion = (((int)$cPt[0]->amount*100000)/(int)$cPop[0]->pop);
+		$neRegion = (((int)$nePt[0]->amount*100000)/(int)$nePop[0]->pop);
+		$sRegion = (((int)$sPt[0]->amount*100000)/(int)$sPop[0]->pop);
+
+	}
 
 }

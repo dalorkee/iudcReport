@@ -139,6 +139,18 @@
 											{{ $key. " ร้อยละ ".$val." " }}
 										@endforeach
 									</div>
+									<div style="text-indent: 50px;">
+										จังหวัดที่มีอัตราป่วยต่อแสนประชากรสูงสุด 5 อันดับแรก คือ
+										@foreach ($top5PtByYear as $key=>$val)
+											{{ $key." (".$val." ต่อแสนประชากร) " }}
+										@endforeach
+									</div>
+									<div style="text-indent: 50px;">
+										ภาคที่มีอัตราป่วยสูงสุด คือ
+									</div>
+									<div style="text-indent: 50px;">
+										ในสัปดาห์นี้ ตั้งแต่วันที่
+									</div>
 								</article>
 
 							</div>

@@ -87,6 +87,17 @@ class DiseasesController extends Controller
 		return $count;
 	}
 
+	protected function countPatientByProv($tblYear=null, $prov_code=array(), $diseaseCode=null) {
+		$pcode = array(10,20);
+		$count = DB::table('ur506_'.$tblYear)
+			->select(DB::raw('COUNT(DATESICK) AS amount'))
+			->whereIn('PROVINCE', $prov_code)
+			->where('DISEASE', $diseaseCode)
+			->get()
+			->toArray();
+		return $count;
+	}
+
 	protected function chArrToStr($arr=array()) {
 		$str = null;
 		if (sizeof($arr) > 0) {
@@ -103,7 +114,10 @@ class DiseasesController extends Controller
 	}
 
 	protected function thProvince() {
-		return $result = DB::table('c_province')->get()->toArray();
+		$result = DB::table('c_province')
+			->get()
+			->toArray();
+		return $result;
 	}
 
 	protected function top10DiseasePatientYear($year=0) {
@@ -124,6 +138,18 @@ class DiseasesController extends Controller
 		->orderBy(DB::raw('sum(if(week_no="" or week_no is not null,1,0))'), 'desc')
 		->limit(10)
 		->get();
+		return $result;
+	}
+
+	protected function cntTop5PatientPerYear($tblYear=0, $diseaseCode=0) {
+		$result =  DB::table('ur506_'.$tblYear)
+		->select(DB::raw('COUNT(DATESICK) AS amount, PROVINCE'))
+		->where('DISEASE', $diseaseCode)
+		->groupBy('PROVINCE')
+		->orderBYRaw('COUNT(DATESICK) DESC')
+		->limit(5)
+		->get()
+		->toArray();
 		return $result;
 	}
 
@@ -164,6 +190,17 @@ class DiseasesController extends Controller
 		$result = DB::table('pop_urban_age_group')
 		->select('age_0_4', 'age_5_9', 'age_10_14', 'age_15_24', 'age_25_34', 'age_35_44', 'age_45_54', 'age_55_64', 'age_65_up' )
 		->where('year_', $year)
+		->get()
+		->toArray();
+		return $result;
+	}
+
+	protected function totalPopPerProv($year=0) {
+		$result = DB::table('pop_urban_sex')
+		->selectRaw('SUM(male)+SUM(female) AS pop, prov_code')
+		->where('pop_year', $year)
+		->groupBy('prov_code')
+		->orderBY('prov_code')
 		->get()
 		->toArray();
 		return $result;
@@ -253,7 +290,7 @@ class DiseasesController extends Controller
 
 	protected function patientByYear($year=0, $diseaseCode=0) {
 		$result = DB::table('ur506_'.$year)
-		->select(DB::RAW('MIN(DATESICK) AS minDate, MAX(DATESICK) AS maxDate, COUNT(datesick) AS patient'))
+		->select(DB::raw('MIN(DATESICK) AS minDate, MAX(DATESICK) AS maxDate, COUNT(datesick) AS patient'))
 		->where('DISEASE', $diseaseCode)
 		->get()
 		->toArray();
@@ -262,7 +299,7 @@ class DiseasesController extends Controller
 
 	protected function countPatientPerProv($year=0, $diseaseCode=0) {
 		$result = DB::table('ur506_'.$year)
-		->select(DB::RAW('COUNT(DATESICK) AS patient, province'))
+		->select(DB::raw('COUNT(DATESICK) AS patient, province'))
 		->where('DISEASE', $diseaseCode)
 		->groupBy('PROVINCE')
 		->orderBy('PROVINCE')
@@ -273,7 +310,7 @@ class DiseasesController extends Controller
 
 	protected function countCaseResultPerProv($year=0, $diseaseCode=0, $result=0) {
 		$result = DB::table('ur506_'.$year)
-		->select(DB::RAW('COUNT(DATESICK) AS patient, province'))
+		->select(DB::raw('COUNT(DATESICK) AS patient, province'))
 		->where('DISEASE', $diseaseCode)
 		->where('RESULT', $result)
 		->groupBy('PROVINCE')
@@ -299,9 +336,17 @@ class DiseasesController extends Controller
 		return $result;
 	}
 
+	protected function getProvince() {
+		$result = DB::table('c_province')
+		->orderBy('prov_code')
+		->get()
+		->toArray();
+		return $result;
+	}
+
 	protected function cntPatientByNation($year=0, $diseaseCode=0) {
 		$result = DB::table('ur506_'.$year)
-		->select(DB::RAW('COUNT(DATESICK) AS patient, RACE'))
+		->select(DB::raw('COUNT(DATESICK) AS patient, RACE'))
 		->where('DISEASE', $diseaseCode)
 		->groupBy('RACE')
 		->orderBy('RACE')
@@ -312,10 +357,20 @@ class DiseasesController extends Controller
 
 	protected function cntPatientByOccupation($year=0, $diseaseCode=0) {
 		$result = DB::table('ur506_'.$year)
-		->select(DB::RAW('COUNT(DATESICK) AS patient, OCCUPAT'))
+		->select(DB::raw('COUNT(DATESICK) AS patient, OCCUPAT'))
 		->where('DISEASE', $diseaseCode)
 		->groupBy('OCCUPAT')
 		->orderBy('OCCUPAT')
+		->get()
+		->toArray();
+		return $result;
+	}
+
+	protected function sumPopByProvCode($prov_code=array(), $pop_year=0) {
+		$result = DB::table('pop_urban_sex')
+		->select(DB::raw('SUM(male+female) AS pop'))
+		->whereIn('prov_code', $prov_code)
+		->where('pop_year', $pop_year)
 		->get()
 		->toArray();
 		return $result;
