@@ -10,7 +10,13 @@ tr.group:hover {
 {{ Html::style(('https://cdn.datatables.net/buttons/1.5.2/css/buttons.dataTables.min.css')) }}
 @endsection
 <?php
-$get_all_disease =\App\Http\Controllers\Controller::list_disease();
+use \App\Http\Controllers\Controller as Controller;
+use \App\Http\Controllers\ExportPatientController as ExportPatientController;
+
+$arr_month = array('Jan','Feb','Mar','Apr','May','June','July','Aug','Sept','Oct','Nov','Dec','Total');
+$get_all_province_th = Controller::get_provincename_th();
+$get_all_disease = Controller::list_disease();
+$get_all_disease_array = Controller::list_disease()->toArray();
 //add array
 function array_push_assoc($array, $key, $value){
 $array[$key] = $value;
@@ -18,12 +24,11 @@ return $array;
 }
 array_push_assoc($get_all_disease,'26-27-66',"DHF Total");
 
-$arr_month = array('Jan','Feb','Mar','Apr','May','June','July','Aug','Sept','Oct','Nov','Dec','Total');
-$get_all_province_th =\App\Http\Controllers\Controller::get_provincename_th();
-
 $select_year = (isset($_GET['select_year']))? $_GET['select_year'] : date('Y')-1;
 $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 
+
+//dd($get_all_disease_array);
 ?>
 <!-- Content Header (Page header) -->
 <section class="content-header">
@@ -44,14 +49,14 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 					<h3 class="box-title">ข้อมูลผู้ป่วยจำนวนป่วย/ตาย</h3>
 				</div>
 				<div class="box-body">
-				<form action='{{ route('post_patient_sick_death_by_month') }}' class="form-horizontal" method="GET">
+				<form action='{{ route('export-patient.sick-death-month') }}' class="form-horizontal" method="get">
 					<div class="box-body">
 						<div class="form-group">
 							<label for="input_monthchoose" class="col-sm-2 control-label">โรค</label>
 							<div class="col-sm-4">
 								<select class="form-control" name="disease_code" id="disease_code">
 								@foreach ($get_all_disease as $disease_key => $disease_value)
-									<option value="{{ $disease_key }}">{{ $disease_key }} - {{ $disease_value }}</option>
+									<option value="{{ $disease_key }}" <?php if($disease_key == $disease_code){ echo 'selected="selected"'; }?>>{{ $disease_key }} - {{ $disease_value }}</option>
 								@endforeach
 								</select>
 							</div>
@@ -60,7 +65,7 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 						<label for="input_yearchoose" class="col-sm-2 control-label">ปี</label>
 							<div class="col-sm-4">
 								<?php
-											$current_year =  (isset($_GET['year']))? $_GET['year']: date('Y');
+											//$current_year =  (isset($_GET['year']))? $_GET['year']: date('Y');
 											//Current Year
 											$already_selected_value = (int)date('Y');
 											//Start Year
@@ -69,7 +74,7 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 											echo '<select name="select_year" class="form-control" id="select_year">';
 												foreach (range($already_selected_value, $earliest_year) as $x) {
 														 $year_th = $x+543;
-														 print '<option value="'.$x.'"'.($x === (int)$current_year ? ' selected="selected"' : '').'>'.$year_th.'</option>';
+														 print '<option value="'.$x.'"'.($x ==$select_year ? ' selected="selected"' : '').'>'.$year_th.'</option>';
 												}
 											echo '</select>';
 								?>
@@ -91,7 +96,7 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 	 	<div class="col-md-12">
 			<div class="box box-success">
 				<div class="box-header with-border">
-					<h3 class="box-title"><span class="ds-box-title">ตารางข้อมูลผู้ป่วยจำนวนป่วย/ตาย โรค <?php echo $disease_code;?></span></h3>
+					<h3 class="box-title"><span class="ds-box-title">ตารางข้อมูลผู้ป่วยจำนวนป่วย/ตาย โรค <?php if($disease_code=='26-27-66'){ echo 'DHF Total'; } else{ echo $disease_code.' - '.$get_all_disease_array[$disease_code];}?> ปี <?php echo $select_year+543;?></span></h3>
 				</div>
 				<!-- /.box-header -->
 				<div class="box-body">
@@ -115,7 +120,7 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 											</tr>
 									</thead>
 									<tbody>
-											<?php $get_data = \App\Http\Controllers\ExportPatientController::post_patient_sick_death_by_month($select_year,$disease_code); ?>
+											<?php $get_data = ExportPatientController::get_patient_sick_death_by_month($select_year,$disease_code); ?>
 											@foreach ($get_data as $data)
 											<tr>
 												<td>{{ $data['DPC'] }}</td>
@@ -173,27 +178,12 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 				</div>
 				<!-- /.box-body -->
 				<div class="box-footer">
-						<button type="submit" class="btn btn-success pull-right">ส่งออกข้อมูลเป็น XLS</button>
+            <a href="{{ route('xls_patient_sick_death_by_month') }}?disease_code={{ $disease_code }}&select_year={{ $select_year }}" class="btn btn-sm btn-success pull-right"><i class="fa fa-download"> </i> ส่งออกข้อมูลเป็น XLS</a>
 				</div>
 				<!-- /.footer -->
 			</div>
 		</div>
  </div>
-
- <!-- <div class="row">
- <div class="col-md-12">
-							<table class="table table-bordered" id="posts">
-									 <thead>
-													<th>Id</th>
-													<th>Title</th>
-													<th>Body</th>
-													<th>Created At</th>
-													<th>Options</th>
-									 </thead>
-							</table>
-			 </div>
-</div> -->
-
 
 </section>
 <!-- /.content -->
@@ -203,34 +193,19 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 @stop
 @section('script')
 <script>
-// $(document).ready(function () {
-// 				//var provincename_th = {!! json_encode($get_all_province_th) !!};
-// 				//var disease_code = $('#disease_code').val();
-// 				//var select_year = $('#select_year').val();
-// 				//console.log('disease_code='+disease_code+'<><><> select_year='+select_year);
-//         $('#example').DataTable({
-//             //"processing": true,
-//             //"serverSide": true,
-// 						"searching": false,
-// 						"bPaginate": false,
-// 						"bInfo": false,
-// 						"order": []
-// 						//"pageLength": 10
-//         });
-//     });
 $(document).ready(function() {
     var groupColumn = 0;
     var table = $('#example').DataTable({
         "columnDefs": [
             { "visible": false, "targets": groupColumn},
-						{ "orderable": false, targets: -27 }
+						{ "orderable": false, targets: '_all' }
         ],
-        "order": [[ groupColumn, 'asc' ]],
+        //"order": [[ groupColumn, 'asc' ]],
 
         //"displayLength": 25,
 				"bPaginate": false,
 				"searching": false,
-				//"bInfo": false,
+				"bInfo": false,
         "drawCallback": function ( settings ) {
             var api = this.api();
             var rows = api.rows( {page:'current'} ).nodes();
