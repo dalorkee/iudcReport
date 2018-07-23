@@ -17,7 +17,6 @@ class OnePageController extends DiseasesController
 			$nowYear = parent::getLastUr506Year();
 			$selectDs = array('disease'=>78, 'selectYear'=>$nowYear, 'selected'=>false);
 		}
-
 		$patientOnYear = $this->getPatientPerYear('2017', '02');
 		$patientPerProv = $this->getPatientPerProv('2017', '02');
 		$caseDead = $this->getCntCaseResult('2017', '02', 1);
@@ -28,8 +27,11 @@ class OnePageController extends DiseasesController
 		$patientByOccupation = $this->getPatientByOccupation('2017', '02');
 		arsort($patientByOccupation);
 		$top5PtByYear = $this->getTop5PtByYear('2017', '02');
-
-		$patientByProvRegion = $this->lstPatientByProvRegion('2017', '02');
+		$patientByProvRegion = $this->getPatientByProvRegion('2017', '02');
+		arsort($patientByProvRegion);
+		$patientOnLastWeek = $this->getPatientOnLastWeek('2017', '02');
+		$patintPerWeek = $this->getPatientPerWeek('2017', '02');
+		$lstPatientPerProv = $this->lstPatientPerProv('2017', '02');
 		return view(
 			'frontend.onePageReport',
 			[
@@ -43,9 +45,9 @@ class OnePageController extends DiseasesController
 				'patientByNation'=>$patientByNation,
 				'patientByOccupation'=>$patientByOccupation,
 				'top5PtByYear'=>$top5PtByYear,
-				'patientByProvRegion'=>$patientByProvRegion
-
-
+				'patientByProvRegion'=>$patientByProvRegion,
+				'patientOnLastWeek'=>$patientOnLastWeek,
+				'patintPerWeek'=>$patintPerWeek
 			]
 		);
 	}
@@ -320,7 +322,7 @@ class OnePageController extends DiseasesController
 		return $result;
 	}
 
-	private function lstPatientByProvRegion($year, $diseaseCode) {
+	private function getPatientByProvRegion($year, $diseaseCode) {
 		/* get provice */
 		$lstProv = parent::getProvince();
 
@@ -360,10 +362,103 @@ class OnePageController extends DiseasesController
 
 		/* result */
 		$nRegion = (((int)$nPt[0]->amount*100000)/(int)$nPop[0]->pop);
-		$cRegion = (((int)$cPt[0]->amount*100000)/(int)$cPop[0]->pop);
-		$neRegion = (((int)$nePt[0]->amount*100000)/(int)$nePop[0]->pop);
-		$sRegion = (((int)$sPt[0]->amount*100000)/(int)$sPop[0]->pop);
+		$nRegion = number_format($nRegion, 2);
 
+		$cRegion = (((int)$cPt[0]->amount*100000)/(int)$cPop[0]->pop);
+		$cRegion = number_format($cRegion, 2);
+
+		$neRegion = (((int)$nePt[0]->amount*100000)/(int)$nePop[0]->pop);
+		$neRegion = number_format($neRegion, 2);
+
+		$sRegion = (((int)$sPt[0]->amount*100000)/(int)$sPop[0]->pop);
+		$sRegion = number_format($sRegion, 2);
+
+		$result = array(
+			'ภาคกลาง'=>$cRegion,
+			'ภาคเหนือ'=>$nRegion,
+			'ภาคใต้'=>$sRegion,
+			'ภาคตะวันออกเฉียงเหนือ'=>$neRegion
+		);
+		return $result;
 	}
+
+	private function getPatientOnLastWeek($year, $diseaseCode) {
+		$weekNo = parent::getLastWeek($year);
+		$dateRange = parent::getDateRangeByWeek($year, $weekNo[0]->lastweek);
+		$result['date_start'] = parent::cvDateToTH($dateRange[0]->DATESICK);
+		$result['date_end'] = parent::cvDateToTH($dateRange[(count($dateRange)-1)]->DATESICK);
+
+		$patientAllWeek = parent::countPatientPerWeek($year, $diseaseCode);
+		$cntWeek = count($patientAllWeek);
+		$result['patient'] = number_format($patientAllWeek[($cntWeek-1)]->amount);
+		return $result;
+	}
+
+	private function getPatientPerWeek($year, $diseaseCode) {
+		/* get provice */
+		$lstProv = parent::getProvince();
+
+		/* split prov_code per region */
+		$north = array();
+		$central = array();
+		$northEastern = array();
+		$sourhern = array();
+		foreach ($lstProv as $val) {
+			switch ($val->prov_zone) {
+				case 'North':
+					array_push($north, $val->prov_code);
+					break;
+				case 'Central':
+					array_push($central, $val->prov_code);
+					break;
+				case 'North-Eastern':
+					array_push($northEastern, $val->prov_code);
+					break;
+				case 'Sourhern':
+					array_push($sourhern, $val->prov_code);
+					break;
+			}
+		}
+		/* get patient by region */
+		$ptCWeek = parent::getPateintPerWeekByProvZone($year, $diseaseCode, $central);
+		$ptNWeek = parent::getPateintPerWeekByProvZone($year, $diseaseCode, $north);
+		$ptNeWeek = parent::getPateintPerWeekByProvZone($year, $diseaseCode, $northEastern);
+		$ptSWeek = parent::getPateintPerWeekByProvZone($year, $diseaseCode, $sourhern);
+		$ptTotal = parent::countPatientPerWeek($year, $diseaseCode);
+
+		foreach ($ptCWeek as $val) {
+			$ptCWeek_arr[$val->week_no] = (int)$val->amount;
+		}
+		$result['ptCWeek'] = $ptCWeek_arr;
+
+		foreach ($ptNWeek as $val) {
+			$ptNWeek_arr[$val->week_no] = (int)$val->amount;
+		}
+		$result['ptNWeek'] = $ptNWeek_arr;
+
+		foreach ($ptNeWeek as $val) {
+			$ptNeWeek_arr[$val->week_no] = (int)$val->amount;
+		}
+		$result['ptNeWeek'] = $ptNeWeek_arr;
+
+		foreach ($ptSWeek as $val) {
+			$ptSWeek_arr[$val->week_no] = (int)$val->amount;
+		}
+		$result['ptSWeek'] = $ptSWeek_arr;
+
+		foreach ($ptTotal as $val) {
+			$ptTotal_arr[$val->weeks] = (int)$val->amount;
+		}
+		$result['ptTotal'] =  $ptTotal_arr;
+
+		return $result;
+	}
+
+	private function lstPatientPerProv($year, $diseaseCode) {
+		$cntPatient = parent::countPatientPerProv($year, $diseaseCode);
+		dd($cntPatient);
+		return $cntPatient;
+	}
+
 
 }

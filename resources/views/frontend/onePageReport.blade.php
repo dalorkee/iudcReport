@@ -16,6 +16,10 @@
 		}
 	</style>
 @endsection
+@section('incHeaderScript')
+	{{ Html::script(('public/components/Chart.PieceLabel.js/src/Chart.bundle.min.js')) }}
+	{{ Html::script(('public/components/Chart.PieceLabel.js/src/Chart.PieceLabel.js')) }}
+@endsection
 @section('content')
 <section class="content-header">
 	<h1>รายงานรายสัปดาห์</h1>
@@ -98,8 +102,8 @@
 	</div>
 
 	<div class="main-box" style="border:none;background:none;box-shadow:none;">
+		<!-- row#1 -->
 		<div class="row">
-			<!-- Left col#1 -->
 			<div class="col-md-12">
 				<div class="box box-info">
 					<div class="box-header with-border">
@@ -110,7 +114,6 @@
 							<button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
 						</div>
 					</div>
-					<!-- /.box-header -->
 					<div class="box-body">
 						<div class="row">
 							<div class="col-md-12">
@@ -147,29 +150,52 @@
 									</div>
 									<div style="text-indent: 50px;">
 										ภาคที่มีอัตราป่วยสูงสุด คือ
+										@foreach ($patientByProvRegion as $key=>$val)
+											{{ $key." (".$val." ต่อแสนประชากร) " }}
+										@endforeach
 									</div>
 									<div style="text-indent: 50px;">
 										ในสัปดาห์นี้ ตั้งแต่วันที่
+										{{ $patientOnLastWeek['date_start']." - ".$patientOnLastWeek['date_end'] }}
+										พบผู้ป่วย {{ $patientOnLastWeek['patient'] }} ราย
 									</div>
 								</article>
 
 							</div>
 						</div>
 					</div>
-					<!-- /.box-body -->
-					<div class="box-footer no-padding">
-						<ul class="nav nav-pills nav-stacked">
-							<li>
-								<a href="#">box footer</a>
-							</li>
-						</ul>
-					</div>
-					<!-- /.footer -->
 				</div>
-				<!-- /.box -->
 			</div>
 		</div>
 		<!-- /. row -->
+		<!-- row#2 -->
+		<div class="row">
+			<div class="col-md-12">
+				<div class="box box-success">
+					<div class="box-header with-border">
+						<h3 class="box-title"><span class="ds-box-title">ผู้ป่วยจำแนกรายสัปดาห์</span></h3>
+						<div class="box-tools pull-right">
+							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+							</button>
+							<button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+						</div>
+					</div>
+					<div class="box-body">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="chart-responsive charts-box">
+									<div class="charts">
+										<canvas id="line-canvas" width="300" height="300"></canvas>
+									</div>
+								</div>
+								<!-- ./chart-responsive -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /. row2 -->
 	</div>
 	<!-- /. box -->
 </section>
@@ -194,6 +220,114 @@ $(document).ready(function () {
 			echo "$('#select-year').datepicker('setDate', 'toYear');";
 		}
 	?>
+});
+</script>
+<script>
+/* Line chart for sick per week */
+function createLineChart(id, type, options) {
+	var data = {
+		labels: [
+			@for ($i=1; $i<=53; $i++)
+				{{ $i.',' }}
+			@endfor
+		],
+		datasets: [
+			{
+				label: 'ผู้ป่วย',
+				fill: false,
+				borderColor: '#FF7900',
+				backgroundColor: '#FFFFFF',
+				data: [
+					@foreach ($patintPerWeek['ptCWeek'] as $val)
+						{{ (int)$val.", " }}
+					@endforeach
+				]
+			},
+			{
+				label: 'ผู้ป่วย',
+				fill: false,
+				borderColor: '#FF00FF',
+				backgroundColor: '#FFFFFF',
+				data: [
+					@foreach ($patintPerWeek['ptNWeek'] as $val)
+						{{ (int)$val.", " }}
+					@endforeach
+				]
+			},
+			{
+				label: 'ผู้ป่วย',
+				fill: false,
+				borderColor: '#4486F8',
+				backgroundColor: '#FFFFFF',
+				data: [
+					@foreach ($patintPerWeek['ptNeWeek'] as $val)
+						{{ (int)$val.", " }}
+					@endforeach
+				]
+			},
+			{
+				label: 'ผู้ป่วย',
+				fill: false,
+				borderColor: '#026802',
+				backgroundColor: '#FFFFFF',
+				data: [
+					@foreach ($patintPerWeek['ptSWeek'] as $val)
+						{{ (int)$val.", " }}
+					@endforeach
+				]
+			},
+			{
+				label: 'ผู้ป่วย',
+				fill: false,
+				borderColor: '#E51400',
+				backgroundColor: '#FFFFFF',
+				data: [
+					@foreach ($patintPerWeek['ptTotal'] as $val)
+						{{ (int)$val.", " }}
+					@endforeach
+				]
+			},
+		]
+	};
+	new Chart(document.getElementById(id), {
+		type: type,
+		data: data,
+		options: options
+	});
+}
+</script>
+<script>
+$('document').ready(function () {
+	/* Line chart for sick per week */
+	createLineChart('line-canvas', 'line', {
+		responsive: true,
+		maintainAspectRatio: false,
+		legend: {
+			display: false,
+			position: 'right',
+		},
+		scales: {
+			xAxes: [{
+				display: true,
+				scaleLabel: {
+					display: true,
+					labelString: 'Week'
+				}
+			}],
+			yAxes: [{
+				display: true,
+				scaleLabel: {
+					display: true,
+					labelString: 'Patient'
+				}
+			}]
+		},
+		elements: {
+			line: {
+				tension: 0,
+			}
+		},
+	});
 });
 </script>
 <!-- bootstrap datepicker -->
