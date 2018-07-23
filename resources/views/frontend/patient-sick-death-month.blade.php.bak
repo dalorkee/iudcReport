@@ -1,14 +1,9 @@
 @extends('layouts.template')
 @section('content')
 @section('style')
-<style>
-tr.group,
-tr.group:hover {
-    background-color: #ddd !important;
-}
-</style>
 {{ Html::style(('https://cdn.datatables.net/buttons/1.5.2/css/buttons.dataTables.min.css')) }}
 @endsection
+
 <?php
 $get_all_disease =\App\Http\Controllers\Controller::list_disease();
 //add array
@@ -20,10 +15,6 @@ array_push_assoc($get_all_disease,'26-27-66',"DHF Total");
 
 $arr_month = array('Jan','Feb','Mar','Apr','May','June','July','Aug','Sept','Oct','Nov','Dec','Total');
 $get_all_province_th =\App\Http\Controllers\Controller::get_provincename_th();
-
-$select_year = (isset($_GET['select_year']))? $_GET['select_year'] : date('Y')-1;
-$disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
-
 ?>
 <!-- Content Header (Page header) -->
 <section class="content-header">
@@ -44,7 +35,8 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 					<h3 class="box-title">ข้อมูลผู้ป่วยจำนวนป่วย/ตาย</h3>
 				</div>
 				<div class="box-body">
-				<form action='{{ route('post_patient_sick_death_by_month') }}' class="form-horizontal" method="GET">
+				<form action='{{ route('post_population_area') }}' class="form-horizontal" method="post">
+					{{ csrf_field() }}
 					<div class="box-body">
 						<div class="form-group">
 							<label for="input_monthchoose" class="col-sm-2 control-label">โรค</label>
@@ -87,80 +79,44 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 	</div>
  </div>
 
+
  <div class="row">
 	 	<div class="col-md-12">
 			<div class="box box-success">
 				<div class="box-header with-border">
-					<h3 class="box-title"><span class="ds-box-title">ตารางข้อมูลผู้ป่วยจำนวนป่วย/ตาย โรค <?php echo $disease_code;?></span></h3>
+					<h3 class="box-title"><span class="ds-box-title">ตารางข้อมูลผู้ป่วยจำนวนป่วย/ตาย</span></h3>
 				</div>
 				<!-- /.box-header -->
 				<div class="box-body">
 					<div class="row">
 						<div class="col-md-12">
 							<div class="table-responsive">
-								<table class="table table-bordered table-responsive" id="example" style="width:100%">
+								<table class="table table-bordered table-responsive" id="users-table" style="width:100%">
 									<thead>
 											<tr>
-												  <th rowspan="2">DPC_NAME</th>
-													<th rowspan="2" class="text-top">Reporting Area</th>
+													<th rowspan="2">Reporting Area</th>
 													@foreach ($arr_month as $month)
-													<th colspan="2" class="text-center">{{ $month }}</th>
+													<th colspan="2">{{ $month }}</th>
 													@endforeach
 											</tr>
 											<tr>
 												@foreach ($arr_month as $month)
-												<th class="text-center">Cases</th>
-												<th class="text-center">Deaths</th>
+												<th>Cases</th>
+												<th>Deaths</th>
 												@endforeach
 											</tr>
 									</thead>
-									<tbody>
-											<?php $get_data = \App\Http\Controllers\ExportPatientController::post_patient_sick_death_by_month($select_year,$disease_code); ?>
-											@foreach ($get_data as $data)
-											<tr>
-												<td>{{ $data['DPC'] }}</td>
-												<td>{{ $data['PROVINCE'] }}</td>
-												<td>{{ $data['case_jan'] }}</td>
-												<td>{{ $data['death_jan'] }}</td>
-												<td>{{ $data['case_feb'] }}</td>
-												<td>{{ $data['death_feb'] }}</td>
-												<td>{{ $data['case_mar'] }}</td>
-												<td>{{ $data['death_mar'] }}</td>
-												<td>{{ $data['case_apr'] }}</td>
-												<td>{{ $data['death_apr'] }}</td>
-												<td>{{ $data['case_may'] }}</td>
-												<td>{{ $data['death_may'] }}</td>
-												<td>{{ $data['case_jun'] }}</td>
-												<td>{{ $data['death_jun'] }}</td>
-												<td>{{ $data['case_jul'] }}</td>
-												<td>{{ $data['death_jul'] }}</td>
-												<td>{{ $data['case_aug'] }}</td>
-												<td>{{ $data['death_aug'] }}</td>
-												<td>{{ $data['case_sep'] }}</td>
-												<td>{{ $data['death_sep'] }}</td>
-												<td>{{ $data['case_oct'] }}</td>
-												<td>{{ $data['death_oct'] }}</td>
-												<td>{{ $data['case_nov'] }}</td>
-												<td>{{ $data['death_nov'] }}</td>
-												<td>{{ $data['case_dec'] }}</td>
-												<td>{{ $data['death_dec'] }}</td>
-												<td>{{ $data['total_case'] }}</td>
-												<td>{{ $data['total_death'] }}</td>
-											</tr>
-											@endforeach
-									</tbody>
 									<tfoot>
 											<tr>
-													<th rowspan="2">DPC_NAME</th>
 													<th rowspan="2">Reporting Area</th>
 													@foreach ($arr_month as $month)
-													<th colspan="2" class="text-center">{{ $month }}</th>
+													<th colspan="2">{{ $month }}</th>
 													@endforeach
 											</tr>
 											<tr>
 												@foreach ($arr_month as $month)
-												<th class="text-center">Cases</th>
-												<th class="text-center">Deaths</th>
+												<th>Cases</th>
+												<th>Deaths</th>
 												@endforeach
 											</tr>
 									</tfoot>
@@ -199,64 +155,58 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 <!-- /.content -->
 @stop
 @section('CustomJSScript')
-
 @stop
 @section('script')
 <script>
-// $(document).ready(function () {
-// 				//var provincename_th = {!! json_encode($get_all_province_th) !!};
-// 				//var disease_code = $('#disease_code').val();
-// 				//var select_year = $('#select_year').val();
-// 				//console.log('disease_code='+disease_code+'<><><> select_year='+select_year);
-//         $('#example').DataTable({
-//             //"processing": true,
-//             //"serverSide": true,
-// 						"searching": false,
-// 						"bPaginate": false,
-// 						"bInfo": false,
-// 						"order": []
-// 						//"pageLength": 10
-//         });
-//     });
-$(document).ready(function() {
-    var groupColumn = 0;
-    var table = $('#example').DataTable({
-        "columnDefs": [
-            { "visible": false, "targets": groupColumn},
-						{ "orderable": false, targets: -27 }
-        ],
-        "order": [[ groupColumn, 'asc' ]],
+$(document).ready(function () {
+				var provincename_th = {!! json_encode($get_all_province_th) !!};
+				var disease_code = $('#disease_code').val();
+				var select_year = $('#select_year').val();
+				//console.log('disease_code='+disease_code+'<><><> select_year='+select_year);
+        $('#users-table').DataTable({
+            "processing": true,
+            "serverSide": true,
+						"searching": false,
+						"bPaginate": false,
+						"bInfo": false,
+						"pageLength": 10,
+            "ajax":{
+                     "url": "{{ route('get_patient_sick_death_by_month') }}",
+                     "dataType": "json",
+                     "type": "GET",
+                     "data":{ disease_code : disease_code,select_year : select_year }
+                   },
+            "columns": [
+												{"data" : "PROVINCE"},
+												{"data" : "case_jan"},
+												{"data" : "death_jan"},
+												{"data" : "case_feb"},
+												{"data" : "death_feb"},
+												{"data" : "case_mar"},
+												{"data" : "death_mar"},
+												{"data" : "case_apr"},
+												{"data" : "death_apr"},
+												{"data" : "case_may"},
+												{"data" : "death_may"},
+												{"data" : "case_jun"},
+												{"data" : "death_jun"},
+												{"data" : "case_jul"},
+												{"data" : "death_jul"},
+												{"data" : "case_aug"},
+												{"data" : "death_aug"},
+												{"data" : "case_sep"},
+												{"data" : "death_sep"},
+												{"data" : "case_oct"},
+												{"data" : "death_oct"},
+												{"data" : "case_nov"},
+												{"data" : "death_nov"},
+												{"data" : "case_dec"},
+												{"data" : "death_dec"},
+												{"data" : "total_case"},
+												{"data" : "total_death"}
+            ]
 
-        //"displayLength": 25,
-				"bPaginate": false,
-				"searching": false,
-				//"bInfo": false,
-        "drawCallback": function ( settings ) {
-            var api = this.api();
-            var rows = api.rows( {page:'current'} ).nodes();
-            var last=null;
-
-            api.column(groupColumn, {page:'current'} ).data().each( function ( group, i ) {
-                if ( last !== group ) {
-                    $(rows).eq( i ).before(
-                        '<tr class="group"><td colspan="27">'+group+'</td></tr>'
-                    );
-                    last = group;
-                }
-            } );
-        }
-    } );
-
-    //Order by the grouping
-    $('#example tbody').on( 'click', 'tr.group', function () {
-        var currentOrder = table.order()[0];
-        if ( currentOrder[0] === groupColumn && currentOrder[1] === 'asc' ) {
-            table.order( [ groupColumn, 'desc' ] ).draw();
-        }
-        else {
-            table.order( [ groupColumn, 'asc' ] ).draw();
-        }
-    } );
-} );
+        });
+    });
 </script>
 @endsection

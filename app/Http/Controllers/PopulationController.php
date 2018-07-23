@@ -68,7 +68,7 @@ class PopulationController extends Controller
 
     public function ShowByDisease_Export(Request $request){
       if(empty($request->year) || empty($request->disease_code)) return false;
-        $get_all_disease =\App\Http\Controllers\Controller::list_disease();
+        $get_all_disease =\App\Http\Controllers\Controller::get_provincename_th();
         $select_year = trim($request->year);
         $disease_code = trim($request->disease_code);
         $table_name = "ur506_".$select_year;
