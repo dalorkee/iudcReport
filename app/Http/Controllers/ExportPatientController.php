@@ -186,7 +186,7 @@ class ExportPatientController extends Controller
 
       $get_pop_dpc_group =\App\Http\Controllers\Controller::get_pop_dpc_group();
       $get_provincename_th =\App\Http\Controllers\Controller::get_provincename_th()->toArray();
-      //$arr_month = array('Jan','Feb','Mar','Apr','May','June','July','Aug','Sept','Oct','Nov','Dec','Total');
+
       $data[] = array('Reporting Area',
                       'Cases-jan','Deaths-jan','Cases-Feb','Deaths-Feb','Cases-Mar','Deaths-Mar','Cases-Apr','Deaths-Apr','Cases-May','Deaths-May','Cases-June','Deaths-June',
                       'Cases-July','Deaths-July','Cases-Aug','Deaths-Aug','Cases-Sept','Deaths-Sept','Cases-Oct','Deaths-Oct','Cases-Nov','Deaths-Nov','Cases-Dec','Deaths-Dec',
@@ -196,7 +196,7 @@ class ExportPatientController extends Controller
       foreach ($get_pop_dpc_group as $dpc_code => $dpc_val)
       {
           if($disease_code=='26-27-66'){
-            $data[] = DB::table('ur506_'.$tblYear)
+            $data1['summary'][] = DB::table('ur506_'.$tblYear)
               ->select('DISEASE', 'PROVINCE')
               ->selectRaw('sum(if(MONTH(DATESICK) = 1,1,0)) as case_jan,sum(if(MONTH(DATEDEATH) = 1,1,0)) as death_jan')
               ->selectRaw('sum(if(MONTH(DATESICK) = 2,1,0)) as case_feb,sum(if(MONTH(DATESICK) = 2,1,0)) as death_feb')
@@ -215,7 +215,7 @@ class ExportPatientController extends Controller
               ->groupBy('PROVINCE')
               ->get();
           }else{
-            $data[] = DB::table('ur506_'.$tblYear)
+            $data1['summary'][] = DB::table('ur506_'.$tblYear)
               ->select('DISEASE', 'PROVINCE')
               ->selectRaw('sum(if(MONTH(DATESICK) = 1,1,0)) as case_jan,sum(if(MONTH(DATEDEATH) = 1,1,0)) as death_jan')
               ->selectRaw('sum(if(MONTH(DATESICK) = 2,1,0)) as case_feb,sum(if(MONTH(DATESICK) = 2,1,0)) as death_feb')
@@ -236,32 +236,32 @@ class ExportPatientController extends Controller
           }
 
       }
-      dd($data);
+        //dd($data[1]);
         $arr_dpc_th = array('สคร.1','สคร.2','สคร.3','สคร.4','สคร.5','สคร.6','สคร.7','สคร.8','สคร.9','สคร.10','สคร.11','สคร.12','สปคม.');
-         for($i=1;$i<count($data);$i++ ){
-          foreach ($data[$i] as $data_key => $data_val)
-          {
-              $total_case = $data_val->case_jan+$data_val->case_feb+$data_val->case_mar+$data_val->case_apr+$data_val->case_may+$data_val->case_jun+$data_val->case_jul+$data_val->case_aug+$data_val->case_sep+$data_val->case_oct+$data_val->case_nov+$data_val->case_dec;
-              $total_death = $data_val->death_jan+$data_val->death_feb+$data_val->death_mar+$data_val->death_apr+$data_val->death_may+$data_val->death_jun+$data_val->death_jul+$data_val->death_aug+$data_val->death_sep+$data_val->death_oct+$data_val->death_nov+$data_val->death_dec;
-              $data[] = array('DPC'=> $arr_dpc_th[$i],'DISEASE' => $data_val->DISEASE,'PROVINCE' => $get_provincename_th[$data_val->PROVINCE],
-                               'case_jan' => $data_val->case_jan,'death_jan' => $data_val->death_jan,'case_feb' => $data_val->case_feb,'death_feb'=>$data_val->death_feb,
-                               'case_mar' => $data_val->case_mar,'death_mar' =>$data_val->death_mar,'case_apr'=>$data_val->case_apr,'death_apr'=>$data_val->death_apr,
-                               'case_may' => $data_val->case_may,'death_may'=>$data_val->death_may,'case_jun'=>$data_val->case_jun,'death_jun'=>$data_val->death_jun,
-                               'case_jul' => $data_val->case_jul,'death_jul'=>$data_val->death_jul,'case_aug'=>$data_val->case_aug,'death_aug'=>$data_val->death_aug,
-                               'case_sep' => $data_val->case_sep,'death_sep'=>$data_val->death_sep,'case_oct'=>$data_val->case_oct,'death_oct'=>$data_val->death_oct,
-                               'case_nov' => $data_val->case_nov,'death_nov'=>$data_val->death_nov,'case_dec'=>$data_val->case_dec,'death_dec'=>$data_val->death_dec,
-                               'total_case' => "$total_case", 'total_death' =>"$total_death"
-                              );
-          }
-         }
-       dd($data);
+        for($i=0;$i<count($data1['summary']);$i++ ){
+                      $data[] = array('DPC_GROUP_NAME' => $arr_dpc_th[$i]);
+            foreach ($data1['summary'][$i] as $val){
+                       $total_case = $val->case_jan+$val->case_feb+$val->case_mar+$val->case_apr+$val->case_may+$val->case_jun+$val->case_jul+$val->case_aug+$val->case_sep+$val->case_oct+$val->case_nov+$val->case_dec;
+                       $total_death = $val->death_jan+$val->death_feb+$val->death_mar+$val->death_apr+$val->death_may+$val->death_jun+$val->death_jul+$val->death_aug+$val->death_sep+$val->death_oct+$val->death_nov+$val->death_dec;
+                       $data[] = array( 'PROVINCE' => $get_provincename_th[$val->PROVINCE],
+                                        'case_jan' => $val->case_jan,'death_jan' => $val->death_jan,'case_feb' => $val->case_feb,'death_feb'=> $val->death_feb,
+                                        'case_mar' => $val->case_mar,'death_mar' => $val->death_mar,'case_apr'=> $val->case_apr,'death_apr'=> $val->death_apr,
+                                        'case_may' => $val->case_may,'death_may'=> $val->death_may,'case_jun'=> $val->case_jun,'death_jun'=> $val->death_jun,
+                                        'case_jul' => $val->case_jul,'death_jul'=> $val->death_jul,'case_aug'=> $val->case_aug,'death_aug'=> $val->death_aug,
+                                        'case_sep' => $val->case_sep,'death_sep'=> $val->death_sep,'case_oct'=> $val->case_oct,'death_oct'=> $val->death_oct,
+                                        'case_nov' => $val->case_nov,'death_nov'=> $val->death_nov,'case_dec'=> $val->case_dec,'death_dec'=> $val->death_dec,
+                                        'total_case' => $total_case, 'total_death' => $total_death
+                                       );
+            }
+        }
+      //  dd($data);
 
       //filename
       $filename = 'test';
       //sheetname
       $sheetname = 'test-sheetname';
 
-      Excel::create($filename, function($excel) use($data_excel,$sheetname) {
+      Excel::create($filename, function($excel) use($data,$sheetname) {
           // Set the title
           $excel->setTitle('UCD-Report');
           // Chain the setters
@@ -269,8 +269,11 @@ class ExportPatientController extends Controller
           //description
           $excel->setDescription('สปคม.');
 
-          $excel->sheet($sheetname, function ($sheet) use ($data_excel) {
-               $sheet->fromArray($data_excel, null, 'A1', false, false);
+          $excel->sheet($sheetname, function ($sheet) use ($data) {
+               $sheet->fromArray($data, null, 'A1', false, false);
+               $sheet->setColumnFormat([
+                        'B' => '@'
+               ]);
            });
        })->download('xlsx');
     }
