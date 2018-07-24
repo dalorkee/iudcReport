@@ -4,6 +4,7 @@
 	{{ Html::style(('public/AdminLTE-2.4.2/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css')) }}
 	<!-- Select2 -->
 	{{ Html::style(('public/AdminLTE-2.4.2/bower_components/select2/dist/css/select2.min.css')) }}
+	{{ Html::style(('https://api.tiles.mapbox.com/mapbox-gl-js/v0.46.0/mapbox-gl.css')) }}
 	<style>
 		.select2 * {
 			moz-border-radius: 0 !important;
@@ -14,11 +15,22 @@
 		.ds-box-title {
 			font-size: .80em;
 		}
+		.charts-box {
+			min-height: 350px;
+			margin: 20px 0;
+		}
+		.map-box {
+			width: 100%;
+			min-height: 580px;
+			position: relative;
+		}
+		#map { position:absolute; top:0; bottom:0; width:100%; }
 	</style>
 @endsection
 @section('incHeaderScript')
 	{{ Html::script(('public/components/Chart.PieceLabel.js/src/Chart.bundle.min.js')) }}
 	{{ Html::script(('public/components/Chart.PieceLabel.js/src/Chart.PieceLabel.js')) }}
+	{{ Html::script(('https://api.tiles.mapbox.com/mapbox-gl-js/v0.46.0/mapbox-gl.js')) }}
 @endsection
 @section('content')
 <section class="content-header">
@@ -160,7 +172,6 @@
 										พบผู้ป่วย {{ $patientOnLastWeek['patient'] }} ราย
 									</div>
 								</article>
-
 							</div>
 						</div>
 					</div>
@@ -196,6 +207,31 @@
 			</div>
 		</div>
 		<!-- /. row2 -->
+		<!-- row#3 -->
+		<div class="row">
+			<div class="col-md-12">
+				<div class="box box-danger">
+					<div class="box-header with-border">
+						<h3 class="box-title"><span class="ds-box-title">แผนที่</span></h3>
+						<div class="box-tools pull-right">
+							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+							</button>
+							<button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+						</div>
+					</div>
+					<div class="box-body">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="map-box">
+									<div id="map"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	<!-- /.row -->
 	</div>
 	<!-- /. box -->
 </section>
@@ -329,6 +365,44 @@ $('document').ready(function () {
 		},
 	});
 });
+</script>
+<?php
+	$color = ['#489E48', '#D1202E', '#FBBC05'];
+	$htm = "";
+	$i = 1;
+	foreach ($lstPatientPerProv as $val) {
+		$ranColor = $color[mt_rand(0, count($color) - 1)];
+		$htm .= "map.on('load', function () {
+			map.addLayer({
+				'id': 'mhs".$i."',
+				'type': 'fill',
+				'source': {
+					'type': 'geojson',
+					'data': 'public/gis/".$val->prov_name_en.".geojson'
+				},
+				'layout': {
+
+				},
+				'paint': {
+					'fill-color': '".$ranColor."',
+					'fill-opacity': 0.8
+				}
+			});
+		});\n";
+		$i++;
+	}
+?>
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoiZGFsb3JrZWUiLCJhIjoiY2pnbmJrajh4MDZ6aTM0cXZkNDQ0MzI5cCJ9.C2REqhILLm2HKIQSn9Wc0A';
+var map = new mapboxgl.Map({
+	container: 'map',
+	style: 'mapbox://styles/mapbox/streets-v9',
+	center: [100.277405, 13.530735],
+	zoom: 4.5
+});
+// Add zoom and rotation controls to the map.
+map.addControl(new mapboxgl.NavigationControl());
+{!! $htm !!}
 </script>
 <!-- bootstrap datepicker -->
 {{ Html::script(('public/AdminLTE-2.4.2/bower_components/moment/min/moment.min.js')) }}

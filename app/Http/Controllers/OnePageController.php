@@ -47,7 +47,9 @@ class OnePageController extends DiseasesController
 				'top5PtByYear'=>$top5PtByYear,
 				'patientByProvRegion'=>$patientByProvRegion,
 				'patientOnLastWeek'=>$patientOnLastWeek,
-				'patintPerWeek'=>$patintPerWeek
+				'patintPerWeek'=>$patintPerWeek,
+				'lstPatientPerProv'=>$lstPatientPerProv
+				
 			]
 		);
 	}
@@ -450,13 +452,21 @@ class OnePageController extends DiseasesController
 			$ptTotal_arr[$val->weeks] = (int)$val->amount;
 		}
 		$result['ptTotal'] =  $ptTotal_arr;
-
 		return $result;
 	}
 
 	private function lstPatientPerProv($year, $diseaseCode) {
+		/* get provice */
+		$lstProv = parent::getProvince();
+		foreach ($lstProv as $val) {
+			$prov[$val->prov_code] = $val->prov_name_en;
+		}
+		/* count patient per province */
 		$cntPatient = parent::countPatientPerProv($year, $diseaseCode);
-		dd($cntPatient);
+
+		for ($i=0; $i<count($cntPatient); $i++) {
+			$cntPatient[$i]->prov_name_en = $prov[$cntPatient[$i]->province];
+		}
 		return $cntPatient;
 	}
 
