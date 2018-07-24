@@ -184,8 +184,10 @@ class ExportPatientController extends Controller
       $disease_code = $request->disease_code;
       $tblYear = $request->select_year;
 
+
       $get_pop_dpc_group =\App\Http\Controllers\Controller::get_pop_dpc_group();
       $get_provincename_th =\App\Http\Controllers\Controller::get_provincename_th()->toArray();
+      $get_all_disease_array = \App\Http\Controllers\Controller::list_disease()->toArray();
 
       $data[] = array('Reporting Area',
                       'Cases-jan','Deaths-jan','Cases-Feb','Deaths-Feb','Cases-Mar','Deaths-Mar','Cases-Apr','Deaths-Apr','Cases-May','Deaths-May','Cases-June','Deaths-June',
@@ -257,9 +259,9 @@ class ExportPatientController extends Controller
       //  dd($data);
 
       //filename
-      $filename = 'test';
+      $filename = 'sick-death-disease'.$disease_code.'-year'.$tblYear;
       //sheetname
-      $sheetname = 'test-sheetname';
+      $sheetname = 'Sick-Death-Disease'.$get_all_disease_array[$disease_code];
 
       Excel::create($filename, function($excel) use($data,$sheetname) {
           // Set the title
