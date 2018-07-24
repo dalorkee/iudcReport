@@ -88,7 +88,6 @@ class DiseasesController extends Controller
 	}
 
 	protected function countPatientByProv($tblYear=null, $prov_code=array(), $diseaseCode=null) {
-		$pcode = array(10,20);
 		$count = DB::table('ur506_'.$tblYear)
 			->select(DB::raw('COUNT(DATESICK) AS amount'))
 			->whereIn('PROVINCE', $prov_code)
@@ -373,6 +372,18 @@ class DiseasesController extends Controller
 		->where('pop_year', $pop_year)
 		->get()
 		->toArray();
+		return $result;
+	}
+
+	protected function getPateintPerWeekByProvZone($year=0, $diseaseCode=0, $prov_code=array()) {
+		$result = DB::table('ur506_'.$year)
+			->select(DB::raw('SUM(IF(DISEASE <> "", 1, 0)) AS amount, week_no'))
+			->where('DISEASE', $diseaseCode)
+			->whereIn('PROVINCE', $prov_code)
+			->groupBy('week_no')
+			->orderBy('week_no')
+			->get()
+			->toArray();
 		return $result;
 	}
 

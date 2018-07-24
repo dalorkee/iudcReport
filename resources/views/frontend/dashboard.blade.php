@@ -305,9 +305,7 @@
 						<div class="row">
 							<div class="col-md-12">
 								<div class="map-box">
-
-										<div id="map"></div>
-
+									<div id="map"></div>
 								</div>
 								<!-- ./chart-responsive -->
 							</div>
@@ -618,7 +616,6 @@ $('document').ready(function () {
 					'data': 'public/gis/".$val->prov_name_en.".geojson'
 				},
 				'layout': {
-
 				},
 				'paint': {
 					'fill-color': '".$ranColor."',
@@ -628,7 +625,7 @@ $('document').ready(function () {
 		});\n";
 		$i++;
 	}
-	?>
+?>
 <script>
 mapboxgl.accessToken = 'pk.eyJ1IjoiZGFsb3JrZWUiLCJhIjoiY2pnbmJrajh4MDZ6aTM0cXZkNDQ0MzI5cCJ9.C2REqhILLm2HKIQSn9Wc0A';
 var map = new mapboxgl.Map({
