@@ -140,6 +140,7 @@ class DiseasesController extends Controller
 		return $result;
 	}
 
+/*
 	protected function cntTop5PatientPerYear($tblYear=0, $diseaseCode=0) {
 		$result =  DB::table('ur506_'.$tblYear)
 		->select(DB::raw('COUNT(DATESICK) AS amount, PROVINCE'))
@@ -147,6 +148,18 @@ class DiseasesController extends Controller
 		->groupBy('PROVINCE')
 		->orderBYRaw('COUNT(DATESICK) DESC')
 		->limit(5)
+		->get()
+		->toArray();
+		return $result;
+	}
+	*/
+
+	protected function cntPatientPerYear($tblYear=0, $diseaseCode=0) {
+		$result =  DB::table('ur506_'.$tblYear)
+		->select(DB::raw('COUNT(DATESICK) AS amount, PROVINCE'))
+		->where('DISEASE', $diseaseCode)
+		->groupBy('PROVINCE')
+		->orderBYRaw('COUNT(DATESICK) DESC')
 		->get()
 		->toArray();
 		return $result;
@@ -287,9 +300,27 @@ class DiseasesController extends Controller
 		return $result;
 	}
 
+	protected function getMinDateSickDate($year=0, $diseaseCode=0) {
+		$result = DB::table('ur506_'.$year)
+		->select(DB::raw('MIN(DATESICK) AS minDate'))
+		->where('DISEASE', $diseaseCode)
+		->get()
+		->toArray();
+		return $result;
+	}
+
+	protected function getMaxDateSickDate($year=0, $diseaseCode=0) {
+		$result = DB::table('ur506_'.$year)
+		->select(DB::raw('MAX(DATESICK) AS maxDate'))
+		->where('DISEASE', $diseaseCode)
+		->get()
+		->toArray();
+		return $result;
+	}
+
 	protected function patientByYear($year=0, $diseaseCode=0) {
 		$result = DB::table('ur506_'.$year)
-		->select(DB::raw('MIN(DATESICK) AS minDate, MAX(DATESICK) AS maxDate, COUNT(datesick) AS patient'))
+		->select(DB::raw('COUNT(DATESICK) AS patient'))
 		->where('DISEASE', $diseaseCode)
 		->get()
 		->toArray();
