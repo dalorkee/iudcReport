@@ -1,6 +1,7 @@
 @extends('layouts.template')
 @section('content')
 <?php
+  use \App\Http\Controllers\Controller as Controller;
 	use \App\Http\Controllers\PopulationController as PopulationController;
 	$select_year = (isset($_GET['year']))? $_GET['year']: date('Y');
 
@@ -79,10 +80,10 @@
 							<tr>
 								<td><a href="showbydisease?disease_code={{ $total_by_disease['DISEASE'] }}&year={{ $current_year }}"><?php echo $total_by_disease['DISNAME'];?></a></td>
 								<td><?php echo number_format($total_by_disease['total']);?></td>
-								<td><?php $total_sick = $total_by_disease['total']*100000/$total_all_pop; echo number_format($total_sick,2);?></td>
+								<td><?php echo Controller::cal_ratio_cases($total_all_pop,$total_by_disease['total']);?></td>
 								<td><?php echo number_format($total_by_disease['totald']);?></td>
-								<td><?php $total_death = $total_by_disease['totald']*100000/$total_all_pop; echo number_format($total_death,2);?></td>
-								<td><?php if($total_by_disease['totald']>'0') { $total_ratio = ($total_by_disease['totald']*100)/$total_by_disease['total']; echo number_format($total_ratio,2);}else{ echo "0.00";}?></td>
+								<td><?php echo Controller::cal_ratio_deaths($total_all_pop,$total_by_disease['totald']);?></td>
+								<td><?php if($total_by_disease['totald']>0) { echo Controller::cal_ratio_cases_deaths($total_by_disease['total'],$total_by_disease['totald']); }else{ echo "0.00";}?></td>
 							</tr>
 							<?php $j++; endforeach; ?>
 						</tbody>

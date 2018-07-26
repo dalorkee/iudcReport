@@ -181,5 +181,19 @@ class Controller extends BaseController
                    'dpc99' => 'รวมทุก สคร.'
                  );
     }
-
+    //calculate ratio cases
+    public static function cal_ratio_cases($total_all_pop,$total_cases){
+          $total_ratio_cases = $total_cases*100000/$total_all_pop;
+          return number_format($total_ratio_cases,2);
+    }
+    //calculate ratio deaths
+    public static function cal_ratio_deaths($total_all_pop,$total_deaths){
+          $total_ratio_deaths = $total_deaths*100000/$total_all_pop;
+          return number_format($total_ratio_deaths,2);
+    }
+    //calculate ratio cases-deaths
+    public static function cal_ratio_cases_deaths($total_cases,$total_deaths){
+          $total_ratio = ($total_deaths*100)/$total_cases;
+          return number_format($total_ratio,2);
+    }
 }
