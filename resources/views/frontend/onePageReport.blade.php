@@ -360,7 +360,10 @@ $('document').ready(function () {
 				scaleLabel: {
 					display: true,
 					labelString: 'จำนวน'
-				}
+				},
+				ticks: {
+					beginAtZero: true
+				},
 			}]
 		},
 		elements: {

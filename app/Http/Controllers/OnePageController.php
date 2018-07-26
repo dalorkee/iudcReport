@@ -419,6 +419,7 @@ class OnePageController extends DiseasesController
 		$central = array();
 		$northEastern = array();
 		$sourhern = array();
+
 		foreach ($lstProv as $val) {
 			switch ($val->prov_zone) {
 				case 'North':
@@ -435,8 +436,12 @@ class OnePageController extends DiseasesController
 					break;
 			}
 		}
+
 		/* get patient by region */
 		$ptCWeek = parent::getPateintPerWeekByProvZone($year, $diseaseCode, $central);
+
+
+
 		$ptNWeek = parent::getPateintPerWeekByProvZone($year, $diseaseCode, $north);
 		$ptNeWeek = parent::getPateintPerWeekByProvZone($year, $diseaseCode, $northEastern);
 		$ptSWeek = parent::getPateintPerWeekByProvZone($year, $diseaseCode, $sourhern);
@@ -466,6 +471,7 @@ class OnePageController extends DiseasesController
 			$ptTotal_arr[$val->weeks] = (int)$val->amount;
 		}
 		$result['ptTotal'] =  $ptTotal_arr;
+
 		return $result;
 	}
 
