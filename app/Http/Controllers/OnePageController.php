@@ -17,7 +17,7 @@ class OnePageController extends DiseasesController
 			$nowYear = parent::getLastUr506Year();
 			$selectDs = array('disease'=>78, 'selectYear'=>$nowYear, 'selected'=>false);
 		}
-		$patientOnYear = $this->getPatientPerYear('2017', '02');
+		$patientOnYear = $this->getPatientPerYear('2017', 2);
 		$patientPerProv = $this->getPatientPerProv('2017', '02');
 		$caseDead = $this->getCntCaseResult('2017', '02', 1);
 		$patientBySex = $this->getPatientBySexType('2017', '02');
@@ -31,7 +31,7 @@ class OnePageController extends DiseasesController
 		arsort($patientByProvRegion);
 		$patientOnLastWeek = $this->getPatientOnLastWeek('2017', '02');
 		$patintPerWeek = $this->getPatientPerWeek('2017', '02');
-		$lstPatientPerProv = $this->lstPatientPerProv('2017', '02');
+		$patientMap = $this->getPatientMap('2017', '02');
 		return view(
 			'frontend.onePageReport',
 			[
@@ -48,8 +48,8 @@ class OnePageController extends DiseasesController
 				'patientByProvRegion'=>$patientByProvRegion,
 				'patientOnLastWeek'=>$patientOnLastWeek,
 				'patintPerWeek'=>$patintPerWeek,
-				'lstPatientPerProv'=>$lstPatientPerProv
-				
+				'patientMap'=>$patientMap
+
 			]
 		);
 	}
@@ -121,9 +121,12 @@ class OnePageController extends DiseasesController
 
 	private function getPatientPerYear($year, $diseaseCode) {
 		$patientOnYear = parent::patientByYear($year, $diseaseCode);
+		$minDate = parent::getMinDateSickDate($year, $diseaseCode);
+		$maxDate = parent::getMaxDateSickDate($year, $diseaseCode);
+
 		$result['patientThisYear'] = number_format((int)$patientOnYear[0]->patient);
-		$result['minDate'] = parent::cvDateToTH($patientOnYear[0]->minDate);
-		$result['maxDate'] = parent::cvDateToTH($patientOnYear[0]->maxDate);
+		$result['minDate'] = parent::cvDateToTH($minDate[0]->minDate);
+		$result['maxDate'] = parent::cvDateToTH($maxDate[0]->maxDate);
 		return $result;
 	}
 
@@ -308,7 +311,6 @@ class OnePageController extends DiseasesController
 
 	private function getTop5PtByYear($year, $diseaseCode) {
 		$getProv = parent::getProvince();
-		$top5Pt = parent::cntTop5PatientPerYear($year, $diseaseCode);
 		foreach ($getProv as $val) {
 			$prov[$val->prov_code] = $val->prov_name;
 		}
@@ -317,10 +319,14 @@ class OnePageController extends DiseasesController
 		foreach ($lstPopPerProv as $val) {
 			$ptPerProv[$val->prov_code] = (int)$val->pop;
 		}
+
+		$ptPerYear = parent::cntPatientPerYear($year, $diseaseCode);
+		$top5Pt = array_slice($ptPerYear, 0, 5, true);
 		foreach ($top5Pt as $val) {
 			$tmp = (($val->amount*100000)/$ptPerProv[$val->PROVINCE]);
 			$result[$prov[$val->PROVINCE]] = number_format($tmp, 2);
 		}
+
 		return $result;
 	}
 
@@ -455,7 +461,9 @@ class OnePageController extends DiseasesController
 		return $result;
 	}
 
-	private function lstPatientPerProv($year, $diseaseCode) {
+	private function getPatientMap($year, $diseaseCode) {
+		$result['disease'] = $diseaseCode;
+
 		/* get provice */
 		$lstProv = parent::getProvince();
 		foreach ($lstProv as $val) {
@@ -464,10 +472,42 @@ class OnePageController extends DiseasesController
 		/* count patient per province */
 		$cntPatient = parent::countPatientPerProv($year, $diseaseCode);
 
+		dd($cntPatient);
+
+		/* list for get max&&min value */
+		$amount_arr = array();
+		foreach ($cntPatient as $val) {
+			if ((int)$val->patient > 0) {
+				array_push($amount_arr, (int)$val->patient);
+			}
+		}
+		$maxAmount = max($amount_arr);
+		$minAmount = min($amount_arr);
+
+		/* set formular for render the map */
+		$x = (($maxAmount-$minAmountj)/5);
+		$r1 = $minAmount+$x;
+		$r2 = (($r1+1)+$x);
+		$r3 = (($r2+1)+$x);
+		$r4 = (($r3+1)+$x);
+		$r5 = (($r4+1)+$x);
+		$color = array(
+			'r1'=>'#A1DF96',
+			'r2'=>'#438722',
+			'r3'=>'#FBBC05',
+			'r4'=>'#F85F1F',
+			'r5'=>'#D1202E'
+		);
+
 		for ($i=0; $i<count($cntPatient); $i++) {
+			if ($cntPatient[$i]->patient) {
+
+			}
 			$cntPatient[$i]->prov_name_en = $prov[$cntPatient[$i]->province];
 		}
-		return $cntPatient;
+		$result['patient'] = $cntPatient;
+		dd($result);
+		return $result;
 	}
 
 
