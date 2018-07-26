@@ -11,6 +11,7 @@ class dashboardController extends DiseasesController
 		$ageRange = parent::setAgeRange();
 		$monthLabel = parent::setMonthLabel();
 		$thProv = $this->getThProvince();
+		
 		if (isset($request) && isset($request->year)) {
 			$countPatientBySex = $this->getCountPatientBySex($request->year, $request->disease);
 			$countPatientByAgegroup = $this->getCountPatientByAgegroup($request->year, $request->disease);

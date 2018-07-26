@@ -11,27 +11,35 @@ class OnePageController extends DiseasesController
 	*/
 	public function index(Request $request) {
 		$dsgroups = $this->getDsNameByDsGroup();
+
 		if (isset($request) && isset($request->year)) {
-			$selectDs = array('disease'=>$request->disease, 'selectYear'=>$request->year, 'selected'=>true);
+			$rqYear = $request->year;
+			$ds = $request->disease;
+			$selected = true;
+			//$selectDs = array('disease'=>$request->disease, 'selectYear'=>$request->year, 'selected'=>true);
 		} else {
 			$nowYear = parent::getLastUr506Year();
-			$selectDs = array('disease'=>78, 'selectYear'=>$nowYear, 'selected'=>false);
+			$rqYear = $nowYear;
+			$ds = 78;
+			$selected = false;
+			//$selectDs = array('disease'=>78, 'selectYear'=>$nowYear, 'selected'=>false);
 		}
-		$patientOnYear = $this->getPatientPerYear('2017', 2);
-		$patientPerProv = $this->getPatientPerProv('2017', '02');
-		$caseDead = $this->getCntCaseResult('2017', '02', 1);
-		$patientBySex = $this->getPatientBySexType('2017', '02');
-		$patientByAgeGroup = $this->getPatientByAgeGroup('2017', '02');
-		$patientByNation = $this->getPatientByNation('2017', '02');
+		$selectDs = array('disease'=>$ds, 'selectYear'=>$rqYear, 'selected'=>$selected);
+		$patientOnYear = $this->getPatientPerYear($rqYear, $ds);
+		$patientPerProv = $this->getPatientPerProv($rqYear, $ds);
+		$caseDead = $this->getCntCaseResult($rqYear, $ds, 2);
+		$patientBySex = $this->getPatientBySexType($rqYear, $ds);
+		$patientByAgeGroup = $this->getPatientByAgeGroup($rqYear, $ds);
+		$patientByNation = $this->getPatientByNation($rqYear, $ds);
 		arsort($patientByNation);
-		$patientByOccupation = $this->getPatientByOccupation('2017', '02');
+		$patientByOccupation = $this->getPatientByOccupation($rqYear, $ds);
 		arsort($patientByOccupation);
-		$top5PtByYear = $this->getTop5PtByYear('2017', '02');
-		$patientByProvRegion = $this->getPatientByProvRegion('2017', '02');
+		$top5PtByYear = $this->getTop5PtByYear($rqYear, $ds);
+		$patientByProvRegion = $this->getPatientByProvRegion($rqYear, $ds);
 		arsort($patientByProvRegion);
-		$patientOnLastWeek = $this->getPatientOnLastWeek('2017', '02');
-		$patintPerWeek = $this->getPatientPerWeek('2017', '02');
-		$patientMap = $this->getPatientMap('2017', '02');
+		$patientOnLastWeek = $this->getPatientOnLastWeek($rqYear, $ds);
+		$patintPerWeek = $this->getPatientPerWeek($rqYear, $ds);
+		$patientMap = $this->getPatientMap($rqYear, $ds);
 		return view(
 			'frontend.onePageReport',
 			[
@@ -472,8 +480,6 @@ class OnePageController extends DiseasesController
 		/* count patient per province */
 		$cntPatient = parent::countPatientPerProv($year, $diseaseCode);
 
-		dd($cntPatient);
-
 		/* list for get max&&min value */
 		$amount_arr = array();
 		foreach ($cntPatient as $val) {
@@ -485,12 +491,12 @@ class OnePageController extends DiseasesController
 		$minAmount = min($amount_arr);
 
 		/* set formular for render the map */
-		$x = (($maxAmount-$minAmountj)/5);
+		$x = (($maxAmount-$minAmount)/5);
 		$r1 = $minAmount+$x;
-		$r2 = (($r1+1)+$x);
-		$r3 = (($r2+1)+$x);
-		$r4 = (($r3+1)+$x);
-		$r5 = (($r4+1)+$x);
+		$r2 = (($r1)+$x);
+		$r3 = (($r2)+$x);
+		$r4 = (($r3)+$x);
+		$r5 = (($r4)+$x);
 		$color = array(
 			'r1'=>'#A1DF96',
 			'r2'=>'#438722',
@@ -498,15 +504,26 @@ class OnePageController extends DiseasesController
 			'r4'=>'#F85F1F',
 			'r5'=>'#D1202E'
 		);
-
+		//$xx = array($maxAmount, $minAmount, $x, $r1, $r2, $r3, $r4, $r5);
+		//var_dump($xx);
+		//exit;
 		for ($i=0; $i<count($cntPatient); $i++) {
-			if ($cntPatient[$i]->patient) {
-
+			if ($cntPatient[$i]->patient <= $r1) {
+				$mapColor = $color['r1'];
+			} elseif ($cntPatient[$i]->patient <= $r2) {
+				$mapColor = $color['r2'];
+			} elseif ($cntPatient[$i]->patient <= $r3) {
+				$mapColor = $color['r3'];
+			} elseif ($cntPatient[$i]->patient <= $r4) {
+				$mapColor = $color['r4'];
+			} elseif ($cntPatient[$i]->patient <= $r5) {
+				$mapColor = $color['r5'];
 			}
+
 			$cntPatient[$i]->prov_name_en = $prov[$cntPatient[$i]->province];
+			$cntPatient[$i]->mapColor = $mapColor;
 		}
 		$result['patient'] = $cntPatient;
-		dd($result);
 		return $result;
 	}
 
