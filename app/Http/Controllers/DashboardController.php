@@ -7,28 +7,33 @@ use DateTime;
 class dashboardController extends DiseasesController
 {
 	public function index(Request $request) {
+		/* get Disease group name */
 		$dsgroups = $this->getDsNameByDsGroup();
+		/* set age range */
 		$ageRange = parent::setAgeRange();
+		/* get month name */
 		$monthLabel = parent::setMonthLabel();
+		/* get th province name */
 		$thProv = $this->getThProvince();
-		
+		/* request var from view */
 		if (isset($request) && isset($request->year)) {
-			$countPatientBySex = $this->getCountPatientBySex($request->year, $request->disease);
-			$countPatientByAgegroup = $this->getCountPatientByAgegroup($request->year, $request->disease);
-			$countPatientPerMonth = $this->getCountPatientPerMonth($request->year, $request->disease);
-			$countCaseDeadPerMonth = $this->getCountCaseDeadPerMonth($request->year, $request->disease);
-			$countPatientPerWeek = $this->getCountPatientPerWeek($request->year, $request->disease);
-			$selectDs = array('disease'=>$request->disease, 'selectYear'=>$request->year, 'selected'=>true);
+			$rqYear = $request->year;
+			$ds = $request->disease;
+			$selected = true;
 		} else {
 			$nowYear = parent::getLastUr506Year();
-			$countPatientBySex = $this->getCountPatientBySex($nowYear, 78);
-			$countPatientByAgegroup = $this->getCountPatientByAgegroup($nowYear, 78);
-			$countPatientPerMonth = $this->getCountPatientPerMonth($nowYear, 78);
-			$countCaseDeadPerMonth = $this->getCountCaseDeadPerMonth($nowYear, 78);
-			$countPatientPerWeek = $this->getCountPatientPerWeek($nowYear, 78);
-			$selectDs = array('disease'=>78, 'selectYear'=>$nowYear, 'selected'=>false);
+			$rqYear = $nowYear;
+			$ds = 78;
+			$selected = false;
 		}
-
+		$selectDs = array('disease'=>$ds, 'selectYear'=>$rqYear, 'selected'=>$selected);
+		/* pass var for get the result */
+		$countPatientBySex = $this->getCountPatientBySex($rqYear, $ds);
+		$countPatientByAgegroup = $this->getCountPatientByAgegroup($rqYear, $ds);
+		$countPatientPerMonth = $this->getCountPatientPerMonth($rqYear, $ds);
+		$countCaseDeadPerMonth = $this->getCountCaseDeadPerMonth($rqYear, $ds);
+		$countPatientPerWeek = $this->getCountPatientPerWeek($rqYear, $ds);
+		$patientMap = $this->getPatientMap($rqYear, $ds);
 		return view('frontend.dashboard',
 			[
 				'dsgroups'=>$dsgroups,
@@ -40,7 +45,8 @@ class dashboardController extends DiseasesController
 				'cpPerWeek'=>$countPatientPerWeek,
 				'selectDs'=>$selectDs,
 				'ageRange' => $ageRange,
-				'monthLabel' => $monthLabel
+				'monthLabel' => $monthLabel,
+				'patientMap'=>$patientMap
 			]
 		);
 	}
@@ -176,6 +182,61 @@ class dashboardController extends DiseasesController
 			}
 		}
 		return $total;
+	}
+
+	private function getPatientMap($year, $diseaseCode) {
+		$result['disease'] = $diseaseCode;
+
+		/* get provice */
+		$lstProv = parent::getProvince();
+		foreach ($lstProv as $val) {
+			$prov[$val->prov_code] = $val->prov_name_en;
+		}
+		/* count patient per province */
+		$cntPatient = parent::countPatientPerProv($year, $diseaseCode);
+
+		/* list for get max&&min value */
+		$amount_arr = array();
+		foreach ($cntPatient as $val) {
+			if ((int)$val->patient > 0) {
+				array_push($amount_arr, (int)$val->patient);
+			}
+		}
+		$maxAmount = max($amount_arr);
+		$minAmount = min($amount_arr);
+
+		/* set formular for render the map */
+		$x = (($maxAmount-$minAmount)/5);
+		$r1 = $minAmount+$x;
+		$r2 = (($r1)+$x);
+		$r3 = (($r2)+$x);
+		$r4 = (($r3)+$x);
+		$r5 = (($r4)+$x);
+		$color = array(
+			'r1'=>'#A1DF96',
+			'r2'=>'#438722',
+			'r3'=>'#FBBC05',
+			'r4'=>'#F85F1F',
+			'r5'=>'#D1202E'
+		);
+		for ($i=0; $i<count($cntPatient); $i++) {
+			if ($cntPatient[$i]->patient <= $r1) {
+				$mapColor = $color['r1'];
+			} elseif ($cntPatient[$i]->patient <= $r2) {
+				$mapColor = $color['r2'];
+			} elseif ($cntPatient[$i]->patient <= $r3) {
+				$mapColor = $color['r3'];
+			} elseif ($cntPatient[$i]->patient <= $r4) {
+				$mapColor = $color['r4'];
+			} elseif ($cntPatient[$i]->patient <= $r5) {
+				$mapColor = $color['r5'];
+			}
+
+			$cntPatient[$i]->prov_name_en = $prov[$cntPatient[$i]->province];
+			$cntPatient[$i]->mapColor = $mapColor;
+		}
+		$result['patient'] = $cntPatient;
+		return $result;
 	}
 
 

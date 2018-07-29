@@ -602,11 +602,9 @@ $('document').ready(function () {
 });
 </script>
 <?php
-	$color = ['#489E48', '#D1202E', '#FBBC05'];
 	$htm = "";
 	$i = 1;
-	foreach ($thProv as $val) {
-		$ranColor = $color[mt_rand(0, count($color) - 1)];
+	foreach ($patientMap['patient'] as $val) {
 		$htm .= "map.on('load', function () {
 			map.addLayer({
 				'id': 'mhs".$i."',
@@ -618,7 +616,7 @@ $('document').ready(function () {
 				'layout': {
 				},
 				'paint': {
-					'fill-color': '".$ranColor."',
+					'fill-color': '".$val->mapColor."',
 					'fill-opacity': 0.8
 				}
 			});

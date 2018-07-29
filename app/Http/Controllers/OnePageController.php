@@ -10,21 +10,21 @@ class OnePageController extends DiseasesController
 	* @return \Illuminate\Http\Response
 	*/
 	public function index(Request $request) {
+		/* get Disease group name */
 		$dsgroups = $this->getDsNameByDsGroup();
-
+		/* request var from view */
 		if (isset($request) && isset($request->year)) {
 			$rqYear = $request->year;
 			$ds = $request->disease;
 			$selected = true;
-			//$selectDs = array('disease'=>$request->disease, 'selectYear'=>$request->year, 'selected'=>true);
 		} else {
 			$nowYear = parent::getLastUr506Year();
 			$rqYear = $nowYear;
 			$ds = 78;
 			$selected = false;
-			//$selectDs = array('disease'=>78, 'selectYear'=>$nowYear, 'selected'=>false);
 		}
 		$selectDs = array('disease'=>$ds, 'selectYear'=>$rqYear, 'selected'=>$selected);
+		/* pass var for get the result */
 		$patientOnYear = $this->getPatientPerYear($rqYear, $ds);
 		$patientPerProv = $this->getPatientPerProv($rqYear, $ds);
 		$caseDead = $this->getCntCaseResult($rqYear, $ds, 2);
@@ -545,9 +545,6 @@ class OnePageController extends DiseasesController
 			'r4'=>'#F85F1F',
 			'r5'=>'#D1202E'
 		);
-		//$xx = array($maxAmount, $minAmount, $x, $r1, $r2, $r3, $r4, $r5);
-		//var_dump($xx);
-		//exit;
 		for ($i=0; $i<count($cntPatient); $i++) {
 			if ($cntPatient[$i]->patient <= $r1) {
 				$mapColor = $color['r1'];
