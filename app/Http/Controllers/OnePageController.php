@@ -438,39 +438,74 @@ class OnePageController extends DiseasesController
 		}
 
 		/* get patient by region */
-		$ptCWeek = parent::getPateintPerWeekByProvZone($year, $diseaseCode, $central);
+		/* get max week */
+		$maxWeek_arr = parent::getLastWeek($year);
+		$maxWeek = $maxWeek_arr[0]->lastweek;
 
-
-
-		$ptNWeek = parent::getPateintPerWeekByProvZone($year, $diseaseCode, $north);
-		$ptNeWeek = parent::getPateintPerWeekByProvZone($year, $diseaseCode, $northEastern);
-		$ptSWeek = parent::getPateintPerWeekByProvZone($year, $diseaseCode, $sourhern);
-		$ptTotal = parent::countPatientPerWeek($year, $diseaseCode);
-
-		foreach ($ptCWeek as $val) {
-			$ptCWeek_arr[$val->week_no] = (int)$val->amount;
+		/* center region */
+		$ptCWeek_coll = parent::getPatientPerWeekByProvZone($year, $diseaseCode, $central);
+		foreach ($ptCWeek_coll as $val) {
+			$ptCWeek_arr[(int)$val->week_no] = (int)$val->amount;
 		}
-		$result['ptCWeek'] = $ptCWeek_arr;
-
-		foreach ($ptNWeek as $val) {
-			$ptNWeek_arr[$val->week_no] = (int)$val->amount;
+		for ($i=1; $i<=$maxWeek; $i++) {
+			if (array_key_exists($i, $ptCWeek_arr)) {
+				$ptCWeek[$i] = $ptCWeek_arr[$i];
+			} else {
+				$ptCWeek[$i] = 0;
+			}
 		}
-		$result['ptNWeek'] = $ptNWeek_arr;
 
-		foreach ($ptNeWeek as $val) {
-			$ptNeWeek_arr[$val->week_no] = (int)$val->amount;
+		/* north region */
+		$ptNWeek_coll = parent::getPatientPerWeekByProvZone($year, $diseaseCode, $north);
+		foreach ($ptNWeek_coll as $val) {
+			$ptNWeek_arr[(int)$val->week_no] = (int)$val->amount;
 		}
-		$result['ptNeWeek'] = $ptNeWeek_arr;
+		for ($i=1; $i<=$maxWeek; $i++) {
+			if (array_key_exists($i, $ptNWeek_arr)) {
+				$ptNWeek[$i] = $ptNWeek_arr[$i];
+			} else {
+				$ptNWeek[$i] = 0;
+			}
+		}
 
-		foreach ($ptSWeek as $val) {
-			$ptSWeek_arr[$val->week_no] = (int)$val->amount;
+		/* northEastern region */
+		$ptNeWeek_coll = parent::getPatientPerWeekByProvZone($year, $diseaseCode, $northEastern);
+		foreach ($ptNeWeek_coll as $val) {
+			$ptNeWeek_arr[(int)$val->week_no] = (int)$val->amount;
 		}
-		$result['ptSWeek'] = $ptSWeek_arr;
+		for ($i=1; $i<=$maxWeek; $i++) {
+			if (array_key_exists($i, $ptNeWeek_arr)) {
+				$ptNeWeek[$i] = $ptNeWeek_arr[$i];
+			} else {
+				$ptNeWeek[$i] = 0;
+			}
+		}
 
-		foreach ($ptTotal as $val) {
-			$ptTotal_arr[$val->weeks] = (int)$val->amount;
+		/* sourhern region */
+		$ptSWeek_coll = parent::getPatientPerWeekByProvZone($year, $diseaseCode, $sourhern);
+		foreach ($ptSWeek_coll as $val) {
+			$ptSWeek_arr[(int)$val->week_no] = (int)$val->amount;
 		}
-		$result['ptTotal'] =  $ptTotal_arr;
+		for ($i=1; $i<=$maxWeek; $i++) {
+			if (array_key_exists($i, $ptSWeek_arr)) {
+				$ptSWeek[$i] = $ptSWeek_arr[$i];
+			} else {
+				$ptSWeek[$i] = 0;
+			}
+		}
+
+		/* sumary region */
+		/* $ptTotal_coll = parent::countPatientPerWeek($year, $diseaseCode); */
+		for ($i=1; $i<=$maxWeek; $i++) {
+			$ptTotal[$i] = $ptCWeek[$i]+$ptNWeek[$i]+$ptNeWeek[$i]+$ptSWeek[$i];
+		}
+
+		/* set result */
+		$result['ptCWeek'] = $ptCWeek;
+		$result['ptNWeek'] = $ptNWeek;
+		$result['ptNeWeek'] = $ptNeWeek;
+		$result['ptSWeek'] = $ptSWeek;
+		$result['ptTotal'] =  $ptTotal;
 
 		return $result;
 	}
