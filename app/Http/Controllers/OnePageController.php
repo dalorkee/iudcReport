@@ -122,7 +122,7 @@ class OnePageController extends DiseasesController
 		foreach ($dsgroups as $val) {
 			$tmpKey = $val->DISEASE;
 			$tmpVal = array('ds_id' => $val->DISEASE, 'ds_name'=>$val->DISNAME, 'ds_group'=>$val->gr);
-			$result[(int)$tmpKey] = $tmpVal;
+			$result[$tmpKey] = $tmpVal;
 		}
 		return $result;
 	}
