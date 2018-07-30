@@ -186,7 +186,6 @@ class dashboardController extends DiseasesController
 
 	private function getPatientMap($year, $diseaseCode) {
 		$result['disease'] = $diseaseCode;
-
 		/* get provice */
 		$lstProv = parent::getProvince();
 		foreach ($lstProv as $val) {
@@ -194,8 +193,7 @@ class dashboardController extends DiseasesController
 		}
 		/* count patient per province */
 		$cntPatient = parent::countPatientPerProv($year, $diseaseCode);
-
-		/* list for get max&&min value */
+		/* get max && min value */
 		$amount_arr = array();
 		foreach ($cntPatient as $val) {
 			if ((int)$val->patient > 0) {
@@ -204,36 +202,60 @@ class dashboardController extends DiseasesController
 		}
 		$maxAmount = max($amount_arr);
 		$minAmount = min($amount_arr);
-
-		/* set formular for render the map */
-		$x = (($maxAmount-$minAmount)/5);
-		$r1 = $minAmount+$x;
-		$r2 = (($r1)+$x);
-		$r3 = (($r2)+$x);
-		$r4 = (($r3)+$x);
-		$r5 = (($r4)+$x);
+		/* set map color */
 		$color = array(
 			'r1'=>'#A1DF96',
 			'r2'=>'#438722',
 			'r3'=>'#FBBC05',
 			'r4'=>'#F85F1F',
-			'r5'=>'#D1202E'
+			'r5'=>'#D1202E',
+			'r6'=>'#000000'
 		);
-		for ($i=0; $i<count($cntPatient); $i++) {
-			if ($cntPatient[$i]->patient <= $r1) {
-				$mapColor = $color['r1'];
-			} elseif ($cntPatient[$i]->patient <= $r2) {
-				$mapColor = $color['r2'];
-			} elseif ($cntPatient[$i]->patient <= $r3) {
-				$mapColor = $color['r3'];
-			} elseif ($cntPatient[$i]->patient <= $r4) {
-				$mapColor = $color['r4'];
-			} elseif ($cntPatient[$i]->patient <= $r5) {
-				$mapColor = $color['r5'];
+		/* set formular for render the map */
+		if ($diseaseCode == 66) {
+			for ($i=0; $i<count($cntPatient); $i++) {
+				$j = (int)$cntPatient[$i]->patient;
+				if ( $j <= 0) {
+					$mapColor = $color['r1'];
+				} elseif ($j <= 50) {
+					$mapColor = $color['r2'];
+				} elseif ($j <= 100) {
+					$mapColor = $color['r3'];
+				} elseif ($j <= 150) {
+					$mapColor = $color['r4'];
+				} elseif ($j > 150) {
+					$mapColor = $color['r5'];
+				} else {
+					$mapColor = $color['r6'];
+				}
+				$cntPatient[$i]->prov_name_en = $prov[$cntPatient[$i]->province];
+				$cntPatient[$i]->mapColor = $mapColor;
 			}
-
-			$cntPatient[$i]->prov_name_en = $prov[$cntPatient[$i]->province];
-			$cntPatient[$i]->mapColor = $mapColor;
+		} else {
+			$x = (($maxAmount-$minAmount)/5);
+			$r1 = $minAmount+$x;
+			$r2 = (($r1)+$x);
+			$r3 = (($r2)+$x);
+			$r4 = (($r3)+$x);
+			$r5 = (($r4)+$x);
+			for ($i=0; $i<count($cntPatient); $i++) {
+				$j = (int)$cntPatient[$i]->patient;
+				if ($j <= $r1) {
+					$mapColor = $color['r1'];
+				} elseif ($j <= $r2) {
+					$mapColor = $color['r2'];
+				} elseif ($j <= $r3) {
+					$mapColor = $color['r3'];
+				} elseif ($j <= $r4) {
+					$mapColor = $color['r4'];
+				} elseif ($j <= $r5) {
+					$mapColor = $color['r5'];
+				} else {
+					$mapColor = $color['r6'];
+				}
+				$cntPatient[$i]->prov_name_en = $prov[$cntPatient[$i]->province];
+				$cntPatient[$i]->mapColor = $mapColor;
+			}
 		}
 		$result['patient'] = $cntPatient;
 		return $result;
