@@ -617,7 +617,7 @@ $('document').ready(function () {
 				},
 				'paint': {
 					'fill-color': '".$val->mapColor."',
-					'fill-opacity': 0.8
+					'fill-opacity': 0.8,
 				}
 			});
 		});\n";
@@ -632,6 +632,7 @@ var map = new mapboxgl.Map({
 	center: [100.277405, 13.530735],
 	zoom: 4.5
 });
+map.setPaintProperty(1, '1', 1);
 {!! $htm !!}
 </script>
 <!-- bootstrap datepicker -->
