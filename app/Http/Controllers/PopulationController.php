@@ -154,17 +154,17 @@ class PopulationController extends Controller
           }
           //dd($data_excel);
 
-          if($disease_code=="26-27-66"){
-           $disease_name = "Total D.H.F.";
-          }else{
-           $disease_name = $get_list_disease[$disease_code];
-          }
+          // if($disease_code=="26-27-66"){
+          //  $disease_name = "Total D.H.F.";
+          // }else{
+          //  $disease_name = $get_list_disease[$disease_code];
+          // }
 
             //filename
             $show_year = $year+543;
-            $filename = 'จำนวนประชากร โรค'.$disease_name.'ปี'.$show_year;
+            $filename = 'จำนวนประชากร โรค'.$disease_code.'ปี'.$show_year;
             //sheetname
-            $data2 = 'จำนวนประชากร โรค'.$disease_name.'ปี'.$show_year;
+            $data2 = 'จำนวนประชากร โรค'.$disease_code.'ปี'.$show_year;
 
             Excel::create($filename, function($excel) use($data_excel,$data2) {
                 // Set the title
