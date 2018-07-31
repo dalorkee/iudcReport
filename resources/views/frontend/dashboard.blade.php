@@ -25,6 +25,10 @@
 			position: relative;
 		}
 		#map { position:absolute; top:0; bottom:0; width:100%; }
+		.mapboxgl-popup {
+	max-width: 400px;
+	font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+}
 	</style>
 @endsection
 @section('incHeaderScript')
@@ -293,7 +297,7 @@
 			<div class="col-md-12">
 				<div class="box box-info">
 					<div class="box-header with-border">
-						<h3 class="box-title"><span class="ds-box-title">แผนที่</span></h3>
+						<h3 class="box-title"><span class="ds-box-title">แผนที่ผู้ป่วย {{ $patientMap['disease_name']['ds_name'] }}</span></h3>
 						<div class="box-tools pull-right">
 							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
 							</button>
@@ -605,34 +609,50 @@ $('document').ready(function () {
 	$htm = "";
 	$i = 1;
 	foreach ($patientMap['patient'] as $val) {
-		$htm .= "map.on('load', function () {
-			map.addLayer({
-				'id': 'mhs".$i."',
-				'type': 'fill',
-				'source': {
-					'type': 'geojson',
-					'data': 'public/gis/".$val->prov_name_en.".geojson'
-				},
-				'layout': {
-				},
-				'paint': {
-					'fill-color': '".$val->mapColor."',
-					'fill-opacity': 0.8,
-				}
-			});
-		});\n";
+		$htm .= "
+			map.on('load', function () {
+				map.addLayer({
+					'id': 'mhs".$i."',
+					'type': 'fill',
+					'source': {
+						'type': 'geojson',
+						'data': 'public/gis/".$val->prov_name_en.".geojson',
+
+					},
+					'layout': {
+					},
+					'paint': {
+						'fill-color': '".$val->mapColor."',
+						'fill-opacity': 0.8,
+					},
+					'test': {
+						'xx':'abc'
+					}
+				});
+			});\n";
+
+
+		$htm .= "
+		map.on('click', 'mhs".$i."', function (e) {
+			new mapboxgl.Popup()
+				.setLngLat(e.lngLat)
+				.setHTML(e.features.map(function(feature) {
+					return '<div><strong>' + feature.properties.PROV_NAMT + '</strong> ' + '".$val->patient."</div>';
+				}).join(', '))
+				.addTo(map);
+		});";
 		$i++;
 	}
 ?>
 <script>
-mapboxgl.accessToken = 'pk.eyJ1IjoiZGFsb3JrZWUiLCJhIjoiY2pnbmJrajh4MDZ6aTM0cXZkNDQ0MzI5cCJ9.C2REqhILLm2HKIQSn9Wc0A';
-var map = new mapboxgl.Map({
-	container: 'map',
-	style: 'mapbox://styles/mapbox/streets-v9',
-	center: [100.277405, 13.530735],
-	zoom: 4.5
-});
-{!! $htm !!}
+	mapboxgl.accessToken = 'pk.eyJ1IjoiZGFsb3JrZWUiLCJhIjoiY2pnbmJrajh4MDZ6aTM0cXZkNDQ0MzI5cCJ9.C2REqhILLm2HKIQSn9Wc0A';
+	var map = new mapboxgl.Map({
+		container: 'map',
+		style: 'mapbox://styles/mapbox/streets-v9',
+		center: [100.277405, 13.530735],
+		zoom: 4.5
+	});
+	{!! $htm !!}
 </script>
 <!-- bootstrap datepicker -->
 {{ Html::script(('public/AdminLTE-2.4.2/bower_components/moment/min/moment.min.js')) }}
