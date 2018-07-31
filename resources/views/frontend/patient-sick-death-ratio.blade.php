@@ -31,12 +31,12 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 ?>
 <!-- Content Header (Page header) -->
 <section class="content-header">
-<h1>รายงานข้อมูลผู้ป่วย <small>รายเดือน</small></h1>
+<h1>รายงานข้อมูลอัตราป่วย/อัตราตาย/อัตราป่วย-ตาย<small>รายจังหวัด</small></h1>
 <ol class="breadcrumb">
 	<li><a href="{{ route('dashboard') }}"><i class="fa fa-home"></i> หนัาหลัก</a></li>
 	<li><a href="#" class="active">รายงาน</a></li>
   <li><a href="{{ route('export-patient-data.main') }}" class="active">รายงานข้อมูลผู้ป่วย</a></li>
-	<li><a href="{{ route('export-patient.sick-death-month') }}" class="active">ส่งออกข้อมูลผู้ป่วยจำนวนป่วย/ตาย รายเดือน</a></li>
+	<li><a href="{{ route('export-patient.sick-death-month') }}" class="active">ส่งออกข้อมูลอัตราป่วย/อัตราตาย/อัตราป่วย-ตาย จำแนกรายจังหวัด</a></li>
 </ol>
 </section>
 <!-- Main content -->
@@ -46,10 +46,10 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 			<!-- Default box -->
 			<div class="box box-info">
 				<div class="box-header with-border">
-					<h3 class="box-title">ข้อมูลผู้ป่วยจำนวนป่วย/ตาย</h3>
+					<h3 class="box-title">อัตราป่วย/อัตราตาย/อัตราป่วย-ตาย จำแนกรายจังหวัด</h3>
 				</div>
 				<div class="box-body">
-				<form action='{{ route('export-patient.sick-death-month') }}' class="form-horizontal" method="get">
+				<form action='{{ route('export-patient.sick-death-ratio') }}' class="form-horizontal" method="get">
 					<div class="box-body">
 						<div class="form-group">
 							<label for="input_monthchoose" class="col-sm-2 control-label">โรค</label>
@@ -96,7 +96,7 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 	 	<div class="col-md-12">
 			<div class="box box-success">
 				<div class="box-header with-border">
-					<h3 class="box-title"><span class="ds-box-title">ตารางข้อมูลผู้ป่วยจำนวนป่วย/ตาย โรค <?php if($disease_code=='26-27-66'){ echo 'DHF Total'; } else{ echo $disease_code.' - '.$get_all_disease_array[$disease_code];}?> ปี <?php echo $select_year+543;?></span></h3>
+					<h3 class="box-title"><span class="ds-box-title">ตารางข้อมูลอัตราป่วย/อัตราตาย/อัตราป่วย-ตาย จำแนกรายจังหวัด โรค <?php if($disease_code=='26-27-66'){ echo 'DHF Total'; } else{ echo $disease_code.' - '.$get_all_disease_array[$disease_code];}?> ปี <?php echo $select_year+543;?></span></h3>
 				</div>
 				<!-- /.box-header -->
 				<div class="box-body">
@@ -106,68 +106,48 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 								<table class="table table-bordered table-responsive" id="example" style="width:100%">
 									<thead>
 											<tr>
-												  <th rowspan="2">DPC_NAME</th>
-													<th rowspan="2" class="text-top">Reporting Area</th>
-													@foreach ($arr_month as $month)
-													<th colspan="2" class="text-center">{{ $month }}</th>
-													@endforeach
-											</tr>
-											<tr>
-												@foreach ($arr_month as $month)
-												<th class="text-center">Cases</th>
-												<th class="text-center">Deaths</th>
-												@endforeach
+												  <th>DPC_NAME</th>
+													<th>Reporting Area</th>
+													<th class="text-center">จำนวนผู้ป่วย</th>
+                          <th class="text-center">อัตราป่วย(ต่อประชากรแสนคน)</th>
+                          <th class="text-center">จำนวนผู้เสียชีวิต</th>
+                          <th class="text-center">อัตราป่วยตาย(%)</th>
+                          <th class="text-center">อัตราตาย(ต่อประชากรแสนคน)</th>
+                          <th class="text-center">จำนวนประชากร</th>
 											</tr>
 									</thead>
 									<tbody>
-											<?php $get_data = ExportPatientController::get_patient_sick_death_by_month($select_year,$disease_code); ?>
-											@foreach ($get_data as $data)
+                    <!-- +"DISEASE": "02"
+                    +"PROVINCE": "60"
+                    +"case_total": "3715"
+                    +"rate_case": "450.0379"
+                    +"death_total": "2"
+                    +"rate_cd": "0.0538"
+                    +"rate_death": "0.2423" -->
+											<?php $get_data = ExportPatientController::get_patient_sick_death_ratio($select_year,$disease_code); ?>
+                      <?php //dd($get_data);?>
+                    	@foreach ($get_data as $data)
 											<tr>
-												<td>{{ $data['DPC'] }}</td>
-												<td>{{ $data['PROVINCE'] }}</td>
-												<td>{{ $data['case_jan'] }}</td>
-												<td>{{ $data['death_jan'] }}</td>
-												<td>{{ $data['case_feb'] }}</td>
-												<td>{{ $data['death_feb'] }}</td>
-												<td>{{ $data['case_mar'] }}</td>
-												<td>{{ $data['death_mar'] }}</td>
-												<td>{{ $data['case_apr'] }}</td>
-												<td>{{ $data['death_apr'] }}</td>
-												<td>{{ $data['case_may'] }}</td>
-												<td>{{ $data['death_may'] }}</td>
-												<td>{{ $data['case_jun'] }}</td>
-												<td>{{ $data['death_jun'] }}</td>
-												<td>{{ $data['case_jul'] }}</td>
-												<td>{{ $data['death_jul'] }}</td>
-												<td>{{ $data['case_aug'] }}</td>
-												<td>{{ $data['death_aug'] }}</td>
-												<td>{{ $data['case_sep'] }}</td>
-												<td>{{ $data['death_sep'] }}</td>
-												<td>{{ $data['case_oct'] }}</td>
-												<td>{{ $data['death_oct'] }}</td>
-												<td>{{ $data['case_nov'] }}</td>
-												<td>{{ $data['death_nov'] }}</td>
-												<td>{{ $data['case_dec'] }}</td>
-												<td>{{ $data['death_dec'] }}</td>
-												<td>{{ $data['total_case'] }}</td>
-												<td>{{ $data['total_death'] }}</td>
+                        <td>{{ $data->DISEASE }}</td>
+												<td>{{ $data->DISEASE }}</td>
+												<td>{{ $data->PROVINCE }}</td>
+												<td>{{ $data->case_total }}</td>
+												<td>{{ $data->rate_case }}</td>
+												<td>{{ $data->death_total }}</td>
+												<td>{{ $data->rate_cd }}</td>
+												<td>{{ $data->rate_death }}</td>
 											</tr>
 											@endforeach
 									</tbody>
 									<tfoot>
-											<tr>
-													<th rowspan="2">DPC_NAME</th>
-													<th rowspan="2">Reporting Area</th>
-													@foreach ($arr_month as $month)
-													<th colspan="2" class="text-center">{{ $month }}</th>
-													@endforeach
-											</tr>
-											<tr>
-												@foreach ($arr_month as $month)
-												<th class="text-center">Cases</th>
-												<th class="text-center">Deaths</th>
-												@endforeach
-											</tr>
+                    <th>DPC_NAME</th>
+                    <th>Reporting Area</th>
+                    <th class="text-center">จำนวนผู้ป่วย</th>
+                    <th class="text-center">อัตราป่วย(ต่อประชากรแสนคน)</th>
+                    <th class="text-center">จำนวนผู้เสียชีวิต</th>
+                    <th class="text-center">อัตราป่วยตาย(%)</th>
+                    <th class="text-center">อัตราตาย(ต่อประชากรแสนคน)</th>
+                    <th class="text-center">จำนวนประชากร</th>
 									</tfoot>
 							 </table>
 						 </div>
