@@ -13,15 +13,21 @@ $disease_code =  (isset($_GET['disease_code']))? $_GET['disease_code']: '01';
 $current_year_th = $current_year+543;
 $total_all_pop = PopulationController::all_population($current_year);
 //$province,$year,$disease_code
-//dd($datas_province);
+//dd($disease_code);
+
+if($disease_code=="26-27-66"){
+ $disease_name = "Total D.H.F.";
+}else{
+ $disease_name = $get_list_disease[$disease_code];
+}
 ?>
 <!-- Content Header (Page header) -->
 <section class="content-header">
-<h1>รายงานปี <?php echo $current_year_th; ?> โรค <?php echo $get_list_disease[$disease_code]; ?></h1>
+<h1>รายงานปี <?php echo $current_year_th; ?> โรค <?php echo $disease_name;  ?></h1>
 <ol class="breadcrumb">
 	<li><a href="{{ route('dashboard') }}"><i class="fa fa-home"></i> หน้าหลัก</a></li>
 	<li><a href="{{ route('dashboard') }}?year=<?php echo $current_year; ?>">ข้อมูลปี <?php echo $current_year_th; ?></a></li>
-	<li class="active"><a href="showbydisease?disease_code={{ $disease_code }}&year={{ $current_year }}"> โรค <?php echo $get_list_disease[$disease_code]; ?></a></li>
+	<li class="active"><a href="showbydisease?disease_code={{ $disease_code }}&year={{ $current_year }}"> โรค <?php echo $disease_name; ?></a></li>
 </ol>
 </section>
 <!-- Main content -->
@@ -31,7 +37,7 @@ $total_all_pop = PopulationController::all_population($current_year);
 			<!-- Default box -->
 			<div class="box">
 				<div class="box-header with-border">
-					<h3 class="box-title">แสดงข้อมูลปี <?php echo $current_year_th; ?> โรค <?php echo $get_list_disease[$disease_code]; ?></h3>
+					<h3 class="box-title">แสดงข้อมูลปี <?php echo $current_year_th; ?> โรค <?php echo $disease_name; ?></h3>
 				</div>
 				<div class="box-body">
 					<table id="tree-table" class="table table-hover table-bordered">
@@ -54,22 +60,20 @@ $total_all_pop = PopulationController::all_population($current_year);
 							<tr data-id="{{ $value_province->PROVINCE }}" data-parent="0" data-level="1">
 								<td data-column="name">{{ $get_provincename_th[$value_province->PROVINCE] }}</td>
 								<td>{{ number_format($value_province->total_cases) }}</td>
-								<td></td>
+								<td>{{ Controller::cal_ratio_cases($total_all_pop,$value_province->total_cases) }}</td>
 								<td>{{ number_format($value_province->total_deaths) }}</td>
-								<td></td>
-								<td></td>
-
+								<td>{{ Controller::cal_ratio_deaths($total_all_pop,$value_province->total_deaths) }}</td>
+								<td>{{ Controller::cal_ratio_cases_deaths($value_province->total_cases,$value_province->total_deaths) }}</td>
 							</tr>
 							<?php $get_sub_level = \App\Http\Controllers\PopulationController::ShowByDiseaseSub($value_province->PROVINCE,$current_year,$disease_code); ?>
 							@foreach ($get_sub_level as $value_sub_level)
 							<tr data-id="{{ $i }}" data-parent="{{ $value_province->PROVINCE }}" data-level="2">
 								<td data-column="name">{{ $value_sub_level->urbanname }}</td>
 								<td>{{ number_format($value_sub_level->total_cases) }}</td>
-								<td></td>
+								<td>{{ Controller::cal_ratio_cases($total_all_pop,$value_sub_level->total_cases) }}</td>
 								<td>{{ number_format($value_sub_level->total_deaths) }}</td>
-								<td></td>
-								<td></td>
-
+								<td>{{ Controller::cal_ratio_deaths($total_all_pop,$value_sub_level->total_deaths) }}</td>
+								<td>{{ Controller::cal_ratio_cases_deaths($value_sub_level->total_cases,$value_sub_level->total_deaths) }}</td>
 							</tr>
 							@endforeach
 							<?php $i++; ?>
@@ -85,7 +89,7 @@ $total_all_pop = PopulationController::all_population($current_year);
 							</ul>
 					</div>
 					<div class="text-right">
-						<a type="button" href="{{ route('export_total_disease') }}?disease_code={{$disease_code}}&year={{$current_year}}" class="btn btn-info pull-right">ส่งออกข้อมูล</a>
+						<a type="button" href="{{ route('export_total_disease') }}?disease_code={{$disease_code}}&year={{$current_year}}" class="btn btn-success pull-right">ส่งออกข้อมูล</a>
 					</div>
 			  </div>
 		</div>
