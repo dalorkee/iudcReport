@@ -92,7 +92,7 @@
 				<?php if($group_name_of_disease=='vbd') :?>
 					<div class="box-footer text-center">
 						<div class="no-margin">
-							Total D.H.F. = <?php echo number_format($json['vbd']['0']['total']+$json['vbd']['1']['total']+$json['vbd']['3']['total']); ?>
+							 <a href="showbydisease?disease_code=26-27-66&year={{ $current_year }}">Total D.H.F. = <?php echo number_format($json['vbd']['0']['total']+$json['vbd']['1']['total']+$json['vbd']['3']['total']); ?></a>
 						</div>
 					</div>
 				<?php endif; ?>
