@@ -185,7 +185,9 @@ class dashboardController extends DiseasesController
 	}
 
 	private function getPatientMap($year, $diseaseCode) {
+		$dsgroup = $this->getDsNameByDsGroup();
 		$result['disease'] = $diseaseCode;
+		$result['disease_name'] = $dsgroup[$diseaseCode];
 		/* get provice */
 		$lstProv = parent::getProvince();
 		foreach ($lstProv as $val) {
