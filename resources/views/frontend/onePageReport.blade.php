@@ -24,6 +24,11 @@
 			min-height: 580px;
 			position: relative;
 		}
+		.onepage>div {
+			line-height:2em;
+			text-indent: 50px;
+			font-size: 1.075em;
+		}
 		#map { position:absolute; top:0; bottom:0; width:100%; }
 	</style>
 @endsection
@@ -52,7 +57,7 @@
 		</div>
 		<!-- /.box-header -->
 		<div class="box-body">
-			<form method="get" action='{{ route('dashboard') }}'>
+			<form method="get" action='{{ route('onePage') }}'>
 				<div class="row">
 					<div class="col-md-3">
 						<div class="form-group">
@@ -130,7 +135,7 @@
 						<div class="row">
 							<div class="col-md-12">
 								<article class="onepage">
-									<div style="text-indent: 50px;">
+									<div>
 										ข้อมูลเฝ้าระวังโรคในเขตเมือง ตั้งแต่วันที่ {{ $patientOnYear['minDate'] }} - {{ $patientOnYear['maxDate'] }}
 										พบผู้ป่วย {{ $patientOnYear['patientThisYear'] }} ราย
 										จาก {{ $patientPerProv['cntProv'] }} จังหวัด
@@ -269,7 +274,7 @@ function createLineChart(id, type, options) {
 		],
 		datasets: [
 			{
-				label: 'ผู้ป่วย',
+				label: 'ภาคกลาง',
 				fill: false,
 				borderColor: '#FF7900',
 				backgroundColor: '#FFFFFF',
@@ -280,7 +285,7 @@ function createLineChart(id, type, options) {
 				]
 			},
 			{
-				label: 'ผู้ป่วย',
+				label: 'ภาคเหนือ',
 				fill: false,
 				borderColor: '#FF00FF',
 				backgroundColor: '#FFFFFF',
@@ -291,7 +296,7 @@ function createLineChart(id, type, options) {
 				]
 			},
 			{
-				label: 'ผู้ป่วย',
+				label: 'ภาคตะวันออกเฉียงเหนือ',
 				fill: false,
 				borderColor: '#4486F8',
 				backgroundColor: '#FFFFFF',
@@ -302,7 +307,7 @@ function createLineChart(id, type, options) {
 				]
 			},
 			{
-				label: 'ผู้ป่วย',
+				label: 'ภาคใต้',
 				fill: false,
 				borderColor: '#026802',
 				backgroundColor: '#FFFFFF',
@@ -313,7 +318,7 @@ function createLineChart(id, type, options) {
 				]
 			},
 			{
-				label: 'ผู้ป่วย',
+				label: 'รวม',
 				fill: false,
 				borderColor: '#E51400',
 				backgroundColor: '#FFFFFF',
@@ -339,23 +344,26 @@ $('document').ready(function () {
 		responsive: true,
 		maintainAspectRatio: false,
 		legend: {
-			display: false,
-			position: 'right',
+			display: true,
+			position: 'top',
 		},
 		scales: {
 			xAxes: [{
 				display: true,
 				scaleLabel: {
 					display: true,
-					labelString: 'Week'
+					labelString: 'สัปดาห์'
 				}
 			}],
 			yAxes: [{
 				display: true,
 				scaleLabel: {
 					display: true,
-					labelString: 'Patient'
-				}
+					labelString: 'จำนวน'
+				},
+				ticks: {
+					beginAtZero: true
+				},
 			}]
 		},
 		elements: {
@@ -369,8 +377,7 @@ $('document').ready(function () {
 <?php
 	$htm = "";
 	$i = 1;
-	foreach ($patientMap as $val) {
-		$ranColor = $color[mt_rand(0, count($color) - 1)];
+	foreach ($patientMap['patient'] as $val) {
 		$htm .= "map.on('load', function () {
 			map.addLayer({
 				'id': 'mhs".$i."',
@@ -383,7 +390,7 @@ $('document').ready(function () {
 
 				},
 				'paint': {
-					'fill-color': '".$ranColor."',
+					'fill-color': '".$val->mapColor."',
 					'fill-opacity': 0.8
 				}
 			});
@@ -401,6 +408,12 @@ var map = new mapboxgl.Map({
 });
 // Add zoom and rotation controls to the map.
 map.addControl(new mapboxgl.NavigationControl());
+map.addControl(new mapboxgl.GeolocateControl({
+	positionOptions: {
+		enableHighAccuracy: true
+	},
+	trackUserLocation: true
+}));
 {!! $htm !!}
 </script>
 <!-- bootstrap datepicker -->

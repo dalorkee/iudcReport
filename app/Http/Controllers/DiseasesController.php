@@ -406,7 +406,7 @@ class DiseasesController extends Controller
 		return $result;
 	}
 
-	protected function getPateintPerWeekByProvZone($year=0, $diseaseCode=0, $prov_code=array()) {
+	protected function getPatientPerWeekByProvZone($year=0, $diseaseCode=0, $prov_code=array()) {
 		$result = DB::table('ur506_'.$year)
 			->select(DB::raw('SUM(IF(DISEASE <> "", 1, 0)) AS amount, week_no'))
 			->where('DISEASE', $diseaseCode)
