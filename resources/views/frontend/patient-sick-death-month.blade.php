@@ -7,7 +7,6 @@ tr.group:hover {
     background-color: #ddd !important;
 }
 </style>
-{{ Html::style(('https://cdn.datatables.net/buttons/1.5.2/css/buttons.dataTables.min.css')) }}
 @endsection
 <?php
 use \App\Http\Controllers\Controller as Controller;
@@ -223,15 +222,15 @@ $(document).ready(function() {
     } );
 
     //Order by the grouping
-    $('#example tbody').on( 'click', 'tr.group', function () {
-        var currentOrder = table.order()[0];
-        if ( currentOrder[0] === groupColumn && currentOrder[1] === 'asc' ) {
-            table.order( [ groupColumn, 'desc' ] ).draw();
-        }
-        else {
-            table.order( [ groupColumn, 'asc' ] ).draw();
-        }
-    } );
+    // $('#example tbody').on( 'click', 'tr.group', function () {
+    //     var currentOrder = table.order()[0];
+    //     if ( currentOrder[0] === groupColumn && currentOrder[1] === 'asc' ) {
+    //         table.order( [ groupColumn, 'desc' ] ).draw();
+    //     }
+    //     else {
+    //         table.order( [ groupColumn, 'asc' ] ).draw();
+    //     }
+    // } );
 } );
 </script>
 @endsection
