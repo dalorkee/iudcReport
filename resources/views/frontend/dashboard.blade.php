@@ -26,9 +26,19 @@
 		}
 		#map { position:absolute; top:0; bottom:0; width:100%; }
 		.mapboxgl-popup {
-	max-width: 400px;
-	font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
-}
+			max-width: 400px;
+			font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+		}
+		.map-popup {
+			margin: 0;
+			padding: 5px;
+			list-style: none;
+		}
+		.map-popup li span {
+			display: inline-block;
+			width: 50px;
+			font-weight: bold;
+		}
 	</style>
 @endsection
 @section('incHeaderScript')
@@ -297,7 +307,7 @@
 			<div class="col-md-12">
 				<div class="box box-info">
 					<div class="box-header with-border">
-						<h3 class="box-title"><span class="ds-box-title">แผนที่ผู้ป่วย {{ $patientMap['disease_name']['ds_name'] }}</span></h3>
+						<h3 class="box-title"><span class="ds-box-title">แผนที่ผู้ป่วย {{ $patientMap['disease']['ds_name'] }}</span></h3>
 						<div class="box-tools pull-right">
 							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
 							</button>
@@ -616,28 +626,23 @@ $('document').ready(function () {
 					'type': 'fill',
 					'source': {
 						'type': 'geojson',
-						'data': 'public/gis/".$val->prov_name_en.".geojson',
+						'data': 'public/gis/".$val['prov_name_en'].".geojson',
 
 					},
 					'layout': {
 					},
 					'paint': {
-						'fill-color': '".$val->mapColor."',
+						'fill-color': '".$val['color']."',
 						'fill-opacity': 0.8,
 					},
-					'test': {
-						'xx':'abc'
-					}
 				});
 			});\n";
-
-
 		$htm .= "
 		map.on('click', 'mhs".$i."', function (e) {
 			new mapboxgl.Popup()
 				.setLngLat(e.lngLat)
 				.setHTML(e.features.map(function(feature) {
-					return '<div><strong>' + feature.properties.PROV_NAMT + '</strong> ' + '".$val->patient."</div>';
+					return '<ul class=\"map-popup\"><li><span>จังหวัด</span>' + feature.properties.PROV_NAMT + '</li><li><span>ผู้ป่วย</span>' + '".$val['amount']."</li></ul>';
 				}).join(', '))
 				.addTo(map);
 		});";
