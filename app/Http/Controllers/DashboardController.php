@@ -186,8 +186,7 @@ class dashboardController extends DiseasesController
 
 	private function getPatientMap($year, $diseaseCode) {
 		$dsgroup = $this->getDsNameByDsGroup();
-		$result['disease'] = $diseaseCode;
-		$result['disease_name'] = $dsgroup[$diseaseCode];
+		$result['disease'] = $dsgroup[$diseaseCode];
 		/* get provice */
 		$lstProv = parent::getProvince();
 		foreach ($lstProv as $val) {
@@ -195,13 +194,25 @@ class dashboardController extends DiseasesController
 		}
 		/* count patient per province */
 		$cntPatient = parent::countPatientPerProv($year, $diseaseCode);
-		/* get max && min value */
+		/* push patient to array */
 		$amount_arr = array();
 		foreach ($cntPatient as $val) {
-			if ((int)$val->patient > 0) {
-				array_push($amount_arr, (int)$val->patient);
+			array_push($amount_arr, (int)$val->patient);
+		}
+		/* push patient to associative array */
+		foreach ($cntPatient as $val) {
+			$provPerPt[$val->province] = (int)$val->patient;
+		}
+		/* set prov => patient */
+		foreach ($lstProv as $val) {
+			if (array_key_exists($val->prov_code, $provPerPt)) {
+				$lstPtPerProv[$val->prov_code] = $provPerPt[$val->prov_code];
+			} else {
+				$lstPtPerProv[$val->prov_code] = 0;
 			}
 		}
+
+		/* get max && min value */
 		$maxAmount = max($amount_arr);
 		$minAmount = min($amount_arr);
 		/* set map color */
@@ -215,23 +226,27 @@ class dashboardController extends DiseasesController
 		);
 		/* set formular for render the map */
 		if ($diseaseCode == 66) {
-			for ($i=0; $i<count($cntPatient); $i++) {
-				$j = (int)$cntPatient[$i]->patient;
-				if ( $j <= 0) {
+			foreach ($lstPtPerProv as $key => $val) {
+				$pt = (int)$val;
+				if ( $pt <= 0) {
 					$mapColor = $color['r1'];
-				} elseif ($j <= 50) {
+				} elseif ($pt <= 50) {
 					$mapColor = $color['r2'];
-				} elseif ($j <= 100) {
+				} elseif ($pt <= 100) {
 					$mapColor = $color['r3'];
-				} elseif ($j <= 150) {
+				} elseif ($pt <= 150) {
 					$mapColor = $color['r4'];
-				} elseif ($j > 150) {
+				} elseif ($pt > 150) {
 					$mapColor = $color['r5'];
 				} else {
 					$mapColor = $color['r6'];
 				}
-				$cntPatient[$i]->prov_name_en = $prov[$cntPatient[$i]->province];
-				$cntPatient[$i]->mapColor = $mapColor;
+				$rs['prov_code'] = $key;
+				$rs['prov_name_en'] = $prov[$key];
+				$rs['color'] = $mapColor;
+				$rs['amount'] = $pt;
+				$result['patient'] = $rs;
+
 			}
 		} else {
 			$x = (($maxAmount-$minAmount)/5);
@@ -240,26 +255,29 @@ class dashboardController extends DiseasesController
 			$r3 = (($r2)+$x);
 			$r4 = (($r3)+$x);
 			$r5 = (($r4)+$x);
-			for ($i=0; $i<count($cntPatient); $i++) {
-				$j = (int)$cntPatient[$i]->patient;
-				if ($j <= $r1) {
+			foreach ($lstPtPerProv as $key => $val) {
+				$pt = (int)$val;
+				if ($pt <= $r1) {
 					$mapColor = $color['r1'];
-				} elseif ($j <= $r2) {
+				} elseif ($pt <= $r2) {
 					$mapColor = $color['r2'];
-				} elseif ($j <= $r3) {
+				} elseif ($pt <= $r3) {
 					$mapColor = $color['r3'];
-				} elseif ($j <= $r4) {
+				} elseif ($pt <= $r4) {
 					$mapColor = $color['r4'];
-				} elseif ($j <= $r5) {
+				} elseif ($pt <= $r5) {
 					$mapColor = $color['r5'];
 				} else {
 					$mapColor = $color['r6'];
 				}
-				$cntPatient[$i]->prov_name_en = $prov[$cntPatient[$i]->province];
-				$cntPatient[$i]->mapColor = $mapColor;
+				$rs['prov_code'] = $key;
+				$rs['prov_name_en'] = $prov[$key];
+				$rs['color'] = $mapColor;
+				$rs['amount'] = $pt;
+				$prov_rs[$key] = $rs;
 			}
+			$result['patient'] = $prov_rs;
 		}
-		$result['patient'] = $cntPatient;
 		return $result;
 	}
 
