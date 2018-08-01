@@ -57,6 +57,7 @@ if($disease_code=="26-27-66"){
 						</thead>
 						<tbody>
 							@foreach ($datas_province as $value_province)
+              <?php //$total_pop_in_province = PopulationController::all_population_by_province($current_year); ?>
 							<tr data-id="{{ $value_province->PROVINCE }}" data-parent="0" data-level="1">
 								<td data-column="name">{{ $get_provincename_th[$value_province->PROVINCE] }}</td>
 								<td>{{ number_format($value_province->total_cases) }}</td>

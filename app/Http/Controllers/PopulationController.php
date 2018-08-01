@@ -201,4 +201,16 @@ class PopulationController extends Controller
           $total = $value->poptotal;
         }        return $total;
     }
+    public static function all_population_by_province($year){
+      $query = DB::table('pop_urban_sex')
+        ->select(DB::raw("pop_urban_sex.prov_code,SUM(pop_urban_sex.male)+SUM(pop_urban_sex.female) AS poptotal"))
+        ->where('pop_urban_sex.pop_year','=',$year)
+        ->groupBy('pop_urban_sex.prov_code');
+        $result = $query->get()->toArray();
+        foreach ($result as $val){
+          $data[$val->prov_code] = array('poptotal_in_province' => $val->poptotal);
+        }
+         return $data;
+    }
+
 }

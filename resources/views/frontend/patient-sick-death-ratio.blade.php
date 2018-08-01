@@ -11,11 +11,14 @@ tr.group:hover {
 <?php
 use \App\Http\Controllers\Controller as Controller;
 use \App\Http\Controllers\ExportPatientController as ExportPatientController;
+use \App\Http\Controllers\PopulationController as PopulationController;
 
 $arr_month = array('Jan','Feb','Mar','Apr','May','June','July','Aug','Sept','Oct','Nov','Dec','Total');
 $get_all_province_th = Controller::get_provincename_th();
 $get_all_disease = Controller::list_disease();
 $get_all_disease_array = Controller::list_disease()->toArray();
+
+
 //add array
 function array_push_assoc($array, $key, $value){
 $array[$key] = $value;
@@ -25,9 +28,6 @@ array_push_assoc($get_all_disease,'26-27-66',"DHF Total");
 
 $select_year = (isset($_GET['select_year']))? $_GET['select_year'] : date('Y')-1;
 $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
-
-
-//dd($get_all_disease_array);
 ?>
 <!-- Content Header (Page header) -->
 <section class="content-header">
@@ -117,25 +117,29 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 											</tr>
 									</thead>
 									<tbody>
-                    <!-- +"DISEASE": "02"
-                    +"PROVINCE": "60"
-                    +"case_total": "3715"
-                    +"rate_case": "450.0379"
-                    +"death_total": "2"
-                    +"rate_cd": "0.0538"
-                    +"rate_death": "0.2423" -->
 											<?php $get_data = ExportPatientController::get_patient_sick_death_ratio($select_year,$disease_code); ?>
-                      <?php //dd($get_data);?>
                     	@foreach ($get_data as $data)
+                      <?php $total_pop_in_province = PopulationController::all_population_by_province($select_year);
+                            if(isset($total_pop_in_province[$data['PROVINCE_CODE']]['poptotal_in_province'])){
+                              $total_pop = number_format($total_pop_in_province[$data['PROVINCE_CODE']]['poptotal_in_province']);
+                              $cal_ratio_cases = Controller::cal_ratio_cases($total_pop_in_province[$data['PROVINCE_CODE']]['poptotal_in_province'],$data['case_total']);
+                              $cal_ratio_deaths = Controller::cal_ratio_cases_deaths($total_pop_in_province[$data['PROVINCE_CODE']]['poptotal_in_province'],$data['death_total']);
+                              $cal_ratio_cases_deaths = Controller::cal_ratio_cases_deaths($data['case_total'],$data['death_total']);
+                            }else{
+                              $total_pop = 0;
+                              $cal_ratio_cases = 0;
+                              $cal_ratio_deaths = 0;
+                            }
+                            ?>
 											<tr>
-                        <td>{{ $data->DISEASE }}</td>
-												<td>{{ $data->DISEASE }}</td>
-												<td>{{ $data->PROVINCE }}</td>
-												<td>{{ $data->case_total }}</td>
-												<td>{{ $data->rate_case }}</td>
-												<td>{{ $data->death_total }}</td>
-												<td>{{ $data->rate_cd }}</td>
-												<td>{{ $data->rate_death }}</td>
+                        <td>{{ $data['DPC'] }}</td>
+												<td>{{ $data['PROVINCE'] }}</td>
+												<td class="text-center">{{ number_format($data['case_total']) }}</td>
+												<td class="text-center">{{ $cal_ratio_cases }}</td>
+												<td class="text-center">{{ number_format($data['death_total']) }}</td>
+												<td class="text-center">{{ $cal_ratio_cases_deaths }}</td>
+												<td class="text-center">{{ $cal_ratio_deaths }}</td>
+												<td class="text-center">{{ $total_pop }}</td>
 											</tr>
 											@endforeach
 									</tbody>
@@ -158,7 +162,7 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 				</div>
 				<!-- /.box-body -->
 				<div class="box-footer">
-            <a href="{{ route('xls_patient_sick_death_by_month') }}?disease_code={{ $disease_code }}&select_year={{ $select_year }}" class="btn btn-sm btn-success pull-right"><i class="fa fa-download"> </i> ส่งออกข้อมูลเป็น XLS</a>
+            <a href="{{ route('xls_patient_sick_death_ratio') }}?disease_code={{ $disease_code }}&select_year={{ $select_year }}" class="btn btn-sm btn-success pull-right"><i class="fa fa-download"> </i> ส่งออกข้อมูลเป็น XLS</a>
 				</div>
 				<!-- /.footer -->
 			</div>
