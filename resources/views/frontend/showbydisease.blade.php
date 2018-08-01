@@ -11,9 +11,9 @@ $get_list_disease =\App\Http\Controllers\Controller::list_disease();
 $current_year =  (isset($_GET['year']))? $_GET['year']: date('Y');
 $disease_code =  (isset($_GET['disease_code']))? $_GET['disease_code']: '01';
 $current_year_th = $current_year+543;
-$total_all_pop = PopulationController::all_population($current_year);
-//$province,$year,$disease_code
-//dd($disease_code);
+//$total_all_pop = PopulationController::all_population($current_year);
+$total_pop_in_province = PopulationController::all_population_by_province($current_year);
+$total_pop_in_urban = PopulationController::all_population_by_urban($current_year);
 
 if($disease_code=="26-27-66"){
  $disease_name = "Total D.H.F.";
@@ -57,24 +57,47 @@ if($disease_code=="26-27-66"){
 						</thead>
 						<tbody>
 							@foreach ($datas_province as $value_province)
-              <?php //$total_pop_in_province = PopulationController::all_population_by_province($current_year); ?>
+              <?php if(isset($total_pop_in_province[$value_province->PROVINCE]['poptotal_in_province'])){
+                      $total_pop_province = number_format($total_pop_in_province[$value_province->PROVINCE]['poptotal_in_province']);
+                      $cal_ratio_cases_province = Controller::cal_ratio_cases($total_pop_in_province[$value_province->PROVINCE]['poptotal_in_province'],$value_province->total_cases);
+                      $cal_ratio_deaths_province = Controller::cal_ratio_cases_deaths($total_pop_in_province[$value_province->PROVINCE]['poptotal_in_province'],$value_province->total_deaths);
+                      $cal_ratio_cases_deaths_province = Controller::cal_ratio_cases_deaths($value_province->total_cases,$value_province->total_deaths);
+                    }else{
+                      $total_pop_province = 0;
+                      $cal_ratio_cases_province = 0;
+                      $cal_ratio_deaths_province = 0;
+                      $cal_ratio_cases_deaths_province = 0;
+                    }
+              ?>
 							<tr data-id="{{ $value_province->PROVINCE }}" data-parent="0" data-level="1">
 								<td data-column="name">{{ $get_provincename_th[$value_province->PROVINCE] }}</td>
 								<td>{{ number_format($value_province->total_cases) }}</td>
-								<td>{{ Controller::cal_ratio_cases($total_all_pop,$value_province->total_cases) }}</td>
+								<td>{{ $cal_ratio_cases_province }}</td>
 								<td>{{ number_format($value_province->total_deaths) }}</td>
-								<td>{{ Controller::cal_ratio_deaths($total_all_pop,$value_province->total_deaths) }}</td>
-								<td>{{ Controller::cal_ratio_cases_deaths($value_province->total_cases,$value_province->total_deaths) }}</td>
+								<td>{{ $cal_ratio_deaths_province }}</td>
+								<td>{{ $cal_ratio_cases_deaths_province }}</td>
 							</tr>
 							<?php $get_sub_level = \App\Http\Controllers\PopulationController::ShowByDiseaseSub($value_province->PROVINCE,$current_year,$disease_code); ?>
-							@foreach ($get_sub_level as $value_sub_level)
+              @foreach ($get_sub_level as $value_sub_level)
+              <?php if(isset($total_pop_in_urban[$value_sub_level->urbancode]['poptotal_in_urban'])){
+                      $total_pop_urban = number_format($total_pop_in_urban[$value_sub_level->urbancode]['poptotal_in_urban']);
+                      $cal_ratio_cases_urban = Controller::cal_ratio_cases($total_pop_in_urban[$value_sub_level->urbancode]['poptotal_in_urban'],$value_sub_level->total_cases);
+                      $cal_ratio_deaths_urban = Controller::cal_ratio_cases_deaths($total_pop_in_urban[$value_sub_level->urbancode]['poptotal_in_urban'],$value_sub_level->total_deaths);
+                      $cal_ratio_cases_deaths_urban = Controller::cal_ratio_cases_deaths($value_sub_level->total_cases,$value_sub_level->total_deaths);
+              }else{
+                $total_pop_urban = 0;
+                $cal_ratio_cases_urban = 0;
+                $cal_ratio_deaths_urban = 0;
+                $cal_ratio_cases_deaths_urban = 0;
+              }
+              ?>
 							<tr data-id="{{ $i }}" data-parent="{{ $value_province->PROVINCE }}" data-level="2">
 								<td data-column="name">{{ $value_sub_level->urbanname }}</td>
 								<td>{{ number_format($value_sub_level->total_cases) }}</td>
-								<td>{{ Controller::cal_ratio_cases($total_all_pop,$value_sub_level->total_cases) }}</td>
+								<td>{{ $cal_ratio_cases_urban }}</td>
 								<td>{{ number_format($value_sub_level->total_deaths) }}</td>
-								<td>{{ Controller::cal_ratio_deaths($total_all_pop,$value_sub_level->total_deaths) }}</td>
-								<td>{{ Controller::cal_ratio_cases_deaths($value_sub_level->total_cases,$value_sub_level->total_deaths) }}</td>
+								<td>{{ $cal_ratio_deaths_urban }}</td>
+								<td>{{ $cal_ratio_cases_deaths_urban }}</td>
 							</tr>
 							@endforeach
 							<?php $i++; ?>

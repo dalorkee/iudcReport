@@ -67,7 +67,7 @@ class PopulationController extends Controller
 
         if($disease_code=='26-27-66'){
           $query_amphur = DB::table($table_name)
-                                         ->select(DB::raw('count(DISEASE) as total_cases,urbanname'))
+                                         ->select(DB::raw('count(DISEASE) as total_cases,urbanname,urbancode'))
                                          ->selectRaw('SUM(IF('.$table_name.'.RESULT = "2",1,0)) as total_deaths')
                                          ->whereIN('DISEASE',['26','27','66'])
                                          ->where(\DB::raw('substr(urbancode, 1, 2)'), '=' , $province)
@@ -75,7 +75,7 @@ class PopulationController extends Controller
           $result = $query_amphur->get();
         }else{
           $query_amphur = DB::table($table_name)
-                                         ->select(DB::raw('count(DISEASE) as total_cases,urbanname'))
+                                         ->select(DB::raw('count(DISEASE) as total_cases,urbanname,urbancode'))
                                          ->selectRaw('SUM(IF('.$table_name.'.RESULT = "2",1,0)) as total_deaths')
                                          ->where('DISEASE',$disease_code)
                                          ->where(\DB::raw('substr(urbancode, 1, 2)'), '=' , $province)
@@ -209,6 +209,17 @@ class PopulationController extends Controller
         $result = $query->get()->toArray();
         foreach ($result as $val){
           $data[$val->prov_code] = array('poptotal_in_province' => $val->poptotal);
+        }
+         return $data;
+    }
+    public static function all_population_by_urban($year){
+      $query = DB::table('pop_urban_sex')
+        ->select(DB::raw("pop_urban_sex.urbancode,SUM(pop_urban_sex.male)+SUM(pop_urban_sex.female) AS poptotal"))
+        ->where('pop_urban_sex.pop_year','=',$year)
+        ->groupBy('pop_urban_sex.urbancode');
+        $result = $query->get()->toArray();
+        foreach ($result as $val){
+          $data[$val->urbancode] = array('poptotal_in_urban' => $val->poptotal);
         }
          return $data;
     }

@@ -278,7 +278,10 @@ class ExportPatientController extends Controller
     $get_pop_dpc_group =\App\Http\Controllers\Controller::get_pop_dpc_group();
     $get_provincename_th =\App\Http\Controllers\Controller::get_provincename_th()->toArray();
     $get_all_disease_array = \App\Http\Controllers\Controller::list_disease()->toArray();
-    $data = array('Reporting Area','จำนวนผู้ป่วย','อัตราป่วย(ต่อประชากรแสนคน)','จำนวนผู้เสียชีวิต','อัตราป่วยตาย(%)','อัตราตาย(ต่อประชากรแสนคน)','จำนวนประชากร');
+    $data[] = array('Reporting Area','จำนวนผู้ป่วย','อัตราป่วย(ต่อประชากรแสนคน)','จำนวนผู้เสียชีวิต','อัตราป่วยตาย(%)','อัตราตาย(ต่อประชากรแสนคน)','จำนวนประชากร');
+
+
+    dd($data);
   }
 
 }
