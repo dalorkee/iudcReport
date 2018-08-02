@@ -90,10 +90,15 @@ class PopulationController extends Controller
         $get_provincename_th = Controller::get_provincename_th();
         $get_list_disease = Controller::list_disease();
 
+
         $year = trim($request->year);
         $disease_code = trim($request->disease_code);
         $table_name = "ur506_".$year;
         $total_all_pop = PopulationController::all_population($year);
+        $total_pop_in_province = PopulationController::all_population_by_province($year);
+        $total_pop_in_urban = PopulationController::all_population_by_urban($year);
+
+        //dd($total_pop_in_urban);
         //Query Province
 
         if($disease_code=='26-27-66'){
@@ -117,24 +122,35 @@ class PopulationController extends Controller
           $data_excel[] = array('จังหวัด','จำนวน(ป่วย)','อัตรา(ป่วย)','จำนวน(ตาย)','อัตรา(ตาย)','อัตรา(ป่วย/ตาย)');
 
           foreach($data_province as $val_data_province){
+                    if(isset($total_pop_in_province[$val_data_province->PROVINCE]['poptotal_in_province'])){
+                            $total_pop_province = number_format($total_pop_in_province[$val_data_province->PROVINCE]['poptotal_in_province']);
+                            $cal_ratio_cases_province = Controller::cal_ratio_cases($total_pop_in_province[$val_data_province->PROVINCE]['poptotal_in_province'],$val_data_province->total_cases);
+                            $cal_ratio_deaths_province = Controller::cal_ratio_cases_deaths($total_pop_in_province[$val_data_province->PROVINCE]['poptotal_in_province'],$val_data_province->total_deaths);
+                            $cal_ratio_cases_deaths_province = Controller::cal_ratio_cases_deaths($val_data_province->total_cases,$val_data_province->total_deaths);
+                    }else{
+                    $total_pop_province = '0';
+                    $cal_ratio_cases_province = '0';
+                    $cal_ratio_deaths_province = '0';
+                    $cal_ratio_cases_deaths_province = '0';
+                  }
             $data_excel[] = array($get_provincename_th[$val_data_province->PROVINCE], //จังหวัด
                                   $val_data_province->total_cases, //จำนวน(ป่วย)
-                                  Controller::cal_ratio_cases($total_all_pop,$val_data_province->total_cases), //อัตรา(ป่วย)
+                                  $cal_ratio_cases_province, //อัตรา(ป่วย)
                                   $val_data_province->total_deaths,//จำนวน(ตาย)
-                                  Controller::cal_ratio_deaths($total_all_pop,$val_data_province->total_deaths), //อัตรา(ตาย)
-                                  Controller::cal_ratio_cases_deaths($val_data_province->total_cases,$val_data_province->total_deaths)//อัตรา(ป่วย/ตาย)
+                                  $cal_ratio_deaths_province, //อัตรา(ตาย)
+                                  $cal_ratio_cases_deaths_province//อัตรา(ป่วย/ตาย)
                                  );
             //Query Amphur
             if($disease_code=='26-27-66'){
               $query_amphur = DB::table($table_name)
-                                             ->select(DB::raw('count(DISEASE) as total_cases,urbanname'))
+                                             ->select(DB::raw('count(DISEASE) as total_cases,urbanname,urbancode'))
                                              ->selectRaw('SUM(IF('.$table_name.'.RESULT = "2",1,0)) as total_deaths')
                                              ->whereIN('DISEASE',['26','27','66'])
                                              ->where(\DB::raw('substr(urbancode, 1, 2)'), '=' , $val_data_province->PROVINCE)
                                              ->groupBy('urbanname');
             }else{
               $query_amphur = DB::table($table_name)
-                                             ->select(DB::raw('count(DISEASE) as total_cases,urbanname'))
+                                             ->select(DB::raw('count(DISEASE) as total_cases,urbanname,urbancode'))
                                              ->selectRaw('SUM(IF('.$table_name.'.RESULT = "2",1,0)) as total_deaths')
                                              ->where('DISEASE',$disease_code)
                                              ->where(\DB::raw('substr(urbancode, 1, 2)'), '=' , $val_data_province->PROVINCE)
@@ -142,12 +158,23 @@ class PopulationController extends Controller
             }
               $data_amphur=$query_amphur->get();
                 foreach($data_amphur as $val_data_amphur){
+                  if(isset($total_pop_in_urban[$val_data_amphur->urbancode]['poptotal_in_urban'])){
+                          $total_pop_urban = number_format($total_pop_in_urban[$val_data_amphur->urbancode]['poptotal_in_urban']);
+                          $cal_ratio_cases_urban = Controller::cal_ratio_cases($total_pop_in_urban[$val_data_amphur->urbancode]['poptotal_in_urban'],$val_data_amphur->total_cases);
+                          $cal_ratio_deaths_urban = Controller::cal_ratio_cases_deaths($total_pop_in_urban[$val_data_amphur->urbancode]['poptotal_in_urban'],$val_data_amphur->total_deaths);
+                          $cal_ratio_cases_deaths_urban = Controller::cal_ratio_cases_deaths($val_data_amphur->total_cases,$val_data_amphur->total_deaths);
+                  }else{
+                    $total_pop_urban = '0';
+                    $cal_ratio_cases_urban = '0';
+                    $cal_ratio_deaths_urban = '0';
+                    $cal_ratio_cases_deaths_urban = '0';
+                  }
                   $data_excel[] = array($val_data_amphur->urbanname, //ชื่อเทศบาล
                                         $val_data_amphur->total_cases, //จำนวน(ป่วย)
-                                        Controller::cal_ratio_cases($total_all_pop,$val_data_amphur->total_cases), //อัตรา(ป่วย)
+                                        $cal_ratio_cases_urban, //อัตรา(ป่วย)
                                         $val_data_amphur->total_deaths,//จำนวน(ตาย)
-                                        Controller::cal_ratio_deaths($total_all_pop,$val_data_amphur->total_deaths), //อัตรา(ตาย)
-                                        Controller::cal_ratio_cases_deaths($val_data_amphur->total_cases,$val_data_amphur->total_deaths)//อัตรา(ป่วย/ตาย)
+                                        $cal_ratio_deaths_urban, //อัตรา(ตาย)
+                                        $cal_ratio_cases_deaths_urban//อัตรา(ป่วย/ตาย)
                                        );
                 }
 
