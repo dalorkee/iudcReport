@@ -221,9 +221,9 @@ class dashboardController extends DiseasesController
 			'r2'=>'#438722',
 			'r3'=>'#FBBC05',
 			'r4'=>'#F85F1F',
-			'r5'=>'#D1202E',
-			'r6'=>'#000000'
+			'r5'=>'#D1202E'
 		);
+		$result['colors'] = $color;
 		/* set formular for render the map */
 		if ($diseaseCode == 66) {
 			foreach ($lstPtPerProv as $key => $val) {
@@ -239,22 +239,23 @@ class dashboardController extends DiseasesController
 				} elseif ($pt > 150) {
 					$mapColor = $color['r5'];
 				} else {
-					$mapColor = $color['r6'];
+					$mapColor = $color['#000000'];
 				}
 				$rs['prov_code'] = $key;
 				$rs['prov_name_en'] = $prov[$key];
 				$rs['color'] = $mapColor;
 				$rs['amount'] = $pt;
-				$result['patient'] = $rs;
-
+				$prov_rs[$key] = $rs;
 			}
+			$result['range'] = array('<0', '1-50', '51-100', '101-150', '150+');
+			$result['patient'] = $prov_rs;
 		} else {
 			$x = (($maxAmount-$minAmount)/5);
-			$r1 = $minAmount+$x;
-			$r2 = (($r1)+$x);
-			$r3 = (($r2)+$x);
-			$r4 = (($r3)+$x);
-			$r5 = (($r4)+$x);
+			$r1 = ($minAmount+$x);
+			$r2 = ($r1+$x);
+			$r3 = ($r2+$x);
+			$r4 = ($r3+$x);
+			$r5 = ($r4+$x);
 			foreach ($lstPtPerProv as $key => $val) {
 				$pt = (int)$val;
 				if ($pt <= $r1) {
@@ -268,7 +269,7 @@ class dashboardController extends DiseasesController
 				} elseif ($pt <= $r5) {
 					$mapColor = $color['r5'];
 				} else {
-					$mapColor = $color['r6'];
+					$mapColor = $color['#000000'];
 				}
 				$rs['prov_code'] = $key;
 				$rs['prov_name_en'] = $prov[$key];
@@ -276,6 +277,12 @@ class dashboardController extends DiseasesController
 				$rs['amount'] = $pt;
 				$prov_rs[$key] = $rs;
 			}
+			$rg1 = "0-".$r1;
+			$rg2 = ($r1+1)."-".$r2;
+			$rg3 = ($r2+1)."-".$r3;
+			$rg4 = ($r3+1)."-".$r4;
+			$rg5 = ($r4+1)."+";
+			$result['range'] = array($rg1, $rg2, $rg3, $rg4, $rg5);
 			$result['patient'] = $prov_rs;
 		}
 		return $result;
