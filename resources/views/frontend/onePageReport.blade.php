@@ -60,7 +60,7 @@
 			line-height: 18px;
 			height: 120px;
 			margin-bottom: 40px;
-			width: 110px;
+			min-width: 110px;
 		}
 		.legend-key {
 			display: inline-block;
@@ -449,7 +449,7 @@ $('document').ready(function () {
 			new mapboxgl.Popup()
 				.setLngLat(e.lngLat)
 				.setHTML(e.features.map(function(feature) {
-					return '<ul class=\"map-popup\"><li><span>จังหวัด</span>' + feature.properties.PROV_NAMT + '</li><li><span>ผู้ป่วย</span>' + '".$val['amount']."</li></ul>';
+					return '<ul class=\"map-popup\"><li><span>จังหวัด</span>' + feature.properties.PROV_NAMT + '</li><li><span>ผู้ป่วย</span>' + '".number_format($val['amount'])."</li></ul>';
 				}).join(', '))
 				.addTo(map);
 		});";
