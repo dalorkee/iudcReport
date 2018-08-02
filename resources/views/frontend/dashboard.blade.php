@@ -36,8 +36,33 @@
 		}
 		.map-popup li span {
 			display: inline-block;
-			width: 50px;
+			width: 46px;
 			font-weight: bold;
+		}
+		.map-overlay {
+			position: absolute;
+			bottom: 0;
+			right: 0;
+			background: rgba(255, 255, 255, 0.8);
+			margin-right: 20px;
+			font-family: Arial, sans-serif;
+			overflow: auto;
+			border-radius: 3px;
+		}
+		#legend {
+			padding: 10px;
+			box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+			line-height: 18px;
+			height: 120px;
+			margin-bottom: 40px;
+			width: 110px;
+		}
+		.legend-key {
+			display: inline-block;
+			border-radius: 20%;
+			width: 10px;
+			height: 10px;
+			margin-right: 5px;
 		}
 	</style>
 @endsection
@@ -320,6 +345,7 @@
 							<div class="col-md-12">
 								<div class="map-box">
 									<div id="map"></div>
+									<div class='map-overlay' id='legend'></div>
 								</div>
 								<!-- ./chart-responsive -->
 							</div>
@@ -657,6 +683,56 @@ $('document').ready(function () {
 		center: [100.277405, 13.530735],
 		zoom: 4.5
 	});
+	var layers = [
+		<?php
+			$str = null;
+			foreach ($patientMap['range'] as $val) {
+				if (is_null($str)) {
+					$str = "";
+				} else {
+					$str = $str.", ";
+				}
+				$str = $str."'".$val."'";
+			}
+			echo $str;
+		?>
+	];
+	var colors = [
+		<?php
+			$str = null;
+			foreach ($patientMap['colors'] as $val) {
+				if (is_null($str)) {
+					$str = "";
+				} else {
+					$str = $str.", ";
+				}
+				$str = $str."'".$val."'";
+			}
+			echo $str;
+		?>
+	];
+	for (i = 0; i < layers.length; i++) {
+		var layer = layers[i];
+		var color = colors[i];
+		var item = document.createElement('div');
+		var key = document.createElement('span');
+		key.className = 'legend-key';
+		key.style.backgroundColor = color;
+
+		var value = document.createElement('span');
+		value.innerHTML = layer;
+		item.appendChild(key);
+		item.appendChild(value);
+		legend.appendChild(item);
+	}
+	map.addControl(new mapboxgl.NavigationControl());
+	map.addControl(new mapboxgl.GeolocateControl({
+		positionOptions: {
+			enableHighAccuracy: true
+		},
+		trackUserLocation: true
+	}));
+	map.getCanvas().style.cursor = 'default';
 	{!! $htm !!}
 </script>
 <!-- bootstrap datepicker -->

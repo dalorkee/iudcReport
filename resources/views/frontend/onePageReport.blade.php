@@ -30,11 +30,50 @@
 			font-size: 1.075em;
 		}
 		#map { position:absolute; top:0; bottom:0; width:100%; }
+		.mapboxgl-popup {
+			max-width: 400px;
+			font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+		}
+		.map-popup {
+			margin: 0;
+			padding: 5px;
+			list-style: none;
+		}
+		.map-popup li span {
+			display: inline-block;
+			width: 46px;
+			font-weight: bold;
+		}
+		.map-overlay {
+			position: absolute;
+			bottom: 0;
+			right: 0;
+			background: rgba(255, 255, 255, 0.8);
+			margin-right: 20px;
+			font-family: Arial, sans-serif;
+			overflow: auto;
+			border-radius: 3px;
+		}
+		#legend {
+			padding: 10px;
+			box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+			line-height: 18px;
+			height: 120px;
+			margin-bottom: 40px;
+			width: 110px;
+		}
+		.legend-key {
+			display: inline-block;
+			border-radius: 20%;
+			width: 10px;
+			height: 10px;
+			margin-right: 5px;
+		}
 	</style>
 @endsection
 @section('incHeaderScript')
-	{{ Html::script(('public/components/Chart.PieceLabel.js/src/Chart.bundle.min.js')) }}
-	{{ Html::script(('public/components/Chart.PieceLabel.js/src/Chart.PieceLabel.js')) }}
+	{{ Html::script(('public/components/Chart.js/dist/2.7.2/Chart.bundle.js')) }}
+	{{ Html::script(('public/components/Chart.js/src/chart.js')) }}
 	{{ Html::script(('https://api.tiles.mapbox.com/mapbox-gl-js/v0.46.0/mapbox-gl.js')) }}
 @endsection
 @section('content')
@@ -217,7 +256,7 @@
 			<div class="col-md-12">
 				<div class="box box-danger">
 					<div class="box-header with-border">
-						<h3 class="box-title"><span class="ds-box-title">แผนที่</span></h3>
+						<h3 class="box-title"><span class="ds-box-title">แผนที่ผู้ป่วย {{ $patientMap['disease']['ds_name'] }}</span></h3>
 						<div class="box-tools pull-right">
 							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
 							</button>
@@ -229,6 +268,7 @@
 							<div class="col-md-12">
 								<div class="map-box">
 									<div id="map"></div>
+									<div class='map-overlay' id='legend'></div>
 								</div>
 							</div>
 						</div>
@@ -276,8 +316,8 @@ function createLineChart(id, type, options) {
 			{
 				label: 'ภาคกลาง',
 				fill: false,
-				borderColor: '#FF7900',
-				backgroundColor: '#FFFFFF',
+				borderColor: '#FF9D3C',
+				backgroundColor: '#FF9D3C',
 				data: [
 					@foreach ($patintPerWeek['ptCWeek'] as $val)
 						{{ (int)$val.", " }}
@@ -287,8 +327,8 @@ function createLineChart(id, type, options) {
 			{
 				label: 'ภาคเหนือ',
 				fill: false,
-				borderColor: '#FF00FF',
-				backgroundColor: '#FFFFFF',
+				borderColor: '#9060EF',
+				backgroundColor: '#9060EF',
 				data: [
 					@foreach ($patintPerWeek['ptNWeek'] as $val)
 						{{ (int)$val.", " }}
@@ -298,8 +338,8 @@ function createLineChart(id, type, options) {
 			{
 				label: 'ภาคตะวันออกเฉียงเหนือ',
 				fill: false,
-				borderColor: '#4486F8',
-				backgroundColor: '#FFFFFF',
+				borderColor: '#36A2EB',
+				backgroundColor: '#36A2EB',
 				data: [
 					@foreach ($patintPerWeek['ptNeWeek'] as $val)
 						{{ (int)$val.", " }}
@@ -309,8 +349,8 @@ function createLineChart(id, type, options) {
 			{
 				label: 'ภาคใต้',
 				fill: false,
-				borderColor: '#026802',
-				backgroundColor: '#FFFFFF',
+				borderColor: '#4BC0C0',
+				backgroundColor: '#4BC0C0',
 				data: [
 					@foreach ($patintPerWeek['ptSWeek'] as $val)
 						{{ (int)$val.", " }}
@@ -320,8 +360,8 @@ function createLineChart(id, type, options) {
 			{
 				label: 'รวม',
 				fill: false,
-				borderColor: '#E51400',
-				backgroundColor: '#FFFFFF',
+				borderColor: '#FF6384',
+				backgroundColor: '#FF6384',
 				data: [
 					@foreach ($patintPerWeek['ptTotal'] as $val)
 						{{ (int)$val.", " }}
@@ -346,6 +386,14 @@ $('document').ready(function () {
 		legend: {
 			display: true,
 			position: 'top',
+		},
+		tooltips: {
+			mode: 'index',
+			intersect: false,
+		},
+		hover: {
+			mode: 'nearest',
+			intersect: true
 		},
 		scales: {
 			xAxes: [{
@@ -378,23 +426,33 @@ $('document').ready(function () {
 	$htm = "";
 	$i = 1;
 	foreach ($patientMap['patient'] as $val) {
-		$htm .= "map.on('load', function () {
+		$htm .= "
+		map.on('load', function () {
 			map.addLayer({
 				'id': 'mhs".$i."',
 				'type': 'fill',
 				'source': {
 					'type': 'geojson',
-					'data': 'public/gis/".$val->prov_name_en.".geojson'
+					'data': 'public/gis/".$val['prov_name_en'].".geojson'
 				},
 				'layout': {
 
 				},
 				'paint': {
-					'fill-color': '".$val->mapColor."',
+					'fill-color': '".$val['color']."',
 					'fill-opacity': 0.8
 				}
 			});
 		});\n";
+		$htm .= "
+		map.on('click', 'mhs".$i."', function (e) {
+			new mapboxgl.Popup()
+				.setLngLat(e.lngLat)
+				.setHTML(e.features.map(function(feature) {
+					return '<ul class=\"map-popup\"><li><span>จังหวัด</span>' + feature.properties.PROV_NAMT + '</li><li><span>ผู้ป่วย</span>' + '".$val['amount']."</li></ul>';
+				}).join(', '))
+				.addTo(map);
+		});";
 		$i++;
 	}
 ?>
@@ -406,7 +464,48 @@ var map = new mapboxgl.Map({
 	center: [100.277405, 13.530735],
 	zoom: 4.5
 });
-// Add zoom and rotation controls to the map.
+var layers = [
+	<?php
+		$str = null;
+		foreach ($patientMap['range'] as $val) {
+			if (is_null($str)) {
+				$str = "";
+			} else {
+				$str = $str.", ";
+			}
+			$str = $str."'".$val."'";
+		}
+		echo $str;
+	?>
+];
+var colors = [
+	<?php
+		$str = null;
+		foreach ($patientMap['colors'] as $val) {
+			if (is_null($str)) {
+				$str = "";
+			} else {
+				$str = $str.", ";
+			}
+			$str = $str."'".$val."'";
+		}
+		echo $str;
+	?>
+];
+for (i = 0; i < layers.length; i++) {
+	var layer = layers[i];
+	var color = colors[i];
+	var item = document.createElement('div');
+	var key = document.createElement('span');
+	key.className = 'legend-key';
+	key.style.backgroundColor = color;
+
+	var value = document.createElement('span');
+	value.innerHTML = layer;
+	item.appendChild(key);
+	item.appendChild(value);
+	legend.appendChild(item);
+}
 map.addControl(new mapboxgl.NavigationControl());
 map.addControl(new mapboxgl.GeolocateControl({
 	positionOptions: {
@@ -414,6 +513,7 @@ map.addControl(new mapboxgl.GeolocateControl({
 	},
 	trackUserLocation: true
 }));
+map.getCanvas().style.cursor = 'default';
 {!! $htm !!}
 </script>
 <!-- bootstrap datepicker -->
