@@ -125,32 +125,32 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 											<tr>
 												<td>{{ $data['DPC'] }}</td>
 												<td>{{ $data['PROVINCE'] }}</td>
-												<td>{{ $data['case_jan'] }}</td>
-												<td>{{ $data['death_jan'] }}</td>
-												<td>{{ $data['case_feb'] }}</td>
-												<td>{{ $data['death_feb'] }}</td>
-												<td>{{ $data['case_mar'] }}</td>
-												<td>{{ $data['death_mar'] }}</td>
-												<td>{{ $data['case_apr'] }}</td>
-												<td>{{ $data['death_apr'] }}</td>
-												<td>{{ $data['case_may'] }}</td>
-												<td>{{ $data['death_may'] }}</td>
-												<td>{{ $data['case_jun'] }}</td>
-												<td>{{ $data['death_jun'] }}</td>
-												<td>{{ $data['case_jul'] }}</td>
-												<td>{{ $data['death_jul'] }}</td>
-												<td>{{ $data['case_aug'] }}</td>
-												<td>{{ $data['death_aug'] }}</td>
-												<td>{{ $data['case_sep'] }}</td>
-												<td>{{ $data['death_sep'] }}</td>
-												<td>{{ $data['case_oct'] }}</td>
-												<td>{{ $data['death_oct'] }}</td>
-												<td>{{ $data['case_nov'] }}</td>
-												<td>{{ $data['death_nov'] }}</td>
-												<td>{{ $data['case_dec'] }}</td>
-												<td>{{ $data['death_dec'] }}</td>
-												<td>{{ $data['total_case'] }}</td>
-												<td>{{ $data['total_death'] }}</td>
+												<td>{{ number_format($data['case_jan']) }}</td>
+												<td>{{ number_format($data['death_jan']) }}</td>
+												<td>{{ number_format($data['case_feb']) }}</td>
+												<td>{{ number_format($data['death_feb']) }}</td>
+												<td>{{ number_format($data['case_mar']) }}</td>
+												<td>{{ number_format($data['death_mar']) }}</td>
+												<td>{{ number_format($data['case_apr']) }}</td>
+												<td>{{ number_format($data['death_apr']) }}</td>
+												<td>{{ number_format($data['case_may']) }}</td>
+												<td>{{ number_format($data['death_may']) }}</td>
+												<td>{{ number_format($data['case_jun']) }}</td>
+												<td>{{ number_format($data['death_jun']) }}</td>
+												<td>{{ number_format($data['case_jul']) }}</td>
+												<td>{{ number_format($data['death_jul']) }}</td>
+												<td>{{ number_format($data['case_aug']) }}</td>
+												<td>{{ number_format($data['death_aug']) }}</td>
+												<td>{{ number_format($data['case_sep']) }}</td>
+												<td>{{ number_format($data['death_sep']) }}</td>
+												<td>{{ number_format($data['case_oct']) }}</td>
+												<td>{{ number_format($data['death_oct']) }}</td>
+												<td>{{ number_format($data['case_nov']) }}</td>
+												<td>{{ number_format($data['death_nov']) }}</td>
+												<td>{{ number_format($data['case_dec']) }}</td>
+												<td>{{ number_format($data['death_dec']) }}</td>
+												<td>{{ number_format($data['total_case']) }}</td>
+												<td>{{ number_format($data['total_death']) }}</td>
 											</tr>
 											@endforeach
 									</tbody>
