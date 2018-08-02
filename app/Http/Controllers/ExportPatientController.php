@@ -273,15 +273,164 @@ class ExportPatientController extends Controller
     }
 
   public static function xls_patient_sick_death_ratio(Request $request){
+    if(empty($request->select_year) || empty($request->disease_code)) return false;
     $disease_code = $request->disease_code;
     $tblYear = $request->select_year;
     $get_pop_dpc_group =\App\Http\Controllers\Controller::get_pop_dpc_group();
     $get_provincename_th =\App\Http\Controllers\Controller::get_provincename_th()->toArray();
     $get_all_disease_array = \App\Http\Controllers\Controller::list_disease()->toArray();
     $data[] = array('Reporting Area','จำนวนผู้ป่วย','อัตราป่วย(ต่อประชากรแสนคน)','จำนวนผู้เสียชีวิต','อัตราป่วยตาย(%)','อัตราตาย(ต่อประชากรแสนคน)','จำนวนประชากร');
+    foreach ($get_pop_dpc_group as $dpc_code => $dpc_val)
+    {
+         if($disease_code=='26-27-66'){
+             $query[] = DB::table('ur506_'.$tblYear)
+               ->select('DISEASE', 'PROVINCE')
+               ->selectRaw('sum(if(RESULT <> 2,1,0)) AS case_total')
+               ->selectRaw('sum(if(RESULT = 2,1,0)) AS death_total')
+               ->whereIn('DISEASE',['26','27','66'])
+               ->whereIn('PROVINCE',$dpc_val)
+               ->groupBy('PROVINCE')
+               ->get();
+         }else{
+             $query[] = DB::table('ur506_'.$tblYear)
+               ->select('DISEASE', 'PROVINCE')
+               ->selectRaw('sum(if(RESULT <> 2,1,0)) AS case_total')
+               ->selectRaw('sum(if(RESULT = 2,1,0)) AS death_total')
+               ->where('DISEASE','=',$disease_code)
+               ->whereIn('PROVINCE',$dpc_val)
+               ->groupBy('PROVINCE')
+               ->get();
+         }
+    }
+        $arr_dpc_th = array('สคร.1','สคร.2','สคร.3','สคร.4','สคร.5','สคร.6','สคร.7','สคร.8','สคร.9','สคร.10','สคร.11','สคร.12','สปคม.');
+              for($i=0;$i<count($query);$i++ ){
+                    $data[] = array('DPC_GROUP_NAME' => $arr_dpc_th[$i]);
+                    foreach ($query[$i] as $data_key => $data_val)
+                    {
+                      $total_pop_in_province = PopulationController::all_population_by_province($tblYear);
+                            if(isset($total_pop_in_province[$data_val->PROVINCE]['poptotal_in_province'])){
+                              $total_pop = number_format($total_pop_in_province[$data_val->PROVINCE]['poptotal_in_province']);
+                              $cal_ratio_cases = Controller::cal_ratio_cases($total_pop_in_province[$data_val->PROVINCE]['poptotal_in_province'],$data_val->case_total);
+                              $cal_ratio_deaths = Controller::cal_ratio_cases_deaths($total_pop_in_province[$data_val->PROVINCE]['poptotal_in_province'],$data_val->death_total);
+                              $cal_ratio_cases_deaths = Controller::cal_ratio_cases_deaths($data_val->case_total,$data_val->death_total);
+                            }else{
+                              $total_pop = '0';
+                              $cal_ratio_cases = '0';
+                              $cal_ratio_deaths = '0';
+                            }
+                        //Reporting Area','จำนวนผู้ป่วย','อัตราป่วย(ต่อประชากรแสนคน)','จำนวนผู้เสียชีวิต','อัตราป่วยตาย(%)','อัตราตาย(ต่อประชากรแสนคน)','จำนวนประชากร');
+                        $data[] = array($get_provincename_th[$data_val->PROVINCE], //Reporting Area
+                                        $data_val->case_total, //จำนวนผู้ป่วย
+                                        $cal_ratio_cases,   //อัตราป่วย(ต่อประชากรแสนคน)
+                                        $data_val->death_total, //จำนวนผู้เสียชีวิต
+                                        $cal_ratio_deaths, //อัตราป่วยตาย(%)
+                                        $cal_ratio_cases_deaths,//อัตราตาย(ต่อประชากรแสนคน)
+                                        $total_pop  //จำนวนประชากร
+                        );
+                    }
+              }
+        //filename
+        $filename = 'sick-death-ratio'.$disease_code.'-year'.$tblYear;
+        //sheetname
+        $sheetname = 'Sick-Death-Ratio'.$get_all_disease_array[$disease_code];
 
+        Excel::create($filename, function($excel) use($data,$sheetname) {
+            // Set the title
+            $excel->setTitle('UCD-Report');
+            // Chain the setters
+            $excel->setCreator('Talek Team')->setCompany('Talek Team');
+            //description
+            $excel->setDescription('สปคม.');
 
-    dd($data);
+            $excel->sheet($sheetname, function ($sheet) use ($data) {
+                 $sheet->fromArray($data, null, 'A1', false, false);
+             });
+         })->download('xlsx');
+  }
+
+  public static function get_patient_sick_weekly($select_year,$disease_code){
+      $tblYear = (isset($select_year))? $select_year : date('Y')-1;
+      $arr_disease_code = (isset($disease_code))? $disease_code : "01";
+      $get_pop_dpc_group =\App\Http\Controllers\Controller::get_pop_dpc_group();
+      $get_provincename_th =\App\Http\Controllers\Controller::get_provincename_th()->toArray();
+      foreach ($get_pop_dpc_group as $dpc_code => $dpc_val)
+      {
+           if($disease_code=='26-27-66'){
+                 $query[] = DB::table('ur506_'.$tblYear)
+                 ->select('DISEASE', 'PROVINCE')
+                 ->selectRaw('SUM(IF(week_no = 01,1,0)) AS wk01,SUM(IF(week_no = 02,1,0)) AS wk02,SUM(IF(week_no = 03,1,0)) AS wk03')
+                 ->selectRaw('SUM(IF(week_no = 04,1,0)) AS wk04,SUM(IF(week_no = 05,1,0)) AS wk05,SUM(IF(week_no = 06,1,0)) AS wk06')
+                 ->selectRaw('SUM(IF(week_no = 07,1,0)) AS wk07,SUM(IF(week_no = 08,1,0)) AS wk08,SUM(IF(week_no = 09,1,0)) AS wk09')
+                 ->selectRaw('SUM(IF(week_no = 10,1,0)) AS wk10,SUM(IF(week_no = 11,1,0)) AS wk11,SUM(IF(week_no = 12,1,0)) AS wk12')
+                 ->selectRaw('SUM(IF(week_no = 13,1,0)) AS wk13,SUM(IF(week_no = 14,1,0)) AS wk14,SUM(IF(week_no = 15,1,0)) AS wk15')
+                 ->selectRaw('SUM(IF(week_no = 16,1,0)) AS wk16,SUM(IF(week_no = 17,1,0)) AS wk17,SUM(IF(week_no = 18,1,0)) AS wk18')
+                 ->selectRaw('SUM(IF(week_no = 19,1,0)) AS wk19,SUM(IF(week_no = 20,1,0)) AS wk20,SUM(IF(week_no = 21,1,0)) AS wk21')
+                 ->selectRaw('SUM(IF(week_no = 22,1,0)) AS wk22,SUM(IF(week_no = 23,1,0)) AS wk23,SUM(IF(week_no = 24,1,0)) AS wk24')
+                 ->selectRaw('SUM(IF(week_no = 25,1,0)) AS wk25,SUM(IF(week_no = 26,1,0)) AS wk26,SUM(IF(week_no = 27,1,0)) AS wk27')
+                 ->selectRaw('SUM(IF(week_no = 28,1,0)) AS wk28,SUM(IF(week_no = 29,1,0)) AS wk29,SUM(IF(week_no = 30,1,0)) AS wk30')
+                 ->selectRaw('SUM(IF(week_no = 31,1,0)) AS wk31,SUM(IF(week_no = 32,1,0)) AS wk32,SUM(IF(week_no = 33,1,0)) AS wk33')
+                 ->selectRaw('SUM(IF(week_no = 34,1,0)) AS wk34,SUM(IF(week_no = 35,1,0)) AS wk35,SUM(IF(week_no = 36,1,0)) AS wk36')
+                 ->selectRaw('SUM(IF(week_no = 37,1,0)) AS wk37,SUM(IF(week_no = 38,1,0)) AS wk38,SUM(IF(week_no = 39,1,0)) AS wk39')
+                 ->selectRaw('SUM(IF(week_no = 40,1,0)) AS wk40,SUM(IF(week_no = 41,1,0)) AS wk41,SUM(IF(week_no = 42,1,0)) AS wk42')
+                 ->selectRaw('SUM(IF(week_no = 43,1,0)) AS wk43,SUM(IF(week_no = 44,1,0)) AS wk44,SUM(IF(week_no = 45,1,0)) AS wk45')
+                 ->selectRaw('SUM(IF(week_no = 46,1,0)) AS wk46,SUM(IF(week_no = 47,1,0)) AS wk47,SUM(IF(week_no = 48,1,0)) AS wk48')
+                 ->selectRaw('SUM(IF(week_no = 49,1,0)) AS wk49,SUM(IF(week_no = 50,1,0)) AS wk50,SUM(IF(week_no = 51,1,0)) AS wk51')
+                 ->selectRaw('SUM(IF(week_no = 52,1,0)) AS wk52,SUM(IF(week_no = 53,1,0)) AS wk53')
+                 ->whereIn('DISEASE',['26','27','66'])
+                 ->whereIn('PROVINCE',$dpc_val)
+                 ->groupBy('PROVINCE')
+                 ->get();
+          }else{
+                  $query[] = DB::table('ur506_'.$tblYear)
+                  ->select('DISEASE', 'PROVINCE')
+                  ->selectRaw('SUM(IF(week_no = 01,1,0)) AS wk01,SUM(IF(week_no = 02,1,0)) AS wk02,SUM(IF(week_no = 03,1,0)) AS wk03')
+                  ->selectRaw('SUM(IF(week_no = 04,1,0)) AS wk04,SUM(IF(week_no = 05,1,0)) AS wk05,SUM(IF(week_no = 06,1,0)) AS wk06')
+                  ->selectRaw('SUM(IF(week_no = 07,1,0)) AS wk07,SUM(IF(week_no = 08,1,0)) AS wk08,SUM(IF(week_no = 09,1,0)) AS wk09')
+                  ->selectRaw('SUM(IF(week_no = 10,1,0)) AS wk10,SUM(IF(week_no = 11,1,0)) AS wk11,SUM(IF(week_no = 12,1,0)) AS wk12')
+                  ->selectRaw('SUM(IF(week_no = 13,1,0)) AS wk13,SUM(IF(week_no = 14,1,0)) AS wk14,SUM(IF(week_no = 15,1,0)) AS wk15')
+                  ->selectRaw('SUM(IF(week_no = 16,1,0)) AS wk16,SUM(IF(week_no = 17,1,0)) AS wk17,SUM(IF(week_no = 18,1,0)) AS wk18')
+                  ->selectRaw('SUM(IF(week_no = 19,1,0)) AS wk19,SUM(IF(week_no = 20,1,0)) AS wk20,SUM(IF(week_no = 21,1,0)) AS wk21')
+                  ->selectRaw('SUM(IF(week_no = 22,1,0)) AS wk22,SUM(IF(week_no = 23,1,0)) AS wk23,SUM(IF(week_no = 24,1,0)) AS wk24')
+                  ->selectRaw('SUM(IF(week_no = 25,1,0)) AS wk25,SUM(IF(week_no = 26,1,0)) AS wk26,SUM(IF(week_no = 27,1,0)) AS wk27')
+                  ->selectRaw('SUM(IF(week_no = 28,1,0)) AS wk28,SUM(IF(week_no = 29,1,0)) AS wk29,SUM(IF(week_no = 30,1,0)) AS wk30')
+                  ->selectRaw('SUM(IF(week_no = 31,1,0)) AS wk31,SUM(IF(week_no = 32,1,0)) AS wk32,SUM(IF(week_no = 33,1,0)) AS wk33')
+                  ->selectRaw('SUM(IF(week_no = 34,1,0)) AS wk34,SUM(IF(week_no = 35,1,0)) AS wk35,SUM(IF(week_no = 36,1,0)) AS wk36')
+                  ->selectRaw('SUM(IF(week_no = 37,1,0)) AS wk37,SUM(IF(week_no = 38,1,0)) AS wk38,SUM(IF(week_no = 39,1,0)) AS wk39')
+                  ->selectRaw('SUM(IF(week_no = 40,1,0)) AS wk40,SUM(IF(week_no = 41,1,0)) AS wk41,SUM(IF(week_no = 42,1,0)) AS wk42')
+                  ->selectRaw('SUM(IF(week_no = 43,1,0)) AS wk43,SUM(IF(week_no = 44,1,0)) AS wk44,SUM(IF(week_no = 45,1,0)) AS wk45')
+                  ->selectRaw('SUM(IF(week_no = 46,1,0)) AS wk46,SUM(IF(week_no = 47,1,0)) AS wk47,SUM(IF(week_no = 48,1,0)) AS wk48')
+                  ->selectRaw('SUM(IF(week_no = 49,1,0)) AS wk49,SUM(IF(week_no = 50,1,0)) AS wk50,SUM(IF(week_no = 51,1,0)) AS wk51')
+                  ->selectRaw('SUM(IF(week_no = 52,1,0)) AS wk52,SUM(IF(week_no = 53,1,0)) AS wk53')
+                  ->where('DISEASE','=',$arr_disease_code)
+                  ->whereIn('PROVINCE',$dpc_val)
+                  ->groupBy('PROVINCE')
+                  ->get();
+          }
+      }
+
+      $arr_dpc_th = array('สคร.1','สคร.2','สคร.3','สคร.4','สคร.5','สคร.6','สคร.7','สคร.8','สคร.9','สคร.10','สคร.11','สคร.12','สปคม.');
+            for($i=0;$i<count($query);$i++ ){
+                  foreach ($query[$i] as $data_key => $data_val)
+                  {
+                      $data2[] = array('DPC' =>  $arr_dpc_th[$i],
+                                      'PROVINCE' => $get_provincename_th[$data_val->PROVINCE],
+                                      'wk01' => $data_val->wk01, 'wk02' => $data_val->wk02, 'wk03' => $data_val->wk03, 'wk04' => $data_val->wk04,'wk05' => $data_val->wk05,
+                                      'wk06' => $data_val->wk06, 'wk07' => $data_val->wk07, 'wk08' => $data_val->wk08, 'wk09' => $data_val->wk09,'wk10' => $data_val->wk10,
+                                      'wk11' => $data_val->wk11, 'wk12' => $data_val->wk12, 'wk13' => $data_val->wk13, 'wk14' => $data_val->wk14,'wk15' => $data_val->wk15,
+                                      'wk16' => $data_val->wk16, 'wk17' => $data_val->wk17, 'wk18' => $data_val->wk18, 'wk19' => $data_val->wk19,'wk20' => $data_val->wk20,
+                                      'wk21' => $data_val->wk21, 'wk22' => $data_val->wk22, 'wk23' => $data_val->wk23, 'wk24' => $data_val->wk24,'wk25' => $data_val->wk25,
+                                      'wk26' => $data_val->wk26, 'wk27' => $data_val->wk27, 'wk28' => $data_val->wk28, 'wk29' => $data_val->wk29,'wk30' => $data_val->wk30,
+                                      'wk31' => $data_val->wk31, 'wk32' => $data_val->wk32, 'wk33' => $data_val->wk33, 'wk34' => $data_val->wk34,'wk35' => $data_val->wk35,
+                                      'wk36' => $data_val->wk36, 'wk37' => $data_val->wk37, 'wk38' => $data_val->wk38, 'wk39' => $data_val->wk39,'wk40' => $data_val->wk40,
+                                      'wk41' => $data_val->wk41, 'wk42' => $data_val->wk42, 'wk43' => $data_val->wk43, 'wk44' => $data_val->wk44,'wk45' => $data_val->wk45,
+                                      'wk46' => $data_val->wk46, 'wk47' => $data_val->wk47, 'wk48' => $data_val->wk48, 'wk49' => $data_val->wk49,'wk50' => $data_val->wk50,
+                                      'wk51' => $data_val->wk51, 'wk52' => $data_val->wk52, 'wk53' => $data_val->wk53
+                                      );
+                  }
+            }
+
+      //dd($data2);
+      return $data2;
   }
 
 }
