@@ -184,6 +184,8 @@ return [
         Barryvdh\Debugbar\ServiceProvider::class,
         //Laravel Excel
         Maatwebsite\Excel\ExcelServiceProvider::class,
+        //Active Menu
+        Pyaesone17\ActiveState\ActiveStateServiceProvider::class,
     ],
 
     /*
@@ -241,7 +243,8 @@ return [
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
 		'Form' => Collective\Html\FormFacade::class,
 		'Html' => Collective\Html\HtmlFacade::class,
-
+    'Active' => Pyaesone17\ActiveState\ActiveFacade::class,
+    
     ],
 
 ];
