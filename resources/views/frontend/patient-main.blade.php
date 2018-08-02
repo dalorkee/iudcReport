@@ -10,8 +10,8 @@ $get_all_disease =\App\Http\Controllers\Controller::list_disease();
 <h1>การส่งออกข้อมูลผู้ป่วย จำแนกรายเดือน<small></small></h1>
 <ol class="breadcrumb">
 	<li><a href="{{ route('dashboard') }}"><i class="fa fa-home"></i> หนัาหลัก</a></li>
-	<li><a href="#">ส่งออกข้อมูล</a></li>
-	<li><a href="{{ route('export-patient-data.main') }}" class="active">ผู้ป่วย</a></li>
+	<li><a href="#">รายงาน</a></li>
+	<li><a href="{{ route('export-patient-data.main') }}" class="active">รายงานข้อมูลผู้ป่วย</a></li>
 </ol>
 </section>
 <!-- Main content -->
@@ -54,7 +54,7 @@ $get_all_disease =\App\Http\Controllers\Controller::list_disease();
           <div class="small-box bg-yellow">
             <div class="inner">
               <h4>ส่งออกข้อมูลผู้ป่วย</h4>
-              <p>จำนวนป่วยรายสัปดาห์</p>
+              <p>จำนวนป่วย รายสัปดาห์</p>
             </div>
             <div class="icon">
               <i class="fa fa-pie-chart"></i>
@@ -70,7 +70,7 @@ $get_all_disease =\App\Http\Controllers\Controller::list_disease();
           <div class="small-box bg-red">
             <div class="inner">
               <h4>ส่งออกข้อมูลผู้ป่วย</h4>
-              <p>จำนวนป่วยตามอายุ</p>
+              <p>จำนวนป่วย ตามอายุ</p>
             </div>
             <div class="icon">
               <i class="fa fa-pie-chart"></i>
@@ -88,7 +88,7 @@ $get_all_disease =\App\Http\Controllers\Controller::list_disease();
 		          <div class="small-box bg-gray">
 		            <div class="inner">
 									<h4>ส่งออกข้อมูลผู้ป่วย</h4>
-		              <p>จำนวนตายตามอายุ</p>
+		              <p>จำนวนตาย ตามอายุ</p>
 		            </div>
 		            <div class="icon">
 		              <i class="fa fa-pie-chart"></i>
@@ -120,7 +120,7 @@ $get_all_disease =\App\Http\Controllers\Controller::list_disease();
 		          <div class="small-box bg-purple">
 		            <div class="inner">
 		              <h4>ส่งออกข้อมูลผู้ป่วย</h4>
-		              <p>จำนวนป่วยตามกลุ่มอาชีพ</p>
+		              <p>จำนวนป่วย ตามกลุ่มอาชีพ</p>
 		            </div>
 		            <div class="icon">
 		              <i class="fa fa-pie-chart"></i>
@@ -136,7 +136,7 @@ $get_all_disease =\App\Http\Controllers\Controller::list_disease();
 		          <div class="small-box bg-teal">
 		            <div class="inner">
 		              <h4>ส่งออกข้อมูลผู้ป่วย</h4>
-		              <p>จำนวนป่วยตามเพศ</p>
+		              <p>จำนวนป่วย ตามเพศ</p>
 		            </div>
 		            <div class="icon">
 		              <i class="fa fa-pie-chart"></i>
