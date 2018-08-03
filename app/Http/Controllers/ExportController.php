@@ -74,8 +74,6 @@ class ExportController extends Controller
 
         $select_year = $request->select_year;
 
-
-
         if($request->sector=='all-region'){
           $data[] = array('REGION','MALE','FEMALE');
           $array_sector = Controller::get_pop_sector_not_key();
@@ -168,7 +166,10 @@ class ExportController extends Controller
         				->get();
 
               if(count($query)<1){
-                  dd('No Record');
+                //dd('No Record');
+                $message = "ไม่พบข้อมูล";
+                flash()->overlay($message, 'ข้อความจากระบบ');
+                return redirect()->route('export-population.sector');
               }else{
 
               $data[] = array('ID','PROVINCE','MALE','FEMALE');
@@ -226,7 +227,10 @@ class ExportController extends Controller
 
 
           if(count($query)<1){
-              dd('No Record');
+              //dd('No Record');
+              $message = "ไม่พบข้อมูล";
+              flash()->overlay($message, 'ข้อความจากระบบ');
+              return redirect()->route('export-population.sector');
           }else{
 
             foreach ($query as $key => $value){
@@ -269,7 +273,10 @@ class ExportController extends Controller
         				->get();
 
               if(count($query)<1){
-                  dd('No Record');
+                  //dd('No Record');
+                  $message = "ไม่พบข้อมูล";
+                  flash()->overlay($message, 'ข้อความจากระบบ');
+                  return redirect()->route('export-population.sector');
               }else{
               $data[] = array('ID','PROVINCE','MALE','FEMALE');
 
@@ -295,12 +302,6 @@ class ExportController extends Controller
                })->download('xlsx');
             }
         }
-
-
-
-
-
-
     }
 
     public function post_population_province(Request $request){
@@ -336,7 +337,10 @@ class ExportController extends Controller
           }
 
             if(count($query)<1){
-                dd('No Record');
+                //dd('No Record');
+                $message = "ไม่พบข้อมูล";
+                flash()->overlay($message, 'ข้อความจากระบบ');
+                return redirect()->route('export-population.sector');
             }else{
             $data[] = array('ID','PROVINCE','MALE','FEMALE');
 
@@ -372,7 +376,10 @@ class ExportController extends Controller
             ->orderBy('pop_urban_sex.name_addr','ASC')
             ->get();
           if(count($query)<1){
-              dd('No Record');
+              //dd('No Record');
+              $message = "ไม่พบข้อมูล";
+              flash()->overlay($message, 'ข้อความจากระบบ');
+              return redirect()->route('export-population.sector');
           }else{
           $data[] = array('PROVINCE','NAME_ADDR','MALE','FEMALE');
             foreach ($query as $value){
@@ -639,7 +646,10 @@ class ExportController extends Controller
       }
 
       if(count($query)<1){
-          dd('No Record');
+          //dd('No Record');
+          $message = "ไม่พบข้อมูล";
+          flash()->overlay($message, 'ข้อความจากระบบ');
+          return redirect()->route('export-population.sector');
       }else{
       $data[] = array('PROVINCE','M_AGE_0','F_AGE_0','M_AGE_1','F_AGE_1','M_AGE_2','F_AGE_2','M_AGE_3','F_AGE_3','M_AGE_4','F_AGE_4','M_AGE_5','F_AGE_5','M_AGE_6','F_AGE_6','M_AGE_7','F_AGE_7','M_AGE_8','F_AGE_8','M_AGE_9','F_AGE_9','M_AGE_10','F_AGE_10','M_AGE_11','F_AGE_11','M_AGE_12','F_AGE_12','M_AGE_13','F_AGE_13','M_AGE_14','F_AGE_14','M_AGE_15','F_AGE_15','M_AGE_16','F_AGE_16','M_AGE_17','F_AGE_17','M_AGE_18','F_AGE_18','M_AGE_19','F_AGE_19','M_AGE_20','F_AGE_20','M_AGE_21','F_AGE_21','M_AGE_22','F_AGE_22','M_AGE_23','F_AGE_23','M_AGE_24','F_AGE_24','M_AGE_25','F_AGE_25','M_AGE_26','F_AGE_26','M_AGE_27','F_AGE_27','M_AGE_28','F_AGE_28','M_AGE_29','F_AGE_29','M_AGE_30','F_AGE_30','M_AGE_31','F_AGE_31','M_AGE_32','F_AGE_32','M_AGE_33','F_AGE_33','M_AGE_34','F_AGE_34','M_AGE_35','F_AGE_35','M_AGE_36','F_AGE_36','M_AGE_37','F_AGE_37','M_AGE_38','F_AGE_38','M_AGE_39','F_AGE_39','M_AGE_40','F_AGE_40','M_AGE_41','F_AGE_41','M_AGE_42','F_AGE_42','M_AGE_43','F_AGE_43','M_AGE_44','F_AGE_44','M_AGE_45','F_AGE_45','M_AGE_46','F_AGE_46','M_AGE_47','F_AGE_47','M_AGE_48','F_AGE_48','M_AGE_49','F_AGE_49','M_AGE_50','F_AGE_50','M_AGE_51','F_AGE_51','M_AGE_52','F_AGE_52','M_AGE_53','F_AGE_53','M_AGE_54','F_AGE_54','M_AGE_55','F_AGE_55','M_AGE_56','F_AGE_56','M_AGE_57','F_AGE_57','M_AGE_58','F_AGE_58','M_AGE_59','F_AGE_59','M_AGE_60','F_AGE_60','M_AGE_61','F_AGE_61','M_AGE_62','F_AGE_62','M_AGE_63','F_AGE_63','M_AGE_64','F_AGE_64','M_AGE_65','F_AGE_65','M_AGE_66','F_AGE_66','M_AGE_67','F_AGE_67','M_AGE_68','F_AGE_68','M_AGE_69','F_AGE_69','M_AGE_70','F_AGE_70','M_AGE_71','F_AGE_71','M_AGE_72','F_AGE_72','M_AGE_73','F_AGE_73','M_AGE_74','F_AGE_74','M_AGE_75','F_AGE_75','M_AGE_76','F_AGE_76','M_AGE_77','F_AGE_77','M_AGE_78','F_AGE_78','M_AGE_79','F_AGE_79','M_AGE_80','F_AGE_80','M_AGE_81','F_AGE_81','M_AGE_82','F_AGE_82','M_AGE_83','F_AGE_83','M_AGE_84','F_AGE_84','M_AGE_85','F_AGE_85','M_AGE_86','F_AGE_86','M_AGE_87','F_AGE_87','M_AGE_88','F_AGE_88','M_AGE_89','F_AGE_89','M_AGE_90','F_AGE_90','M_AGE_91','F_AGE_91','M_AGE_92','F_AGE_92','M_AGE_93','F_AGE_93','M_AGE_94','F_AGE_94','M_AGE_95','F_AGE_95','M_AGE_96','F_AGE_96','M_AGE_97','F_AGE_97','M_AGE_98','F_AGE_98','M_AGE_99','F_AGE_99','M_AGE_100','F_AGE_100','M_AGE_101','F_AGE_101');
 
@@ -878,7 +888,10 @@ class ExportController extends Controller
             ->orderBy('pop_urban_age.name_addr','ASC')
             ->get();
           if(count($query)<1){
-              dd('No Record');
+              //dd('No Record');
+              $message = "ไม่พบข้อมูล";
+              flash()->overlay($message, 'ข้อความจากระบบ');
+              return redirect()->route('export-population.sector');
           }else{
           $data[] = array('PROVINCE','NAME_ADDR','M_AGE_0','F_AGE_0','M_AGE_1','F_AGE_1','M_AGE_2','F_AGE_2','M_AGE_3','F_AGE_3','M_AGE_4','F_AGE_4','M_AGE_5','F_AGE_5','M_AGE_6','F_AGE_6','M_AGE_7','F_AGE_7','M_AGE_8','F_AGE_8','M_AGE_9','F_AGE_9','M_AGE_10','F_AGE_10','M_AGE_11','F_AGE_11','M_AGE_12','F_AGE_12','M_AGE_13','F_AGE_13','M_AGE_14','F_AGE_14','M_AGE_15','F_AGE_15','M_AGE_16','F_AGE_16','M_AGE_17','F_AGE_17','M_AGE_18','F_AGE_18','M_AGE_19','F_AGE_19','M_AGE_20','F_AGE_20','M_AGE_21','F_AGE_21','M_AGE_22','F_AGE_22','M_AGE_23','F_AGE_23','M_AGE_24','F_AGE_24','M_AGE_25','F_AGE_25','M_AGE_26','F_AGE_26','M_AGE_27','F_AGE_27','M_AGE_28','F_AGE_28','M_AGE_29','F_AGE_29','M_AGE_30','F_AGE_30','M_AGE_31','F_AGE_31','M_AGE_32','F_AGE_32','M_AGE_33','F_AGE_33','M_AGE_34','F_AGE_34','M_AGE_35','F_AGE_35','M_AGE_36','F_AGE_36','M_AGE_37','F_AGE_37','M_AGE_38','F_AGE_38','M_AGE_39','F_AGE_39','M_AGE_40','F_AGE_40','M_AGE_41','F_AGE_41','M_AGE_42','F_AGE_42','M_AGE_43','F_AGE_43','M_AGE_44','F_AGE_44','M_AGE_45','F_AGE_45','M_AGE_46','F_AGE_46','M_AGE_47','F_AGE_47','M_AGE_48','F_AGE_48','M_AGE_49','F_AGE_49','M_AGE_50','F_AGE_50','M_AGE_51','F_AGE_51','M_AGE_52','F_AGE_52','M_AGE_53','F_AGE_53','M_AGE_54','F_AGE_54','M_AGE_55','F_AGE_55','M_AGE_56','F_AGE_56','M_AGE_57','F_AGE_57','M_AGE_58','F_AGE_58','M_AGE_59','F_AGE_59','M_AGE_60','F_AGE_60','M_AGE_61','F_AGE_61','M_AGE_62','F_AGE_62','M_AGE_63','F_AGE_63','M_AGE_64','F_AGE_64','M_AGE_65','F_AGE_65','M_AGE_66','F_AGE_66','M_AGE_67','F_AGE_67','M_AGE_68','F_AGE_68','M_AGE_69','F_AGE_69','M_AGE_70','F_AGE_70','M_AGE_71','F_AGE_71','M_AGE_72','F_AGE_72','M_AGE_73','F_AGE_73','M_AGE_74','F_AGE_74','M_AGE_75','F_AGE_75','M_AGE_76','F_AGE_76','M_AGE_77','F_AGE_77','M_AGE_78','F_AGE_78','M_AGE_79','F_AGE_79','M_AGE_80','F_AGE_80','M_AGE_81','F_AGE_81','M_AGE_82','F_AGE_82','M_AGE_83','F_AGE_83','M_AGE_84','F_AGE_84','M_AGE_85','F_AGE_85','M_AGE_86','F_AGE_86','M_AGE_87','F_AGE_87','M_AGE_88','F_AGE_88','M_AGE_89','F_AGE_89','M_AGE_90','F_AGE_90','M_AGE_91','F_AGE_91','M_AGE_92','F_AGE_92','M_AGE_93','F_AGE_93','M_AGE_94','F_AGE_94','M_AGE_95','F_AGE_95','M_AGE_96','F_AGE_96','M_AGE_97','F_AGE_97','M_AGE_98','F_AGE_98','M_AGE_99','F_AGE_99','M_AGE_100','F_AGE_100','M_AGE_101','F_AGE_101');
 

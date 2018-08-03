@@ -186,6 +186,10 @@ return [
         Maatwebsite\Excel\ExcelServiceProvider::class,
         //Active Menu
         Pyaesone17\ActiveState\ActiveStateServiceProvider::class,
+        /*
+        *laravelcasts/flashmessage
+        */
+        Laracasts\Flash\FlashServiceProvider::class,
     ],
 
     /*
@@ -244,7 +248,7 @@ return [
 		'Form' => Collective\Html\FormFacade::class,
 		'Html' => Collective\Html\HtmlFacade::class,
     'Active' => Pyaesone17\ActiveState\ActiveFacade::class,
-    
+
     ],
 
 ];

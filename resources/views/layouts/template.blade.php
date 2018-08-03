@@ -34,6 +34,7 @@ $pj = 'PJ';
 	<!-- =============================================== -->
 	<!-- Content Wrapper. Contains page content -->
 	<div class="content-wrapper">
+		@include('flash::message')
 		<!-- animation loader -->
 		<div class="loader"></div>
 		@yield('content')
