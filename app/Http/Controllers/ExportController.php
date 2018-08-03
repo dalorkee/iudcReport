@@ -164,7 +164,7 @@ class ExportController extends Controller
         				->groupBy(DB::raw('pop_urban_sex.prov_code'))
                 ->orderBy('pop_urban_sex.prov_code','ASC')
         				->get();
-
+                
               if(count($query)<1){
                 //dd('No Record');
                 $message = "ไม่พบข้อมูล";

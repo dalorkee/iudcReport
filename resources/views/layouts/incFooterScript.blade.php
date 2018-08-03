@@ -20,5 +20,6 @@
 <script>
 $(document).ready(function () {
 	$('.loader').fadeOut('slow');
+	$('#flash-overlay-modal').modal();
 });
 </script>

@@ -71,10 +71,3 @@ $array_sector_th_name = Controller::get_pop_sector_th_name();
 </section>
 <!-- /.content -->
 @stop
-@section('script')
-<script>
-$(document).ready(function () {
-	$('#flash-overlay-modal').modal();
-});
-</script>
-@stop
