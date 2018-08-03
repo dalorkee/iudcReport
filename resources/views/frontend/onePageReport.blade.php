@@ -60,7 +60,7 @@
 			line-height: 18px;
 			height: 120px;
 			margin-bottom: 40px;
-			width: 110px;
+			min-width: 110px;
 		}
 		.legend-key {
 			display: inline-block;
@@ -78,10 +78,10 @@
 @endsection
 @section('content')
 <section class="content-header">
-	<h1>รายงานรายสัปดาห์</h1>
+	<h1>One page report</h1>
 	<ol class="breadcrumb">
 		<li><a href="#"><i class="fa fa-home"></i> หน้าหลัก</a></li>
-		<li class="active">รายงานรายสัปดาห์</li>
+		<li class="active">One page report</li>
 	</ol>
 </section>
 <!-- Main content -->
@@ -199,15 +199,15 @@
 										@endforeach
 									</div>
 									<div style="text-indent: 50px;">
-										จังหวัดที่มีอัตราป่วยต่อแสนประชากรสูงสุด 5 อันดับแรก คือ
+										จังหวัดที่มีอัตราป่วยสูงสุด 5 อันดับแรก คือ
 										@foreach ($top5PtByYear as $key=>$val)
-											{{ $key." (".$val." ต่อแสนประชากร) " }}
+											{{ $key." (".$val." ต่อประชากรแสนคน) " }}
 										@endforeach
 									</div>
 									<div style="text-indent: 50px;">
 										ภาคที่มีอัตราป่วยสูงสุด คือ
 										@foreach ($patientByProvRegion as $key=>$val)
-											{{ $key." (".$val." ต่อแสนประชากร) " }}
+											{{ $key." (".$val." ต่อประชากรแสนคน) " }}
 										@endforeach
 									</div>
 									<div style="text-indent: 50px;">
@@ -449,7 +449,7 @@ $('document').ready(function () {
 			new mapboxgl.Popup()
 				.setLngLat(e.lngLat)
 				.setHTML(e.features.map(function(feature) {
-					return '<ul class=\"map-popup\"><li><span>จังหวัด</span>' + feature.properties.PROV_NAMT + '</li><li><span>ผู้ป่วย</span>' + '".$val['amount']."</li></ul>';
+					return '<ul class=\"map-popup\"><li><span>จังหวัด</span>' + feature.properties.PROV_NAMT + '</li><li><span>ผู้ป่วย</span>' + '".number_format($val['amount'])."</li></ul>';
 				}).join(', '))
 				.addTo(map);
 		});";

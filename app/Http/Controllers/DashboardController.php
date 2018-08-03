@@ -277,11 +277,11 @@ class dashboardController extends DiseasesController
 				$rs['amount'] = $pt;
 				$prov_rs[$key] = $rs;
 			}
-			$rg1 = "0-".$r1;
-			$rg2 = ($r1+1)."-".$r2;
-			$rg3 = ($r2+1)."-".$r3;
-			$rg4 = ($r3+1)."-".$r4;
-			$rg5 = ($r4+1)."+";
+			$rg1 = "0-".number_format($r1);
+			$rg2 = number_format(($r1+1))."-".number_format($r2);
+			$rg3 = number_format(($r2+1))."-".number_format($r3);
+			$rg4 = number_format(($r3+1))."-".number_format($r4);
+			$rg5 = number_format(($r4+1))."+";
 			$result['range'] = array($rg1, $rg2, $rg3, $rg4, $rg5);
 			$result['patient'] = $prov_rs;
 		}
