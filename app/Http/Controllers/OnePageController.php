@@ -13,53 +13,70 @@ class OnePageController extends DiseasesController
 		/* get Disease group name */
 		$dsgroups = $this->getDsNameByDsGroup();
 		/* request var from view */
-		if (isset($request) && isset($request->year)) {
+		if (isset($request->week_number) && isset($request->year)) {
+			$rqWeek = $request->week_number;
 			$rqYear = $request->year;
 			$ds = $request->disease;
 			$selected = true;
 		} else {
 			$nowYear = parent::getLastUr506Year();
+			$rqWeek = 'all';
 			$rqYear = $nowYear;
 			$ds = 78;
 			$selected = false;
 		}
-		$selectDs = array('disease'=>$ds, 'selectYear'=>$rqYear, 'selected'=>$selected);
-		/* pass var for get the result */
-		$patientOnYear = $this->getPatientPerYear($rqYear, $ds);
-		$patientPerProv = $this->getPatientPerProv($rqYear, $ds);
-		$caseDead = $this->getCntCaseResult($rqYear, $ds, 2);
-		$patientBySex = $this->getPatientBySexType($rqYear, $ds);
-		$patientByAgeGroup = $this->getPatientByAgeGroup($rqYear, $ds);
-		$patientByNation = $this->getPatientByNation($rqYear, $ds);
-		arsort($patientByNation);
-		$patientByOccupation = $this->getPatientByOccupation($rqYear, $ds);
-		arsort($patientByOccupation);
-		$top5PtByYear = $this->getTop5PtByYear($rqYear, $ds);
-		$patientByProvRegion = $this->getPatientByProvRegion($rqYear, $ds);
-		arsort($patientByProvRegion);
-		$patientOnLastWeek = $this->getPatientOnLastWeek($rqYear, $ds);
-		$patintPerWeek = $this->getPatientPerWeek($rqYear, $ds);
-		$patientMap = $this->getPatientMap($rqYear, $ds);
-		return view(
-			'frontend.onePageReport',
-			[
-				'dsgroups'=>$dsgroups,
-				'selectDs'=>$selectDs,
-				'patientOnYear'=>$patientOnYear,
-				'patientPerProv'=>$patientPerProv,
-				'caseDead'=>$caseDead,
-				'patientBySex'=>$patientBySex,
-				'patientByAgeGroup'=>$patientByAgeGroup,
-				'patientByNation'=>$patientByNation,
-				'patientByOccupation'=>$patientByOccupation,
-				'top5PtByYear'=>$top5PtByYear,
-				'patientByProvRegion'=>$patientByProvRegion,
-				'patientOnLastWeek'=>$patientOnLastWeek,
-				'patintPerWeek'=>$patintPerWeek,
-				'patientMap'=>$patientMap
-
-			]
+		$selectDs = array(
+			'disease'=>$ds,
+			'selectWeek'=>$rqWeek,
+			'selectYear'=>$rqYear,
+			'selected'=>$selected
 		);
+		if ($rqWeek == 'all') {
+			/* pass var for get the result */
+			$patientOnYear = $this->getPatientPerYear($rqYear, $ds);
+			$patientPerProv = $this->getPatientPerProv($rqYear, $ds);
+			$caseDead = $this->getCntCaseResult($rqYear, $ds, 2);
+			$patientBySex = $this->getPatientBySexType($rqYear, $ds);
+			$patientByAgeGroup = $this->getPatientByAgeGroup($rqYear, $ds);
+			$patientByNation = $this->getPatientByNation($rqYear, $ds);
+			arsort($patientByNation);
+			$patientByOccupation = $this->getPatientByOccupation($rqYear, $ds);
+			arsort($patientByOccupation);
+			$top5PtByYear = $this->getTop5PtByYear($rqYear, $ds);
+			$patientByProvRegion = $this->getPatientByProvRegion($rqYear, $ds);
+			arsort($patientByProvRegion);
+			$patientOnLastWeek = $this->getPatientOnLastWeek($rqYear, $ds);
+			$patintPerWeek = $this->getPatientPerWeek($rqYear, $ds);
+			$patientMap = $this->getPatientMap($rqYear, $ds);
+			return view(
+				'frontend.onePageReport',
+				[
+					'dsgroups'=>$dsgroups,
+					'selectDs'=>$selectDs,
+					'patientOnYear'=>$patientOnYear,
+					'patientPerProv'=>$patientPerProv,
+					'caseDead'=>$caseDead,
+					'patientBySex'=>$patientBySex,
+					'patientByAgeGroup'=>$patientByAgeGroup,
+					'patientByNation'=>$patientByNation,
+					'patientByOccupation'=>$patientByOccupation,
+					'top5PtByYear'=>$top5PtByYear,
+					'patientByProvRegion'=>$patientByProvRegion,
+					'patientOnLastWeek'=>$patientOnLastWeek,
+					'patintPerWeek'=>$patintPerWeek,
+					'patientMap'=>$patientMap
+
+				]
+			);
+		} else {
+			return view(
+				'frontend.onePageWeekReport',
+				[
+					'dsgroups'=>$dsgroups,
+					'selectDs'=>$selectDs,
+				]
+			);
+		}
 	}
 
 	/*

@@ -327,6 +327,16 @@ class DiseasesController extends Controller
 		return $result;
 	}
 
+	protected function patientByWeek($week_no=0, $year=0, $diseaseCode=0) {
+		$result = DB::table('ur506_'.$year)
+		->select(DB::raw('COUNT(DATESICK) AS patient'))
+		->where('DISEASE', $diseaseCode)
+		->where('week_no', $week_no)
+		->get()
+		->toArray();
+		return $result;
+	}
+
 	protected function countPatientPerProv($year=0, $diseaseCode=0) {
 		$result = DB::table('ur506_'.$year)
 		->select(DB::raw('COUNT(DATESICK) AS patient, province'))
