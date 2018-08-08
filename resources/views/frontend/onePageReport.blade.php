@@ -60,7 +60,6 @@
 			line-height: 18px;
 			height: 120px;
 			margin-bottom: 40px;
-			min-width: 110px;
 		}
 		.legend-key {
 			display: inline-block;
