@@ -180,8 +180,9 @@ return [
         //Laravel Chart
         //ConsoleTVs\Charts\ChartsServiceProvider::class,
 		Khill\Lavacharts\Laravel\LavachartsServiceProvider::class,
-        //Debug Bar
+        /* Debug Bar
         Barryvdh\Debugbar\ServiceProvider::class,
+		*/
         //Laravel Excel
         Maatwebsite\Excel\ExcelServiceProvider::class,
         //Active Menu
@@ -241,8 +242,9 @@ return [
         //Laravel Chart
         //'Charts' => ConsoleTVs\Charts\Facades\Charts::class,
 		'Lava' => Khill\Lavacharts\Laravel\LavachartsFacade::class,
-        //Debug Bar
+        /* Debug Bar
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
+		*/
         //Laravel Excel
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
 		'Form' => Collective\Html\FormFacade::class,

@@ -14,7 +14,7 @@ $pj = 'PJ';
 	@yield('incHeaderScript')
 </head>
 <body class="hold-transition skin-purple sidebar-mini">
-<!-- Site wrapper
+<!-- Site wrapper -->
 <div class="iudc-header hidden-xs hidden-sm">
 	<figure>
 		<img src="{{ URL::asset('public/images/moph-logo.png') }}" alt="logo" class="moph-logo">
@@ -23,7 +23,7 @@ $pj = 'PJ';
 		<h2>ฐานข้อมูลโรคติดต่อเขตเมือง</h2>
 		<p>Urban Communicable Disease Database</p>
 	</div>
-</div>   -->
+</div>
 <div class="wrapper">
 	@include('layouts.incHeader')
 	<!-- =============================================== -->

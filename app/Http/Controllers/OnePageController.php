@@ -743,11 +743,11 @@ class OnePageController extends DiseasesController
 					$prov_rs[$key] = $rs;
 				}
 				/* set legend on the map */
-				$rg1 = "0-".$r1;
-				$rg2 = ($r1+1)."-".$r2;
-				$rg3 = ($r2+1)."-".$r3;
-				$rg4 = ($r3+1)."-".$r4;
-				$rg5 = ($r4+1)."+";
+				$rg1 = "0-".number_format($r1, 2);
+				$rg2 = number_format(($r1+0.01), 2)."-".number_format($r2, 2);
+				$rg3 = number_format(($r2+0.01), 2)."-".number_format($r3, 2);
+				$rg4 = number_format(($r3+0.01), 2)."-".number_format($r4, 2);
+				$rg5 = number_format(($r4+0.01), 2)."+";
 				$result['range'] = array($rg1, $rg2, $rg3, $rg4, $rg5);
 				$result['patient'] = $prov_rs;
 			}

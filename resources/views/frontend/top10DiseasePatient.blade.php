@@ -73,7 +73,7 @@
 			<div class="col-md-12">
 				<div class="box box-info">
 					<div class="box-header with-border">
-						<h3 class="box-title"><span class="ds-box-title">อัตราป่วยด้วยโรคที่เฝ้าระวัง สัปดาห์ที่ {{$listWeek['lastWeek']->week_no }} ปี {{ ((int)$listWeek['year']+543) }}</span></h3>
+						<h3 class="box-title"><span class="ds-box-title">โรคที่มีอัตราป่วยสูงสุด สัปดาห์ที่ {{$listWeek['lastWeek']->week_no }} ปี {{ ((int)$listWeek['year']+543) }}</span></h3>
 						<div class="box-tools pull-right">
 							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
 							</button>

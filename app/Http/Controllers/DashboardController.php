@@ -184,106 +184,111 @@ class dashboardController extends DiseasesController
 		return $total;
 	}
 
-	private function getPatientMap($year, $diseaseCode) {
+	private function getPatientMap($year, $diseaseCode, $week_no) {
+		/* get disease name to array */
 		$dsgroup = $this->getDsNameByDsGroup();
 		$result['disease'] = $dsgroup[$diseaseCode];
-		/* get provice */
+		/* get provice to array */
 		$lstProv = parent::getProvince();
 		foreach ($lstProv as $val) {
 			$prov[$val->prov_code] = $val->prov_name_en;
 		}
 		/* count patient per province */
-		$cntPatient = parent::countPatientPerProv($year, $diseaseCode);
-		/* push patient to array */
-		$amount_arr = array();
-		foreach ($cntPatient as $val) {
-			array_push($amount_arr, (int)$val->patient);
-		}
-		/* push patient to associative array */
-		foreach ($cntPatient as $val) {
-			$provPerPt[$val->province] = (int)$val->patient;
-		}
-		/* set prov => patient */
-		foreach ($lstProv as $val) {
-			if (array_key_exists($val->prov_code, $provPerPt)) {
-				$lstPtPerProv[$val->prov_code] = $provPerPt[$val->prov_code];
+		$cntPatient = parent::countPatientPerProv($year, $diseaseCode, $week_no);
+		if (count($cntPatient) > 0) {
+			/* push patient to array */
+			$amount_arr = array();
+			foreach ($cntPatient as $val) {
+				array_push($amount_arr, (int)$val->patient);
+			}
+			/* push patient to associative array */
+			foreach ($cntPatient as $val) {
+				$provPerPt[$val->province] = (int)$val->patient;
+			}
+			/* set prov => patient */
+			foreach ($lstProv as $val) {
+				if (array_key_exists($val->prov_code, $provPerPt)) {
+					$lstPtPerProv[$val->prov_code] = $provPerPt[$val->prov_code];
+				} else {
+					$lstPtPerProv[$val->prov_code] = 0;
+				}
+			}
+			/* get max && min value */
+			$maxAmount = max($amount_arr);
+			$minAmount = min($amount_arr);
+			/* set map color */
+			$color = array(
+				'r1'=>'#A1DF96',
+				'r2'=>'#438722',
+				'r3'=>'#FBBC05',
+				'r4'=>'#F85F1F',
+				'r5'=>'#D1202E'
+			);
+			$result['colors'] = $color;
+			/* set formular for render the map */
+			if ($diseaseCode == 66) {
+				foreach ($lstPtPerProv as $key => $val) {
+					$pt = (int)$val;
+					if ( $pt <= 0) {
+						$mapColor = $color['r1'];
+					} elseif ($pt <= 50) {
+						$mapColor = $color['r2'];
+					} elseif ($pt <= 100) {
+						$mapColor = $color['r3'];
+					} elseif ($pt <= 150) {
+						$mapColor = $color['r4'];
+					} elseif ($pt > 150) {
+						$mapColor = $color['r5'];
+					} else {
+						$mapColor = '#000000';
+					}
+					$rs['prov_code'] = $key;
+					$rs['prov_name_en'] = $prov[$key];
+					$rs['color'] = $mapColor;
+					$rs['amount'] = $pt;
+					$prov_rs[$key] = $rs;
+				}
+				$result['range'] = array('<0', '1-50', '51-100', '101-150', '150+');
+				$result['patient'] = $prov_rs;
 			} else {
-				$lstPtPerProv[$val->prov_code] = 0;
-			}
-		}
-
-		/* get max && min value */
-		$maxAmount = max($amount_arr);
-		$minAmount = min($amount_arr);
-		/* set map color */
-		$color = array(
-			'r1'=>'#A1DF96',
-			'r2'=>'#438722',
-			'r3'=>'#FBBC05',
-			'r4'=>'#F85F1F',
-			'r5'=>'#D1202E'
-		);
-		$result['colors'] = $color;
-		/* set formular for render the map */
-		if ($diseaseCode == 66) {
-			foreach ($lstPtPerProv as $key => $val) {
-				$pt = (int)$val;
-				if ( $pt <= 0) {
-					$mapColor = $color['r1'];
-				} elseif ($pt <= 50) {
-					$mapColor = $color['r2'];
-				} elseif ($pt <= 100) {
-					$mapColor = $color['r3'];
-				} elseif ($pt <= 150) {
-					$mapColor = $color['r4'];
-				} elseif ($pt > 150) {
-					$mapColor = $color['r5'];
-				} else {
-					$mapColor = $color['#000000'];
+				$x = (($maxAmount-$minAmount)/5);
+				$r1 = ($minAmount+$x);
+				$r2 = ($r1+$x);
+				$r3 = ($r2+$x);
+				$r4 = ($r3+$x);
+				$r5 = ($r4+$x);
+				foreach ($lstPtPerProv as $key => $val) {
+					$pt = (int)$val;
+					if ($pt <= $r1) {
+						$mapColor = $color['r1'];
+					} elseif ($pt <= $r2) {
+						$mapColor = $color['r2'];
+					} elseif ($pt <= $r3) {
+						$mapColor = $color['r3'];
+					} elseif ($pt <= $r4) {
+						$mapColor = $color['r4'];
+					} elseif ($pt > $r4) {
+						$mapColor = $color['r5'];
+					} else {
+						$mapColor = '#000000';
+					}
+					$rs['prov_code'] = $key;
+					$rs['prov_name_en'] = $prov[$key];
+					$rs['color'] = $mapColor;
+					$rs['amount'] = $pt;
+					$prov_rs[$key] = $rs;
 				}
-				$rs['prov_code'] = $key;
-				$rs['prov_name_en'] = $prov[$key];
-				$rs['color'] = $mapColor;
-				$rs['amount'] = $pt;
-				$prov_rs[$key] = $rs;
+				/* set legend on the map */
+				$rg1 = "0-".number_format($r1, 2);
+				$rg2 = number_format(($r1+0.01), 2)."-".number_format($r2, 2);
+				$rg3 = number_format(($r2+0.01), 2)."-".number_format($r3, 2);
+				$rg4 = number_format(($r3+0.01), 2)."-".number_format($r4, 2);
+				$rg5 = number_format(($r4+0.01), 2)."+";
+				$result['range'] = array($rg1, $rg2, $rg3, $rg4, $rg5);
+				$result['patient'] = $prov_rs;
 			}
-			$result['range'] = array('<0', '1-50', '51-100', '101-150', '150+');
-			$result['patient'] = $prov_rs;
 		} else {
-			$x = (($maxAmount-$minAmount)/5);
-			$r1 = ($minAmount+$x);
-			$r2 = ($r1+$x);
-			$r3 = ($r2+$x);
-			$r4 = ($r3+$x);
-			$r5 = ($r4+$x);
-			foreach ($lstPtPerProv as $key => $val) {
-				$pt = (int)$val;
-				if ($pt <= $r1) {
-					$mapColor = $color['r1'];
-				} elseif ($pt <= $r2) {
-					$mapColor = $color['r2'];
-				} elseif ($pt <= $r3) {
-					$mapColor = $color['r3'];
-				} elseif ($pt <= $r4) {
-					$mapColor = $color['r4'];
-				} elseif ($pt <= $r5) {
-					$mapColor = $color['r5'];
-				} else {
-					$mapColor = $color['#000000'];
-				}
-				$rs['prov_code'] = $key;
-				$rs['prov_name_en'] = $prov[$key];
-				$rs['color'] = $mapColor;
-				$rs['amount'] = $pt;
-				$prov_rs[$key] = $rs;
-			}
-			$rg1 = "0-".number_format($r1);
-			$rg2 = number_format(($r1+1))."-".number_format($r2);
-			$rg3 = number_format(($r2+1))."-".number_format($r3);
-			$rg4 = number_format(($r3+1))."-".number_format($r4);
-			$rg5 = number_format(($r4+1))."+";
-			$result['range'] = array($rg1, $rg2, $rg3, $rg4, $rg5);
-			$result['patient'] = $prov_rs;
+			$result = false;
 		}
 		return $result;
 	}

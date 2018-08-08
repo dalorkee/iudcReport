@@ -218,7 +218,7 @@
 						<div class="row">
 							<div class="col-md-12">
 								<article class="onepage">
-									<div>
+									<div class="bs-callout bs-callout-primary">
 										ข้อมูลเฝ้าระวังโรคในเขตเมือง ตั้งแต่วันที่ {{ $patientOnYear['minDate'] }} - {{ $patientOnYear['maxDate'] }}
 										พบผู้ป่วย {{ $patientOnYear['patientThisYear'] }} ราย
 										@if ($patientOnYear['patientThisYear'] > 0)
@@ -248,7 +248,7 @@
 											@endif
 										@endif
 									</div>
-									<div style="text-indent: 50px;">
+									<div class="bs-callout bs-callout-success">
 										@if ($patientOnYear['patientThisYear'] > 0 || $top5PtByYear != false)
 											{{ "จังหวัดที่มีอัตราป่วยสูงสุด 5 อันดับแรก คือ " }}
 											@foreach ($top5PtByYear as $key=>$val)
@@ -256,7 +256,7 @@
 											@endforeach
 										@endif
 									</div>
-									<div style="text-indent: 50px;">
+									<div class="bs-callout bs-callout-info">
 										@if ($patientOnYear['patientThisYear'] > 0)
 											{{ "ภาคที่มีอัตราป่วยสูงสุด คือ " }}
 											@foreach ($patientByProvRegion as $key=>$val)
@@ -264,10 +264,9 @@
 											@endforeach
 										@endif
 									</div>
-									<div style="text-indent: 50px;">
+									<div class="bs-callout bs-callout-danger">
 										@if ($patientOnLastWeek['patient'] > 0)
 											ในสัปดาห์สุดท้าย ตั้งแต่วันที่ {{ $patientOnLastWeek['date_start']." - ".$patientOnLastWeek['date_end'] }}
-											 {{ $patientOnLastWeek['year'] }}
 											 พบผู้ป่วย {{ $patientOnLastWeek['patient'] }} ราย
 										@endif
 									</div>
@@ -507,7 +506,7 @@ if ($patientMap != false) {
 			new mapboxgl.Popup()
 				.setLngLat(e.lngLat)
 				.setHTML(e.features.map(function(feature) {
-					return '<ul class=\"map-popup\"><li><span>จังหวัด</span>' + feature.properties.PROV_NAMT + '</li><li><span>ผู้ป่วย</span>' + '".number_format($val['amount'])."</li></ul>';
+					return '<ul class=\"map-popup\"><li><span>' + '".$patientMap['disease']['ds_name']."</span></li><li><span>จังหวัด</span>' + feature.properties.PROV_NAMT + '</li><li><span>ผู้ป่วย</span>' + '".number_format($val['amount'])."</li></ul>';
 				}).join(', '))
 				.addTo(map);
 		});";
