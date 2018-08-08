@@ -184,7 +184,7 @@ class dashboardController extends DiseasesController
 		return $total;
 	}
 
-	private function getPatientMap($year, $diseaseCode, $week_no) {
+	private function getPatientMap($year, $diseaseCode, $week_no='all') {
 		/* get disease name to array */
 		$dsgroup = $this->getDsNameByDsGroup();
 		$result['disease'] = $dsgroup[$diseaseCode];
