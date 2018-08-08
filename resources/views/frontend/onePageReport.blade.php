@@ -107,15 +107,14 @@
 								</div>
 								<select name="disease" class="form-control select2" style="width:100%;">
 									<optgroup label="โรคที่มี 1 รหัส">
-									<?php
-										if ($selectDs['selected'] == true) {
+									@php
+										if ($selectDs['selected_ds'] == true) {
 											$selected1 = "selected=\"selected\"";
 											$selected2 = null;
 											echo "<option value=\"".$selectDs['disease']."\"".$selected1.">".$dsgroups[$selectDs['disease']]['ds_name']."</option>";
 										} else {
 											$selected2 = "selected=\"selected\"";
 										}
-
 										$i = 1;
 										foreach ($dsgroups as $dsgroup) {
 											if ($i == 1) {
@@ -125,7 +124,7 @@
 											}
 											$i++;
 										}
-									?>
+									@endphp
 									</optgroup>
 									<optgroup label="โรคที่มีหลายรหัส">
 										<option value="-1">DHF+DSS+DF</option>
@@ -149,10 +148,33 @@
 									<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
 								</div>
 								<select name="week_number" class="form-control select2" style="width:100%;">
-									<option value="all">All week</option>
-									@for($i=1;$i<=53;$i++)
-										<option value="{{ $i }}">{{ $i }}</option>
-									@endfor
+									@php
+									if ($selectDs['selected_week'] == true) {
+										$selected3 = "selected=\"selected\"";
+										$selected4 = null;
+										if ($selectDs['str_week'] == 'all') {
+											$str_week = 'All week';
+										} else {
+											$str_week = $selectDs['str_week'];
+										}
+										echo "<option value=\"".$selectDs['str_week']."\"".$selected3.">".$str_week."</option>";
+									} else {
+										$selected4 = "selected=\"selected\"";
+									}
+									$opt = array('all'=>'All week');
+									for($i=1;$i<=53;$i++) {
+										$opt[$i] = $i;
+									}
+									$i = 1;
+									foreach ($opt as $key => $val) {
+										if ($i == 1) {
+											echo "<option value=\"".$key."\" ".$selected4.">".$val."</option>";
+										} else {
+											echo "<option value=\"".$key."\">".$val."</option>";
+										}
+										$i++;
+									}
+									@endphp
 								</select>
 							</div>
 						</div>
@@ -164,6 +186,7 @@
 								<div class="input-group-addon">
 									<i class="fa fa-calendar"></i>
 								</div>
+								<input type="hidden" name="requestFrm" value="1">
 								<input type="text" name="year" class="form-control pull-right" id="select-year">
 							</div>
 						</div>
@@ -184,7 +207,7 @@
 			<div class="col-md-12">
 				<div class="box box-info">
 					<div class="box-header with-border">
-						<h3 class="box-title"><span class="ds-box-title">One page report</span></h3>
+						<h3 class="box-title"><span class="ds-box-title">รายงาน</span></h3>
 						<div class="box-tools pull-right">
 							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
 							</button>
@@ -198,43 +221,55 @@
 									<div>
 										ข้อมูลเฝ้าระวังโรคในเขตเมือง ตั้งแต่วันที่ {{ $patientOnYear['minDate'] }} - {{ $patientOnYear['maxDate'] }}
 										พบผู้ป่วย {{ $patientOnYear['patientThisYear'] }} ราย
-										จาก {{ $patientPerProv['cntProv'] }} จังหวัด
-										เสียชีวิต {{ number_format((int)$caseDead['caseDead']) }} ราย
-										อัตราป่วย {{ number_format(((int)$patientOnYear['patientThisYear']*100)/100000, 2) }} ต่อประชากรแสนคน
-										อัตราตาย {{ number_format(((int)$caseDead['caseDead']*100)/100000, 2) }} ต่อประชากรแสนคน
-										อัตราส่วนเพศชายต่อเพศหญิง {{ $patientBySex['ratio'] }}
-										กลุ่มอายุที่พบมากที่สุด เรียงตามลำดับ คือ
-										@foreach ($patientByAgeGroup as $key=>$val)
-											{{ $key." ปี (".$val."%)" }}
-										@endforeach
-										@foreach ($patientByNation as $key => $val)
-											@if ($key == 'ไทย')
-												{{ "สัญชาติเป็น".$key." ร้อยละ ".$val." " }}
-											@else
-												{{ $key." ร้อยละ ".$val." " }}
+										@if ($patientOnYear['patientThisYear'] > 0)
+											จาก {{ $patientPerProv['cntProv'] }} จังหวัด
+											เสียชีวิต {{ number_format((int)$caseDead['caseDead']) }} ราย
+											อัตราป่วย {{ number_format(((int)$patientOnYear['patientThisYear']*100)/100000, 2) }} ต่อประชากรแสนคน
+											อัตราตาย {{ number_format(((int)$caseDead['caseDead']*100)/100000, 2) }} ต่อประชากรแสนคน
+											อัตราส่วนเพศชายต่อเพศหญิง {{ $patientBySex['ratio'] }}
+											กลุ่มอายุที่พบมากที่สุด เรียงตามลำดับ คือ
+											@foreach ($patientByAgeGroup as $key=>$val)
+												{{ $key." ปี (".$val."%)" }}
+											@endforeach
+											@if ($patientByNation != false)
+												@foreach ($patientByNation as $key => $val)
+													@if ($key == 'ไทย')
+														{{ "สัญชาติเป็น".$key." ร้อยละ ".$val." " }}
+													@else
+														{{ $key." ร้อยละ ".$val." " }}
+													@endif
+												@endforeach
 											@endif
-										@endforeach
-										อาชีพส่วนใหญ่คือ
-										@foreach ($patientByOccupation  as $key=>$val)
-											{{ $key. " ร้อยละ ".$val." " }}
-										@endforeach
+											@if ($patientByOccupation != false)
+												{{ "อาชีพส่วนใหญ่คือ " }}
+												@foreach ($patientByOccupation  as $key=>$val)
+													{{ $key. " ร้อยละ ".$val." " }}
+												@endforeach
+											@endif
+										@endif
 									</div>
 									<div style="text-indent: 50px;">
-										จังหวัดที่มีอัตราป่วยสูงสุด 5 อันดับแรก คือ
-										@foreach ($top5PtByYear as $key=>$val)
-											{{ $key." (".$val." ต่อประชากรแสนคน) " }}
-										@endforeach
+										@if ($patientOnYear['patientThisYear'] > 0 || $top5PtByYear != false)
+											{{ "จังหวัดที่มีอัตราป่วยสูงสุด 5 อันดับแรก คือ " }}
+											@foreach ($top5PtByYear as $key=>$val)
+												{{ $key." (".$val." ต่อประชากรแสนคน) " }}
+											@endforeach
+										@endif
 									</div>
 									<div style="text-indent: 50px;">
-										ภาคที่มีอัตราป่วยสูงสุด คือ
-										@foreach ($patientByProvRegion as $key=>$val)
-											{{ $key." (".$val." ต่อประชากรแสนคน) " }}
-										@endforeach
+										@if ($patientOnYear['patientThisYear'] > 0)
+											{{ "ภาคที่มีอัตราป่วยสูงสุด คือ " }}
+											@foreach ($patientByProvRegion as $key=>$val)
+												{{ $key." (".$val." ต่อประชากรแสนคน) " }}
+											@endforeach
+										@endif
 									</div>
 									<div style="text-indent: 50px;">
-										ในสัปดาห์นี้ ตั้งแต่วันที่
-										{{ $patientOnLastWeek['date_start']." - ".$patientOnLastWeek['date_end'] }}
-										พบผู้ป่วย {{ $patientOnLastWeek['patient'] }} ราย
+										@if ($patientOnLastWeek['patient'] > 0)
+											ในสัปดาห์สุดท้าย ตั้งแต่วันที่ {{ $patientOnLastWeek['date_start']." - ".$patientOnLastWeek['date_end'] }}
+											 {{ $patientOnLastWeek['year'] }}
+											 พบผู้ป่วย {{ $patientOnLastWeek['patient'] }} ราย
+										@endif
 									</div>
 								</article>
 							</div>
@@ -319,7 +354,7 @@ $(document).ready(function () {
     calendarWeeks: true
 });
 	<?php
-		if ($selectDs['selected'] == true) {
+		if ($selectDs['selected_year'] == true) {
 			echo "$('#select-year').datepicker('setDate', '".$selectDs['selectYear']."');";
 		} else {
 			echo "$('#select-year').datepicker('setDate', 'toYear');";
@@ -409,7 +444,7 @@ $('document').ready(function () {
 		maintainAspectRatio: false,
 		legend: {
 			display: true,
-			position: 'top',
+			position: 'bottom',
 		},
 		tooltips: {
 			mode: 'index',
@@ -446,8 +481,8 @@ $('document').ready(function () {
 	});
 });
 </script>
-<?php
-/*
+@php
+if ($patientMap != false) {
 	$htm = "";
 	$i = 1;
 	foreach ($patientMap['patient'] as $val) {
@@ -460,9 +495,7 @@ $('document').ready(function () {
 					'type': 'geojson',
 					'data': 'public/gis/".$val['prov_name_en'].".geojson'
 				},
-				'layout': {
-
-				},
+				'layout': {},
 				'paint': {
 					'fill-color': '".$val['color']."',
 					'fill-opacity': 0.8
@@ -480,10 +513,9 @@ $('document').ready(function () {
 		});";
 		$i++;
 	}
-	*/
-?>
+}
+@endphp
 <script>
-/*
 mapboxgl.accessToken = 'pk.eyJ1IjoiZGFsb3JrZWUiLCJhIjoiY2pnbmJrajh4MDZ6aTM0cXZkNDQ0MzI5cCJ9.C2REqhILLm2HKIQSn9Wc0A';
 var map = new mapboxgl.Map({
 	container: 'map',
@@ -492,8 +524,8 @@ var map = new mapboxgl.Map({
 	zoom: 4.5
 });
 var layers = [
-	php
-
+	@php
+	if ($patientMap != false) {
 		$str = null;
 		foreach ($patientMap['range'] as $val) {
 			if (is_null($str)) {
@@ -504,10 +536,12 @@ var layers = [
 			$str = $str."'".$val."'";
 		}
 		echo $str;
-	?>
+	}
+	@endphp
 ];
 var colors = [
-	php
+	@php
+	if ($patientMap != false) {
 		$str = null;
 		foreach ($patientMap['colors'] as $val) {
 			if (is_null($str)) {
@@ -518,8 +552,8 @@ var colors = [
 			$str = $str."'".$val."'";
 		}
 		echo $str;
-
-	?>
+	}
+	@endphp
 ];
 for (i = 0; i < layers.length; i++) {
 	var layer = layers[i];
@@ -543,9 +577,9 @@ map.addControl(new mapboxgl.GeolocateControl({
 	trackUserLocation: true
 }));
 map.getCanvas().style.cursor = 'default';
-
-!! $htm !!
-*/
+@if ($patientMap != false)
+	{!! $htm !!}
+@endif
 </script>
 <!-- bootstrap datepicker -->
 {{ Html::script(('public/AdminLTE-2.4.2/bower_components/moment/min/moment.min.js')) }}

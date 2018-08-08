@@ -13,70 +13,79 @@ class OnePageController extends DiseasesController
 		/* get Disease group name */
 		$dsgroups = $this->getDsNameByDsGroup();
 		/* request var from view */
-		if (isset($request->week_number) && isset($request->year)) {
-			$rqWeek = $request->week_number;
-			$rqYear = $request->year;
+		if (isset($request->requestFrm) && $request->requestFrm == "1") {
+			/* selected disease */
 			$ds = $request->disease;
-			$selected = true;
+			$selected_ds = true;
+			/* selected week number */
+			if ($request->week_number !== 'all') {
+				$week_arr = array();
+				for ($i=1; $i<=$request->week_number; $i++) {
+					array_push($week_arr, sprintf('%02d', $i));
+				}
+				$rqWeek = $week_arr;
+				$str_week = (int)max($rqWeek);
+			} else {
+				$rqWeek = $request->week_number;
+				$str_week = $request->week_number;
+			}
+			$selected_week = true;
+			/* selected year */
+			$rqYear = $request->year;
+			$selected_year = true;
 		} else {
-			$nowYear = parent::getLastUr506Year();
-			$rqWeek = 'all';
-			$rqYear = $nowYear;
 			$ds = 78;
-			$selected = false;
+			$rqWeek = 'all';
+			$str_week = 'all';
+			$nowYear = parent::getLastUr506Year();
+			$rqYear = $nowYear;
+			$selected_ds = false;
+			$selected_week = false;
+			$selected_year = false;
 		}
+		/* set the last result request var to array */
 		$selectDs = array(
 			'disease'=>$ds,
 			'selectWeek'=>$rqWeek,
+			'str_week'=>$str_week,
 			'selectYear'=>$rqYear,
-			'selected'=>$selected
+			'selected_ds'=>$selected_ds,
+			'selected_week'=>$selected_week,
+			'selected_year'=>$selected_year
 		);
-		if ($rqWeek == 'all') {
-			/* pass var for get the result */
-			$patientOnYear = $this->getPatientPerYear($rqYear, $ds);
-			$patientPerProv = $this->getPatientPerProv($rqYear, $ds);
-			$caseDead = $this->getCntCaseResult($rqYear, $ds, 2);
-			$patientBySex = $this->getPatientBySexType($rqYear, $ds);
-			$patientByAgeGroup = $this->getPatientByAgeGroup($rqYear, $ds);
-			$patientByNation = $this->getPatientByNation($rqYear, $ds);
-			arsort($patientByNation);
-			$patientByOccupation = $this->getPatientByOccupation($rqYear, $ds);
-			arsort($patientByOccupation);
-			$top5PtByYear = $this->getTop5PtByYear($rqYear, $ds);
-			$patientByProvRegion = $this->getPatientByProvRegion($rqYear, $ds);
-			arsort($patientByProvRegion);
-			$patientOnLastWeek = $this->getPatientOnLastWeek($rqYear, $ds);
-			$patintPerWeek = $this->getPatientPerWeek($rqYear, $ds);
-			$patientMap = $this->getPatientMap($rqYear, $ds);
-			return view(
-				'frontend.onePageReport',
-				[
-					'dsgroups'=>$dsgroups,
-					'selectDs'=>$selectDs,
-					'patientOnYear'=>$patientOnYear,
-					'patientPerProv'=>$patientPerProv,
-					'caseDead'=>$caseDead,
-					'patientBySex'=>$patientBySex,
-					'patientByAgeGroup'=>$patientByAgeGroup,
-					'patientByNation'=>$patientByNation,
-					'patientByOccupation'=>$patientByOccupation,
-					'top5PtByYear'=>$top5PtByYear,
-					'patientByProvRegion'=>$patientByProvRegion,
-					'patientOnLastWeek'=>$patientOnLastWeek,
-					'patintPerWeek'=>$patintPerWeek,
-					'patientMap'=>$patientMap
-
-				]
-			);
-		} else {
-			return view(
-				'frontend.onePageWeekReport',
-				[
-					'dsgroups'=>$dsgroups,
-					'selectDs'=>$selectDs,
-				]
-			);
-		}
+		/* get result send to view */
+		$patientOnYear = $this->getPatientPerYear($rqYear, $ds, $rqWeek);
+		$patientPerProv = $this->getPatientPerProv($rqYear, $ds, $rqWeek);
+		$caseDead = $this->getCntCaseResult($rqYear, $ds, 2, $rqWeek);
+		$patientBySex = $this->getPatientBySexType($rqYear, $ds, $rqWeek);
+		$patientByAgeGroup = $this->getPatientByAgeGroup($rqYear, $ds, $rqWeek);
+		$patientByNation = $this->getPatientByNation($rqYear, $ds, $rqWeek);
+		$patientByOccupation = $this->getPatientByOccupation($rqYear, $ds, $rqWeek);
+		$top5PtByYear = $this->getTop5PtByYear($rqYear, $ds, $rqWeek);
+		$patientByProvRegion = $this->getPatientByProvRegion($rqYear, $ds, $rqWeek);
+		arsort($patientByProvRegion);
+		$patientOnLastWeek = $this->getPatientOnLastWeek($rqYear, $ds);
+		$patintPerWeek = $this->getPatientPerWeek($rqYear, $ds, $rqWeek);
+		$patientMap = $this->getPatientMap($rqYear, $ds, $rqWeek);
+		return view(
+			'frontend.onePageReport',
+			[
+				'dsgroups'=>$dsgroups,
+				'selectDs'=>$selectDs,
+				'patientOnYear'=>$patientOnYear,
+				'patientPerProv'=>$patientPerProv,
+				'caseDead'=>$caseDead,
+				'patientBySex'=>$patientBySex,
+				'patientByAgeGroup'=>$patientByAgeGroup,
+				'patientByNation'=>$patientByNation,
+				'patientByOccupation'=>$patientByOccupation,
+				'top5PtByYear'=>$top5PtByYear,
+				'patientByProvRegion'=>$patientByProvRegion,
+				'patientOnLastWeek'=>$patientOnLastWeek,
+				'patintPerWeek'=>$patintPerWeek,
+				'patientMap'=>$patientMap
+			]
+		);
 	}
 
 	/*
@@ -144,49 +153,64 @@ class OnePageController extends DiseasesController
 		return $result;
 	}
 
-	private function getPatientPerYear($year, $diseaseCode) {
-		$patientOnYear = parent::patientByYear($year, $diseaseCode);
-		$minDate = parent::getMinDateSickDate($year, $diseaseCode);
-		$maxDate = parent::getMaxDateSickDate($year, $diseaseCode);
-
-		$result['patientThisYear'] = number_format((int)$patientOnYear[0]->patient);
-		$result['minDate'] = parent::cvDateToTH($minDate[0]->minDate);
-		$result['maxDate'] = parent::cvDateToTH($maxDate[0]->maxDate);
+	private function getPatientPerYear($year, $diseaseCode, $week_no) {
+		$patientOnYear = parent::patientByYear($year, $diseaseCode, $week_no);
+		if ($patientOnYear[0]->patient > 0) {
+			$minDate = parent::getMinDateSickDate($year, $diseaseCode, $week_no);
+			$maxDate = parent::getMaxDateSickDate($year, $diseaseCode, $week_no);
+			$result['patientThisYear'] = number_format((int)$patientOnYear[0]->patient);
+			$result['minDate'] = parent::cvDateToTH($minDate[0]->minDate);
+			$result['maxDate'] = parent::cvDateToTH($maxDate[0]->maxDate);
+		} else {
+			$dateRange = parent::getDateRangeByWeek($year, $week_no);
+			$cntDateRange = count($dateRange);
+			$result['patientThisYear'] = 0;
+			$result['minDate'] = parent::cvDateToTH($dateRange[0]->DATESICK);
+			$result['maxDate'] =parent::cvDateToTH($dateRange[((int)$cntDateRange-1)]->DATESICK);
+		}
 		return $result;
 	}
 
-	private function getPatientPerProv($year, $diseaseCode) {
-		$cntPatient = parent::countPatientPerProv($year, $diseaseCode);
+	private function getPatientPerProv($year, $diseaseCode, $week_no) {
+		$cntPatient = parent::countPatientPerProv($year, $diseaseCode, $week_no);
 		$result['cntProv'] = count($cntPatient);
 		$sumPatient = 0;
-		foreach ($cntPatient as $val) {
-			$sumPatient += $val->patient;
+		if ($result['cntProv'] > 0) {
+			foreach ($cntPatient as $val) {
+				$sumPatient += $val->patient;
+			}
 		}
 		$result['totalPatient'] = $sumPatient;
 		return $result;
 	}
 
-	private function getCntCaseResult($year, $diseaseCode, $result506) {
-		$cntCaseResult = parent::countCaseResultPerProv($year, $diseaseCode, $result506);
+	private function getCntCaseResult($year, $diseaseCode, $result506, $week_no) {
+		$cntCaseResult = parent::countCaseResultPerProv($year, $diseaseCode, $result506, $week_no);
+		$cntCase = count($cntCaseResult);
 		$sumCaseDead = 0;
-		foreach ($cntCaseResult as $val) {
-			$sumCaseDead += $val->patient;
+		if ($cntCase > 0) {
+			foreach ($cntCaseResult as $val) {
+				$sumCaseDead += $val->patient;
+			}
 		}
 		$result['caseDead'] = $sumCaseDead;
 		return $result;
 	}
 
-	private function getPatientBySexType($year, $diseaseCode) {
-		$male = parent::countPatientBySex($year, $diseaseCode, '1');
-		$female = parent::countPatientBySex($year, $diseaseCode, '2');
-		if ($male < $female) {
-			$tmp = ($female/$male);
-			$ratio = '1 : '.rtrim(rtrim((string)number_format($tmp, 2, ".", ""),"0"),".");
+	private function getPatientBySexType($year, $diseaseCode, $week_no) {
+		$male = parent::countPatientBySex($year, $diseaseCode, '1', $week_no);
+		$female = parent::countPatientBySex($year, $diseaseCode, '2', $week_no);
+		if ($male > 0 && $female > 0) {
+			if ($male < $female) {
+				$tmp = ($female/$male);
+				$ratio = '1 : '.rtrim(rtrim((string)number_format($tmp, 2, ".", ""),"0"),".");
+			} else {
+				$tmp = ($male/$female);
+				$ratio = rtrim(rtrim((string)number_format($tmp, 2, ".", ""),"0"),".").' : 1';
+			}
 		} else {
-			$tmp = ($male/$female);
-			$ratio = rtrim(rtrim((string)number_format($tmp, 2, ".", ""),"0"),".").' : 1';
+			$ratio = 0;
 		}
-
 		$result['year'] = $year;
 		$result['disease'] = $diseaseCode;
 		$result['ptMale'] = $male;
@@ -195,36 +219,132 @@ class OnePageController extends DiseasesController
 		return $result;
 	}
 
-	private function setCountPatientByAgegroup($tblYear, $diseaseCode) {
+	private function getPatientByAgeGroup($year, $diseaseCode, $week_no) {
+		$patient = $this->setCountPatientByAgegroup($year, $diseaseCode, $week_no);
+		$i = 0;
+		foreach ($patient as $key=>$val) {
+			$i += (float)$val;
+		}
+		foreach ($patient as $key=>$val) {
+			switch ($key) {
+				case 'g1':
+					if ($val > 0) {
+						$tmp = (((float)$val/$i)*100);
+						$rs = rtrim(rtrim((string)number_format($tmp, 2, ".", ""),"0"),".");
+					} else {
+						$rs = $val;
+					}
+					$result['0-4'] = $rs;
+					break;
+				case 'g2':
+					if ($val > 0) {
+						$tmp = (((float)$val/$i)*100);
+						$rs = rtrim(rtrim((string)number_format($tmp, 2, ".", ""),"0"),".");
+					} else {
+						$rs = $val;
+					}
+					$result['5-9'] = $rs;
+					break;
+				case 'g3':
+					if ($val > 0) {
+						$tmp = (((float)$val/$i)*100);
+						$rs = rtrim(rtrim((string)number_format($tmp, 2, ".", ""),"0"),".");
+					} else {
+						$rs = $val;
+					}
+					$result['10-14'] = $rs;
+					break;
+				case 'g4':
+					if ($val > 0) {
+						$tmp = (((float)$val/$i)*100);
+						$rs = rtrim(rtrim((string)number_format($tmp, 2, ".", ""),"0"),".");
+					} else {
+						$rs = $val;
+					}
+					$result['15-24'] = $rs;
+					break;
+				case 'g5':
+					if ($val > 0) {
+						$tmp = (((float)$val/$i)*100);
+						$rs = rtrim(rtrim((string)number_format($tmp, 2, ".", ""),"0"),".");
+					} else {
+						$rs = $val;
+					}
+					$result['25-34'] = $rs;
+					break;
+				case 'g6':
+					if ($val > 0) {
+						$tmp = (((float)$val/$i)*100);
+						$rs = rtrim(rtrim((string)number_format($tmp, 2, ".", ""),"0"),".");
+					} else {
+						$rs = $val;
+					}
+					$result['35-44'] = $rs;
+					break;
+				case 'g7':
+					if ($val > 0) {
+						$tmp = (((float)$val/$i)*100);
+						$rs = rtrim(rtrim((string)number_format($tmp, 2, ".", ""),"0"),".");
+					} else {
+						$rs = $val;
+					}
+					$result['45-54'] = $rs;
+					break;
+				case 'g8':
+					if ($val > 0) {
+						$tmp = (((float)$val/$i)*100);
+						$rs = rtrim(rtrim((string)number_format($tmp, 2, ".", ""),"0"),".");
+					} else {
+						$rs = $val;
+					}
+					$result['55-64'] = $rs;
+					break;
+				case 'g9':
+					if ($val > 0) {
+						$tmp = (((float)$val/$i)*100);
+						$rs = rtrim(rtrim((string)number_format($tmp, 2, ".", ""),"0"),".");
+					} else {
+						$rs = $val;
+					}
+					$result['65'] = $rs;
+					break;
+			}
+		}
+		arsort($result);
+		return $result;
+	}
+
+	private function setCountPatientByAgegroup($tblYear, $diseaseCode, $week_no) {
 		$popTotalByAgegroup = $this->setTotalPopByAgegroup($tblYear);
 		if ($popTotalByAgegroup != 0) {
 			/* gruop1 */
-			$g1 = parent::countPatientByAgegroup($tblYear, $diseaseCode, array('<', 5));
+			$g1 = parent::countPatientByAgegroup($tblYear, $diseaseCode, array('<', 5), $week_no);
 			$g1 = number_format((((int)$g1*100000)/(int)$popTotalByAgegroup[0]->age_0_4), 2, '.', '');
 			/* group2 */
-			$g2 = parent::countPatientByAgegroup($tblYear, $diseaseCode, array('between', 5, 9));
+			$g2 = parent::countPatientByAgegroup($tblYear, $diseaseCode, array('between', 5, 9), $week_no);
 			$g2 = number_format((((int)$g2*100000)/(int)$popTotalByAgegroup[0]->age_5_9), 2, '.', '');
 			/* group3 */
-			$g3 = parent::countPatientByAgegroup($tblYear, $diseaseCode, array('between', 10, 14));
+			$g3 = parent::countPatientByAgegroup($tblYear, $diseaseCode, array('between', 10, 14), $week_no);
 			$g3 = number_format((((int)$g3*100000)/(int)$popTotalByAgegroup[0]->age_10_14), 2, '.', '');
 			/* group4 */
-			$g4 = parent::countPatientByAgegroup($tblYear, $diseaseCode, array('between', 15, 24));
+			$g4 = parent::countPatientByAgegroup($tblYear, $diseaseCode, array('between', 15, 24), $week_no);
 			$g4 = number_format((((int)$g4*100000)/(int)$popTotalByAgegroup[0]->age_15_24), 2, '.', '');
 			/* group5 */
-			$g5 = parent::countPatientByAgegroup($tblYear, $diseaseCode, array('between', 25, 34));
+			$g5 = parent::countPatientByAgegroup($tblYear, $diseaseCode, array('between', 25, 34), $week_no);
 			$g5 = number_format((((int)$g5*100000)/(int)$popTotalByAgegroup[0]->age_25_34), 2, '.', '');
 			/* group6 */
-			$g6 = parent::countPatientByAgegroup($tblYear, $diseaseCode, array('between', 35, 44));
+			$g6 = parent::countPatientByAgegroup($tblYear, $diseaseCode, array('between', 35, 44), $week_no);
 			$g6 = number_format((((int)$g6*100000)/(int)$popTotalByAgegroup[0]->age_35_44), 2, '.', '');
 			/* group7 */
-			$g7 = parent::countPatientByAgegroup($tblYear, $diseaseCode, array('between', 45, 54));
-			/* group8 */
+			$g7 = parent::countPatientByAgegroup($tblYear, $diseaseCode, array('between', 45, 54), $week_no);
 			$g7 = number_format((((int)$g7*100000)/(int)$popTotalByAgegroup[0]->age_45_54), 2, '.', '');
-			$g8 = parent::countPatientByAgegroup($tblYear, $diseaseCode, array('between', 55, 64));
+			/* group8 */
+			$g8 = parent::countPatientByAgegroup($tblYear, $diseaseCode, array('between', 55, 64), $week_no);
 			$g8 = number_format((((int)$g8*100000)/(int)$popTotalByAgegroup[0]->age_55_64), 2, '.', '');
 			/* group9 */
-			$g9 = parent::countPatientByAgegroup($tblYear, $diseaseCode, array('>', 64));
+			$g9 = parent::countPatientByAgegroup($tblYear, $diseaseCode, array('>', 64), $week_no);
 			$g9 = number_format((((int)$g9*100000)/(int)$popTotalByAgegroup[0]->age_65_up), 2, '.', '');
+			/* set result */
 			$result = array('g1'=>$g1, 'g2'=>$g2, 'g3'=>$g3, 'g4'=>$g4, 'g5'=>$g5, 'g6'=>$g6, 'g7'=>$g7, 'g8'=>$g8, 'g9'=>$g9);
 		} else {
 			$result = array('g1'=>0, 'g2'=>0, 'g3'=>0, 'g4'=>0, 'g5'=>0, 'g6'=>0, 'g7'=>0, 'g8'=>0, 'g9'=>0);
@@ -249,116 +369,85 @@ class OnePageController extends DiseasesController
 		return $total;
 	}
 
-	private function getPatientByAgeGroup($year, $diseaseCode) {
-		$patient = $this->setCountPatientByAgegroup($year, $diseaseCode);
-		$i = 0;
-		foreach ($patient as $key=>$val) {
-			$i += (float)$val;
-		}
-		foreach ($patient as $key=>$val) {
-			switch ($key) {
-				case 'g1':
-					$tmp = (((float)$val/$i)*100);
-					$result['0-4'] = rtrim(rtrim((string)number_format($tmp, 2, ".", ""),"0"),".");
-					break;
-				case 'g2':
-					$tmp = (((float)$val/$i)*100);
-					$result['5-9'] = rtrim(rtrim((string)number_format($tmp, 2, ".", ""),"0"),".");
-					break;
-				case 'g3':
-					$tmp = (((float)$val/$i)*100);
-					$result['10-14'] = rtrim(rtrim((string)number_format($tmp, 2, ".", ""),"0"),".");
-					break;
-				case 'g4':
-					$tmp = (((float)$val/$i)*100);
-					$result['15-24'] = rtrim(rtrim((string)number_format($tmp, 2, ".", ""),"0"),".");
-					break;
-				case 'g5':
-					$tmp = (((float)$val/$i)*100);
-					$result['25-34'] = rtrim(rtrim((string)number_format($tmp, 2, ".", ""),"0"),".");
-					break;
-				case 'g6':
-					$tmp = (((float)$val/$i)*100);
-					$result['35-44'] = rtrim(rtrim((string)number_format($tmp, 2, ".", ""),"0"),".");
-					break;
-				case 'g7':
-					$tmp = (((float)$val/$i)*100);
-					$result['45-54'] = rtrim(rtrim((string)number_format($tmp, 2, ".", ""),"0"),".");
-					break;
-				case 'g8':
-					$tmp = (((float)$val/$i)*100);
-					$result['55-64'] = rtrim(rtrim((string)number_format($tmp, 2, ".", ""),"0"),".");
-					break;
-				case 'g9':
-					$tmp = (((float)$val/$i)*100);
-					$result['65'] = rtrim(rtrim((string)number_format($tmp, 2, ".", ""),"0"),".");
-					break;
-			}
-		}
-		arsort($result);
-		return $result;
-	}
-
-	private function getPatientByNation($year, $diseaseCode) {
+	private function getPatientByNation($year, $diseaseCode, $week_no) {
+		/* get nation from db */
 		$c_nation = parent::getNation();
 		foreach ($c_nation as $val) {
 			$nation[$val->cdnation] = $val->nation;
 		}
-		$patient = parent::cntPatientByNation($year, $diseaseCode);
+		/* get patient by nation */
+		$patient = parent::cntPatientByNation($year, $diseaseCode, $week_no);
+		$cntPatient = count($patient);
 		$sumPatient = 0;
-		foreach ($patient as $val) {
-			$sumPatient += (int)$val->patient;
-		}
-		foreach ($patient as $val) {
-			$tmp = (((float)$val->patient/$sumPatient)*100);
-			$result[$nation[$val->RACE]] = rtrim(rtrim((string)number_format($tmp, 2, ".", ""),"0"),".");
+		if ($cntPatient > 0) {
+			foreach ($patient as $val) {
+				$sumPatient += (int)$val->patient;
+			}
+			foreach ($patient as $val) {
+				$tmp = (((float)$val->patient/$sumPatient)*100);
+				$result[$nation[$val->RACE]] = rtrim(rtrim((string)number_format($tmp, 2, ".", ""),"0"),".");
+			}
+			arsort($result);
+		} else {
+			$result = false;
 		}
 		return $result;
 	}
 
-	private function getPatientByOccupation($year, $diseaseCode) {
+	private function getPatientByOccupation($year, $diseaseCode, $week_no) {
+		/* get occupation from db */
 		$occ = parent::getOccupation();
 		foreach ($occ as $val) {
 			$occupation[$val->cdocc] = $val->occu;
 		}
-		$patient = parent::cntPatientByOccupation($year, $diseaseCode);
+		/* get patient by occupation */
+		$patient = parent::cntPatientByOccupation($year, $diseaseCode, $week_no);
+		$cntPatient = count($patient);
 		$sumPatient = 0;
-		foreach ($patient as $val) {
-			$sumPatient += (int)$val->patient;
-		}
-		foreach ($patient as $val) {
-			$tmp = (((float)$val->patient/$sumPatient)*100);
-			$result[$occupation[$val->OCCUPAT]] = rtrim(rtrim((string)number_format($tmp, 2, ".", ""),"0"),".");
+		if ($cntPatient > 0) {
+			foreach ($patient as $val) {
+				$sumPatient += (int)$val->patient;
+			}
+			foreach ($patient as $val) {
+				$tmp = (((float)$val->patient/$sumPatient)*100);
+				$result[$occupation[$val->OCCUPAT]] = rtrim(rtrim((string)number_format($tmp, 2, ".", ""),"0"),".");
+			}
+			arsort($result);
+		} else {
+			$result = false;
 		}
 		return $result;
-
 	}
 
-	private function getTop5PtByYear($year, $diseaseCode) {
+	private function getTop5PtByYear($year, $diseaseCode, $week_no) {
+		/* get province from db */
 		$getProv = parent::getProvince();
 		foreach ($getProv as $val) {
 			$prov[$val->prov_code] = $val->prov_name;
 		}
-
+		/* get population set per province */
 		$lstPopPerProv = parent::totalPopPerProv($year);
 		foreach ($lstPopPerProv as $val) {
 			$ptPerProv[$val->prov_code] = (int)$val->pop;
 		}
-
-		$ptPerYear = parent::cntPatientPerYear($year, $diseaseCode);
-		$top5Pt = array_slice($ptPerYear, 0, 5, true);
-		foreach ($top5Pt as $val) {
-			$tmp = (($val->amount*100000)/$ptPerProv[$val->PROVINCE]);
-			$result[$prov[$val->PROVINCE]] = number_format($tmp, 2);
+		/* set patient per year */
+		$ptPerYear = parent::cntPatientPerYear($year, $diseaseCode, $week_no);
+		$cntPatient = count($ptPerYear);
+		if ($cntPatient > 0) {
+			$top5Pt = array_slice($ptPerYear, 0, 5, true);
+			foreach ($top5Pt as $val) {
+				$tmp = (($val->amount*100000)/$ptPerProv[$val->PROVINCE]);
+				$result[$prov[$val->PROVINCE]] = number_format($tmp, 2);
+			}
+		} else {
+			$result = false;
 		}
-
 		return $result;
 	}
 
-	private function getPatientByProvRegion($year, $diseaseCode) {
-		/* get provice */
+	private function getPatientByProvRegion($year, $diseaseCode, $week_no) {
+		/* get provice by db */
 		$lstProv = parent::getProvince();
-
 		/* split prov_code per region */
 		$north = array();
 		$central = array();
@@ -380,12 +469,11 @@ class OnePageController extends DiseasesController
 					break;
 			}
 		}
-
 		/* patient per region */
-		$nPt = parent::countPatientByProv($year, $north, $diseaseCode);
-		$cPt = parent::countPatientByProv($year, $central, $diseaseCode);
-		$nePt = parent::countPatientByProv($year, $northEastern, $diseaseCode);
-		$sPt = parent::countPatientByProv($year, $sourhern, $diseaseCode);
+		$nPt = parent::countPatientByProv($year, $north, $diseaseCode, $week_no);
+		$cPt = parent::countPatientByProv($year, $central, $diseaseCode, $week_no);
+		$nePt = parent::countPatientByProv($year, $northEastern, $diseaseCode, $week_no);
+		$sPt = parent::countPatientByProv($year, $sourhern, $diseaseCode, $week_no);
 
 		/* pop per region */
 		$nPop = parent::sumPopByProvCode($north, $year);
@@ -393,19 +481,34 @@ class OnePageController extends DiseasesController
 		$nePop = parent::sumPopByProvCode($northEastern, $year);
 		$sPop = parent::sumPopByProvCode($sourhern, $year);
 
-		/* result */
-		$nRegion = (((int)$nPt[0]->amount*100000)/(int)$nPop[0]->pop);
-		$nRegion = number_format($nRegion, 2);
-
-		$cRegion = (((int)$cPt[0]->amount*100000)/(int)$cPop[0]->pop);
-		$cRegion = number_format($cRegion, 2);
-
-		$neRegion = (((int)$nePt[0]->amount*100000)/(int)$nePop[0]->pop);
-		$neRegion = number_format($neRegion, 2);
-
-		$sRegion = (((int)$sPt[0]->amount*100000)/(int)$sPop[0]->pop);
-		$sRegion = number_format($sRegion, 2);
-
+		/* north result */
+		if (count($nPop) > 0) {
+			$nRegion = (((int)$nPt[0]->amount*100000)/(int)$nPop[0]->pop);
+			$nRegion = number_format($nRegion, 2);
+		} else {
+			$nRegion = 0;
+		}
+		/* center result */
+		if (count($cPop) > 0) {
+			$cRegion = (((int)$cPt[0]->amount*100000)/(int)$cPop[0]->pop);
+			$cRegion = number_format($cRegion, 2);
+		} else {
+			$cRegion = 0;
+		}
+		/* north-east result */
+		if (count($nePop) > 0) {
+			$neRegion = (((int)$nePt[0]->amount*100000)/(int)$nePop[0]->pop);
+			$neRegion = number_format($neRegion, 2);
+		} else {
+			$neRegion = 0;
+		}
+		/* south result */
+		if (count($sPop) > 0) {
+			$sRegion = (((int)$sPt[0]->amount*100000)/(int)$sPop[0]->pop);
+			$sRegion = number_format($sRegion, 2);
+		} else {
+			$sRegion = 0;
+		}
 		$result = array(
 			'ภาคกลาง'=>$cRegion,
 			'ภาคเหนือ'=>$nRegion,
@@ -416,27 +519,26 @@ class OnePageController extends DiseasesController
 	}
 
 	private function getPatientOnLastWeek($year, $diseaseCode) {
-		$weekNo = parent::getLastWeek($year);
-		$dateRange = parent::getDateRangeByWeek($year, $weekNo[0]->lastweek);
+		$week_arr = parent::getLastWeek($year);
+		$week_no = array($week_arr[0]->lastweek);
+		$dateRange = parent::getDateRangeByWeek($year, $week_no);
+		$result['year'] = ((int)$year+543);
 		$result['date_start'] = parent::cvDateToTH($dateRange[0]->DATESICK);
 		$result['date_end'] = parent::cvDateToTH($dateRange[(count($dateRange)-1)]->DATESICK);
-
 		$patientAllWeek = parent::countPatientPerWeek($year, $diseaseCode);
 		$cntWeek = count($patientAllWeek);
 		$result['patient'] = number_format($patientAllWeek[($cntWeek-1)]->amount);
 		return $result;
 	}
 
-	private function getPatientPerWeek($year, $diseaseCode) {
-		/* get provice */
+	private function getPatientPerWeek($year, $diseaseCode, $week_no) {
+		/* get provice from db */
 		$lstProv = parent::getProvince();
-
-		/* split prov_code per region */
+		/* split prov_code per region to array */
 		$north = array();
 		$central = array();
 		$northEastern = array();
 		$sourhern = array();
-
 		foreach ($lstProv as $val) {
 			switch ($val->prov_zone) {
 				case 'North':
@@ -453,180 +555,204 @@ class OnePageController extends DiseasesController
 					break;
 			}
 		}
-
-		/* get patient by region */
 		/* get max week */
-		$maxWeek_arr = parent::getLastWeek($year);
-		$maxWeek = $maxWeek_arr[0]->lastweek;
-
-		/* center region */
-		$ptCWeek_coll = parent::getPatientPerWeekByProvZone($year, $diseaseCode, $central);
-		foreach ($ptCWeek_coll as $val) {
-			$ptCWeek_arr[(int)$val->week_no] = (int)$val->amount;
+		if ($week_no == "all") {
+			$maxWeek_arr = parent::getLastWeek($year);
+			$maxWeek = $maxWeek_arr[0]->lastweek;
+		} else {
+			$maxWeek = max($week_no);
 		}
-		for ($i=1; $i<=$maxWeek; $i++) {
-			if (array_key_exists($i, $ptCWeek_arr)) {
-				$ptCWeek[$i] = $ptCWeek_arr[$i];
-			} else {
+		$maxWeek = (int)$maxWeek;
+		/* center region */
+		$ptCWeek_coll = parent::getPatientPerWeekByProvZone($year, $diseaseCode, $central, $week_no);
+		if (count($ptCWeek_coll) > 0) {
+			foreach ($ptCWeek_coll as $val) {
+				$ptCWeek_arr[(int)$val->week_no] = (int)$val->amount;
+			}
+			for ($i=1; $i<=$maxWeek; $i++) {
+				if (array_key_exists($i, $ptCWeek_arr)) {
+					$ptCWeek[$i] = $ptCWeek_arr[$i];
+				} else {
+					$ptCWeek[$i] = 0;
+				}
+			}
+		} else {
+			for ($i=1; $i<=$maxWeek; $i++) {
 				$ptCWeek[$i] = 0;
 			}
 		}
-
 		/* north region */
-		$ptNWeek_coll = parent::getPatientPerWeekByProvZone($year, $diseaseCode, $north);
-		foreach ($ptNWeek_coll as $val) {
-			$ptNWeek_arr[(int)$val->week_no] = (int)$val->amount;
-		}
-		for ($i=1; $i<=$maxWeek; $i++) {
-			if (array_key_exists($i, $ptNWeek_arr)) {
-				$ptNWeek[$i] = $ptNWeek_arr[$i];
-			} else {
+		$ptNWeek_coll = parent::getPatientPerWeekByProvZone($year, $diseaseCode, $north, $week_no);
+		if (count($ptNWeek_coll) > 0) {
+			foreach ($ptNWeek_coll as $val) {
+				$ptNWeek_arr[(int)$val->week_no] = (int)$val->amount;
+			}
+			for ($i=1; $i<=$maxWeek; $i++) {
+				if (array_key_exists($i, $ptNWeek_arr)) {
+					$ptNWeek[$i] = $ptNWeek_arr[$i];
+				} else {
+					$ptNWeek[$i] = 0;
+				}
+			}
+		} else {
+			for ($i=1; $i<=$maxWeek; $i++) {
 				$ptNWeek[$i] = 0;
 			}
 		}
-
 		/* northEastern region */
-		$ptNeWeek_coll = parent::getPatientPerWeekByProvZone($year, $diseaseCode, $northEastern);
-		foreach ($ptNeWeek_coll as $val) {
-			$ptNeWeek_arr[(int)$val->week_no] = (int)$val->amount;
-		}
-		for ($i=1; $i<=$maxWeek; $i++) {
-			if (array_key_exists($i, $ptNeWeek_arr)) {
-				$ptNeWeek[$i] = $ptNeWeek_arr[$i];
-			} else {
+		$ptNeWeek_coll = parent::getPatientPerWeekByProvZone($year, $diseaseCode, $northEastern, $week_no);
+		if (count($ptNeWeek_coll) > 0) {
+			foreach ($ptNeWeek_coll as $val) {
+				$ptNeWeek_arr[(int)$val->week_no] = (int)$val->amount;
+			}
+			for ($i=1; $i<=$maxWeek; $i++) {
+				if (array_key_exists($i, $ptNeWeek_arr)) {
+					$ptNeWeek[$i] = $ptNeWeek_arr[$i];
+				} else {
+					$ptNeWeek[$i] = 0;
+				}
+			}
+		} else {
+			for ($i=1; $i<=$maxWeek; $i++) {
 				$ptNeWeek[$i] = 0;
 			}
 		}
-
 		/* sourhern region */
-		$ptSWeek_coll = parent::getPatientPerWeekByProvZone($year, $diseaseCode, $sourhern);
-		foreach ($ptSWeek_coll as $val) {
-			$ptSWeek_arr[(int)$val->week_no] = (int)$val->amount;
-		}
-		for ($i=1; $i<=$maxWeek; $i++) {
-			if (array_key_exists($i, $ptSWeek_arr)) {
-				$ptSWeek[$i] = $ptSWeek_arr[$i];
-			} else {
+		$ptSWeek_coll = parent::getPatientPerWeekByProvZone($year, $diseaseCode, $sourhern, $week_no);
+		if (count($ptSWeek_coll) > 0) {
+			foreach ($ptSWeek_coll as $val) {
+				$ptSWeek_arr[(int)$val->week_no] = (int)$val->amount;
+			}
+			for ($i=1; $i<=$maxWeek; $i++) {
+				if (array_key_exists($i, $ptSWeek_arr)) {
+					$ptSWeek[$i] = $ptSWeek_arr[$i];
+				} else {
+					$ptSWeek[$i] = 0;
+				}
+			}
+		} else {
+			for ($i=1; $i<=$maxWeek; $i++) {
 				$ptSWeek[$i] = 0;
 			}
 		}
-
 		/* sumary region */
-		/* $ptTotal_coll = parent::countPatientPerWeek($year, $diseaseCode); */
 		for ($i=1; $i<=$maxWeek; $i++) {
 			$ptTotal[$i] = $ptCWeek[$i]+$ptNWeek[$i]+$ptNeWeek[$i]+$ptSWeek[$i];
 		}
-
 		/* set result */
 		$result['ptCWeek'] = $ptCWeek;
 		$result['ptNWeek'] = $ptNWeek;
 		$result['ptNeWeek'] = $ptNeWeek;
 		$result['ptSWeek'] = $ptSWeek;
 		$result['ptTotal'] =  $ptTotal;
-
 		return $result;
 	}
 
-	private function getPatientMap($year, $diseaseCode) {
+	private function getPatientMap($year, $diseaseCode, $week_no) {
+		/* get disease name to array */
 		$dsgroup = $this->getDsNameByDsGroup();
 		$result['disease'] = $dsgroup[$diseaseCode];
-		/* get provice */
+		/* get provice to array */
 		$lstProv = parent::getProvince();
 		foreach ($lstProv as $val) {
 			$prov[$val->prov_code] = $val->prov_name_en;
 		}
 		/* count patient per province */
-		$cntPatient = parent::countPatientPerProv($year, $diseaseCode);
-		/* push patient to array */
-		$amount_arr = array();
-		foreach ($cntPatient as $val) {
-			array_push($amount_arr, (int)$val->patient);
-		}
-		/* push patient to associative array */
-		foreach ($cntPatient as $val) {
-			$provPerPt[$val->province] = (int)$val->patient;
-		}
-		/* set prov => patient */
-		foreach ($lstProv as $val) {
-			if (array_key_exists($val->prov_code, $provPerPt)) {
-				$lstPtPerProv[$val->prov_code] = $provPerPt[$val->prov_code];
+		$cntPatient = parent::countPatientPerProv($year, $diseaseCode, $week_no);
+		if (count($cntPatient) > 0) {
+			/* push patient to array */
+			$amount_arr = array();
+			foreach ($cntPatient as $val) {
+				array_push($amount_arr, (int)$val->patient);
+			}
+			/* push patient to associative array */
+			foreach ($cntPatient as $val) {
+				$provPerPt[$val->province] = (int)$val->patient;
+			}
+			/* set prov => patient */
+			foreach ($lstProv as $val) {
+				if (array_key_exists($val->prov_code, $provPerPt)) {
+					$lstPtPerProv[$val->prov_code] = $provPerPt[$val->prov_code];
+				} else {
+					$lstPtPerProv[$val->prov_code] = 0;
+				}
+			}
+			/* get max && min value */
+			$maxAmount = max($amount_arr);
+			$minAmount = min($amount_arr);
+			/* set map color */
+			$color = array(
+				'r1'=>'#A1DF96',
+				'r2'=>'#438722',
+				'r3'=>'#FBBC05',
+				'r4'=>'#F85F1F',
+				'r5'=>'#D1202E'
+			);
+			$result['colors'] = $color;
+			/* set formular for render the map */
+			if ($diseaseCode == 66) {
+				foreach ($lstPtPerProv as $key => $val) {
+					$pt = (int)$val;
+					if ( $pt <= 0) {
+						$mapColor = $color['r1'];
+					} elseif ($pt <= 50) {
+						$mapColor = $color['r2'];
+					} elseif ($pt <= 100) {
+						$mapColor = $color['r3'];
+					} elseif ($pt <= 150) {
+						$mapColor = $color['r4'];
+					} elseif ($pt > 150) {
+						$mapColor = $color['r5'];
+					} else {
+						$mapColor = '#000000';
+					}
+					$rs['prov_code'] = $key;
+					$rs['prov_name_en'] = $prov[$key];
+					$rs['color'] = $mapColor;
+					$rs['amount'] = $pt;
+					$prov_rs[$key] = $rs;
+				}
+				$result['range'] = array('<0', '1-50', '51-100', '101-150', '150+');
+				$result['patient'] = $prov_rs;
 			} else {
-				$lstPtPerProv[$val->prov_code] = 0;
-			}
-		}
-
-		/* get max && min value */
-		$maxAmount = max($amount_arr);
-		$minAmount = min($amount_arr);
-		/* set map color */
-		$color = array(
-			'r1'=>'#A1DF96',
-			'r2'=>'#438722',
-			'r3'=>'#FBBC05',
-			'r4'=>'#F85F1F',
-			'r5'=>'#D1202E'
-		);
-		$result['colors'] = $color;
-		/* set formular for render the map */
-		if ($diseaseCode == 66) {
-			foreach ($lstPtPerProv as $key => $val) {
-				$pt = (int)$val;
-				if ( $pt <= 0) {
-					$mapColor = $color['r1'];
-				} elseif ($pt <= 50) {
-					$mapColor = $color['r2'];
-				} elseif ($pt <= 100) {
-					$mapColor = $color['r3'];
-				} elseif ($pt <= 150) {
-					$mapColor = $color['r4'];
-				} elseif ($pt > 150) {
-					$mapColor = $color['r5'];
-				} else {
-					$mapColor = $color['#000000'];
+				$x = (($maxAmount-$minAmount)/5);
+				$r1 = ($minAmount+$x);
+				$r2 = ($r1+$x);
+				$r3 = ($r2+$x);
+				$r4 = ($r3+$x);
+				$r5 = ($r4+$x);
+				foreach ($lstPtPerProv as $key => $val) {
+					$pt = (int)$val;
+					if ($pt <= $r1) {
+						$mapColor = $color['r1'];
+					} elseif ($pt <= $r2) {
+						$mapColor = $color['r2'];
+					} elseif ($pt <= $r3) {
+						$mapColor = $color['r3'];
+					} elseif ($pt <= $r4) {
+						$mapColor = $color['r4'];
+					} elseif ($pt > $r4) {
+						$mapColor = $color['r5'];
+					} else {
+						$mapColor = '#000000';
+					}
+					$rs['prov_code'] = $key;
+					$rs['prov_name_en'] = $prov[$key];
+					$rs['color'] = $mapColor;
+					$rs['amount'] = $pt;
+					$prov_rs[$key] = $rs;
 				}
-				$rs['prov_code'] = $key;
-				$rs['prov_name_en'] = $prov[$key];
-				$rs['color'] = $mapColor;
-				$rs['amount'] = $pt;
-				$prov_rs[$key] = $rs;
+				/* set legend on the map */
+				$rg1 = "0-".$r1;
+				$rg2 = ($r1+1)."-".$r2;
+				$rg3 = ($r2+1)."-".$r3;
+				$rg4 = ($r3+1)."-".$r4;
+				$rg5 = ($r4+1)."+";
+				$result['range'] = array($rg1, $rg2, $rg3, $rg4, $rg5);
+				$result['patient'] = $prov_rs;
 			}
-			$result['range'] = array('<0', '1-50', '51-100', '101-150', '150+');
-			$result['patient'] = $prov_rs;
 		} else {
-			$x = (($maxAmount-$minAmount)/5);
-			$r1 = ($minAmount+$x);
-			$r2 = ($r1+$x);
-			$r3 = ($r2+$x);
-			$r4 = ($r3+$x);
-			$r5 = ($r4+$x);
-			foreach ($lstPtPerProv as $key => $val) {
-				$pt = (int)$val;
-				if ($pt <= $r1) {
-					$mapColor = $color['r1'];
-				} elseif ($pt <= $r2) {
-					$mapColor = $color['r2'];
-				} elseif ($pt <= $r3) {
-					$mapColor = $color['r3'];
-				} elseif ($pt <= $r4) {
-					$mapColor = $color['r4'];
-				} elseif ($pt <= $r5) {
-					$mapColor = $color['r5'];
-				} else {
-					$mapColor = $color['#000000'];
-				}
-				$rs['prov_code'] = $key;
-				$rs['prov_name_en'] = $prov[$key];
-				$rs['color'] = $mapColor;
-				$rs['amount'] = $pt;
-				$prov_rs[$key] = $rs;
-			}
-			$rg1 = "0-".number_format($r1);
-			$rg2 = number_format(($r1+1))."-".number_format($r2);
-			$rg3 = number_format(($r2+1))."-".number_format($r3);
-			$rg4 = number_format(($r3+1))."-".number_format($r4);
-			$rg5 = number_format(($r4+1))."+";
-			$result['range'] = array($rg1, $rg2, $rg3, $rg4, $rg5);
-			$result['patient'] = $prov_rs;
+			$result = false;
 		}
 		return $result;
 	}

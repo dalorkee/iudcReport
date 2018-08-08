@@ -96,38 +96,43 @@
 					<div class="col-md-3">
 						<div class="form-group">
 							<label for="selectDisease" class="sr-only">เลือกโรค:</label>
-							<select name="disease" class="form-control select2" style="width:100%;">
-								<optgroup label="โรคที่มี 1 รหัส">
-								<?php
-									if ($selectDs['selected'] == true) {
-										$selected1 = "selected=\"selected\"";
-										$selected2 = null;
-										echo "<option value=\"".$selectDs['disease']."\"".$selected1.">".$dsgroups[$selectDs['disease']]['ds_name']."</option>";
-									} else {
-										$selected2 = "selected=\"selected\"";
-									}
-									$i = 1;
-									foreach ($dsgroups as $dsgroup) {
-										if ($i == 1) {
-											echo "<option value=\"".$dsgroup['ds_id']."\" ".$selected2.">".$dsgroup['ds_name']."</option>\n";
+							<div class="input-group">
+								<div class="input-group-addon">
+									<i class="fa fa-bug" aria-hidden="true"></i>
+								</div>
+								<select name="disease" class="form-control select2" style="width:100%;">
+									<optgroup label="โรคที่มี 1 รหัส">
+									<?php
+										if ($selectDs['selected'] == true) {
+											$selected1 = "selected=\"selected\"";
+											$selected2 = null;
+											echo "<option value=\"".$selectDs['disease']."\"".$selected1.">".$dsgroups[$selectDs['disease']]['ds_name']."</option>";
 										} else {
-											echo "<option value=\"".$dsgroup['ds_id']."\">".$dsgroup['ds_name']."</option>\n";
+											$selected2 = "selected=\"selected\"";
 										}
-										$i++;
-									}
-								?>
-								</optgroup>
-								<optgroup label="โรคที่มีหลายรหัส">
-									<option value="-1">DHF+DSS+DF</option>
-									<option value="-2">Dysentery</option>
-									<option value="-3">Encephalitis</option>
-									<option value="-4">Hepatitis</option>
-									<option value="-5">Measles</option>
-									<option value="-6">S.T.I</option>
-									<option value="-7">Tetanus inc.Neo</option>
-									<option value="-8">Tuberculosis</option>
-								</optgroup>
-							</select>
+										$i = 1;
+										foreach ($dsgroups as $dsgroup) {
+											if ($i == 1) {
+												echo "<option value=\"".$dsgroup['ds_id']."\" ".$selected2.">".$dsgroup['ds_name']."</option>\n";
+											} else {
+												echo "<option value=\"".$dsgroup['ds_id']."\">".$dsgroup['ds_name']."</option>\n";
+											}
+											$i++;
+										}
+									?>
+									</optgroup>
+									<optgroup label="โรคที่มีหลายรหัส">
+										<option value="-1">DHF+DSS+DF</option>
+										<option value="-2">Dysentery</option>
+										<option value="-3">Encephalitis</option>
+										<option value="-4">Hepatitis</option>
+										<option value="-5">Measles</option>
+										<option value="-6">S.T.I</option>
+										<option value="-7">Tetanus inc.Neo</option>
+										<option value="-8">Tuberculosis</option>
+									</optgroup>
+								</select>
+							</div>
 						</div>
 					</div>
 					<div class="col-md-2">

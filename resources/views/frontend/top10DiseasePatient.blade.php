@@ -21,10 +21,10 @@
 @endsection
 @section('content')
 <section class="content-header">
-	<h1>รายงานรายสัปดาห์</h1>
+	<h1>10 อันดับโรคที่มีอัตราป่วยสูงสุด</h1>
 	<ol class="breadcrumb">
 		<li><a href="#"><i class="fa fa-home"></i> หน้าหลัก</a></li>
-		<li class="active">รายงานรายสัปดาห์</li>
+		<li class="active">10 อันดับโรคที่มีอัตราป่วยสูงสุด</li>
 	</ol>
 </section>
 <!-- Main content -->
@@ -33,9 +33,9 @@
 		<div class="row">
 			<!-- Left col#2 -->
 			<div class="col-md-12">
-				<div class="box box-info">
+				<div class="box box-danger">
 					<div class="box-header with-border">
-						<h3 class="box-title"><span class="ds-box-title">โรคที่มีอัตราป่วยสูงสุด 10 อันดับ</span></h3>
+						<h3 class="box-title"><span class="ds-box-title">โรคที่มีอัตราป่วยสูงสุด ปี {{ ((int)$listWeek['year']+543) }}</span></h3>
 						<div class="box-tools pull-right">
 							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
 							</button>
@@ -60,7 +60,7 @@
 					<div class="box-footer no-padding">
 						<ul class="nav nav-pills nav-stacked">
 							<li>
-								<a href="#">อัตราป่วยสะสม<span class="hidden-xs hidden-sm">ด้วยโรคที่เฝ้าระวัง</span> 10 อันดับ <span class="hidden-xs hidden-sm">ในพื้นที่เขตเมือง ปี {{ ((int)$listWeek['year']+543) }}</span> <span class="pull-right text-red"> {{ $listWeek['firstWeek']->DATESICK.' - '.$listWeek['lastWeek']->DATESICK }}</span></a>
+								<a href="#">อัตราป่วย<span class="hidden-xs hidden-sm">ด้วยโรคที่เฝ้าระวัง</span> 10 อันดับ <span class="hidden-xs hidden-sm">ในพื้นที่เขตเมือง ปี {{ ((int)$listWeek['year']+543) }}</span> <span class="pull-right text-red"> {{ $listWeek['firstWeek']->DATESICK.' - '.$listWeek['lastWeek']->DATESICK }}</span></a>
 							</li>
 						</ul>
 					</div>
@@ -71,9 +71,9 @@
 
 			<!-- Right col#2 -->
 			<div class="col-md-12">
-				<div class="box box-danger">
+				<div class="box box-info">
 					<div class="box-header with-border">
-						<h3 class="box-title"><span class="ds-box-title">อัตราป่วยสะสมด้วยโรคที่เฝ้าระวัง 10 อันดับ</span></h3>
+						<h3 class="box-title"><span class="ds-box-title">อัตราป่วยด้วยโรคที่เฝ้าระวัง สัปดาห์ที่ {{$listWeek['lastWeek']->week_no }} ปี {{ ((int)$listWeek['year']+543) }}</span></h3>
 						<div class="box-tools pull-right">
 							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
 							</button>
@@ -144,7 +144,7 @@ function createBarChart1(id, type, options) {
 			],
 			backgroundColor: [
 				@for($i=1; $i<=10; $i++)
-					{!! '"#4285F4"'.',' !!}
+					{!! '"#FE819D"'.',' !!}
 				@endfor
 			]
 		}]
@@ -172,7 +172,7 @@ function createBarChart2(id, type, options) {
 			],
 			backgroundColor: [
 				@for($i=1; $i<=10; $i++)
-					{!! '"#EA4335"'.',' !!}
+					{!! '"#36A2EB"'.',' !!}
 				@endfor
 			]
 		}]

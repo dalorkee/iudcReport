@@ -13,7 +13,6 @@ class WeekReportController extends DiseasesController
 		$top10DsPtYear = $this->top10DsPtYear($request);
 		$top10DsPtWeek = $this->top10DsPtWeek($request);
 		$listWeek = $this->getListUr506WeekFromYear($request);
-
 		return view('frontend.top10DiseasePatient',
 			[
 				'dsName'=>$dsName,
@@ -117,6 +116,7 @@ class WeekReportController extends DiseasesController
 		foreach ($Rawtop10DsPtWeek as $val) {
 			$top10DsPtWeek[(int)$val->DISEASE] = (((int)$val->total_week*100000)/$sumPopTotalByAgegroup);
 		}
+		//dd($top10DsPtWeek);
 		return $top10DsPtWeek;
 	}
 
@@ -156,8 +156,7 @@ class WeekReportController extends DiseasesController
 		$listWeekFromYear['firstWeek'] = $listWeek[0];
 		$listWeekFromYear['lastWeek'] = $listWeek[($cntListWeek-1)];
 		$listWeekFromYear['allWeek'] = $listWeek;
-
-		$lastWeekDateRage = parent::getDateRangeByWeek($year, $listWeekFromYear['lastWeek']->week_no);
+		$lastWeekDateRage = parent::getDateRangeByWeek($year, array($listWeekFromYear['lastWeek']->week_no));
 		$i = 0;
 		foreach ($lastWeekDateRage as $val) {
 			$cv = parent::cvDateToTH($val->DATESICK);
