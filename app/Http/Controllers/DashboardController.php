@@ -185,13 +185,27 @@ class dashboardController extends DiseasesController
 	}
 
 	private function getPatientMap($year, $diseaseCode, $week_no='all') {
-		/* get disease name to array */
+		/* set disease name to array */
 		$dsgroup = $this->getDsNameByDsGroup();
 		$result['disease'] = $dsgroup[$diseaseCode];
-		/* get provice to array */
+		/* set provice to array */
 		$lstProv = parent::getProvince();
 		foreach ($lstProv as $val) {
 			$prov[$val->prov_code] = $val->prov_name_en;
+		}
+
+		/* set poputation per province to array */
+		$totalPop = parent::totalPopPerProv($year);
+		foreach ($totalPop as $key=>$val) {
+			$popPerProv[$val->prov_code] = $val->pop;
+		}
+		/* resetup population per province is missing add it to 0 */
+		foreach ($prov as $key=>$val) {
+			if (array_key_exists($key, $popPerProv)) {
+				$pop_prov[$key] = $popPerProv[$key];
+			} else {
+				$pop_prov[$key] = 0;
+			}
 		}
 		/* count patient per province */
 		$cntPatient = parent::countPatientPerProv($year, $diseaseCode, $week_no);
@@ -213,9 +227,9 @@ class dashboardController extends DiseasesController
 					$lstPtPerProv[$val->prov_code] = 0;
 				}
 			}
-			/* get max && min value */
-			$maxAmount = max($amount_arr);
-			$minAmount = min($amount_arr);
+			/* set max && min patient amount */
+			$maxPatient = max($amount_arr);
+			$minPatient = min($amount_arr);
 			/* set map color */
 			$color = array(
 				'r1'=>'#A1DF96',
@@ -225,10 +239,21 @@ class dashboardController extends DiseasesController
 				'r5'=>'#D1202E'
 			);
 			$result['colors'] = $color;
-			/* set formular for render the map */
+			/* set patient formular */
+			foreach ($lstPtPerProv as $key=>$val) {
+				if ($val <= 0) {
+					$ptPerPop[$key] = 0;
+				} else {
+					$ptPerPop[$key] = number_format(floor((($val*100000)/$pop_prov[$key])), 2);
+				}
+			}
+			dd($ptPerPop);
+
+
+
+			/* set length for render the map color */
 			if ($diseaseCode == 66) {
-				foreach ($lstPtPerProv as $key => $val) {
-					$pt = (int)$val;
+				foreach ($lstPtPerProv as $key=>$val) {
 					if ( $pt <= 0) {
 						$mapColor = $color['r1'];
 					} elseif ($pt <= 50) {
@@ -251,8 +276,8 @@ class dashboardController extends DiseasesController
 				$result['range'] = array('<0', '1-50', '51-100', '101-150', '150+');
 				$result['patient'] = $prov_rs;
 			} else {
-				$x = (($maxAmount-$minAmount)/5);
-				$r1 = ($minAmount+$x);
+				$x = (($maxPatient-$minPatient)/5);
+				$r1 = ($minPatient+$x);
 				$r2 = ($r1+$x);
 				$r3 = ($r2+$x);
 				$r4 = ($r3+$x);
