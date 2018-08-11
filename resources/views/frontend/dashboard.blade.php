@@ -55,7 +55,7 @@
 			line-height: 18px;
 			height: 120px;
 			margin-bottom: 40px;
-			
+
 		}
 		.legend-key {
 			display: inline-block;
