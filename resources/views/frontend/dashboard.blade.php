@@ -673,7 +673,7 @@ $('document').ready(function () {
 			new mapboxgl.Popup()
 				.setLngLat(e.lngLat)
 				.setHTML(e.features.map(function(feature) {
-					return '<ul class=\"map-popup\"><li><span>จังหวัด</span>' + feature.properties.PROV_NAMT + '</li><li><span>ผู้ป่วย</span>' + '".$val['amount']."</li></ul>';
+					return '<ul class=\"map-popup\"><li><strong>' + '".$patientMap['disease']['ds_name']."</strong></li><li><span>จังหวัด</span>' + feature.properties.PROV_NAMT + '</li><li><span>ผู้ป่วย</span>' + '".$val['amount']."</li><li><span>อัตรา</span>' + '".$val['rate']."</li></ul>';
 				}).join(', '))
 				.addTo(map);
 		});";

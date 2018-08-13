@@ -505,7 +505,7 @@ if ($patientMap != false) {
 			new mapboxgl.Popup()
 				.setLngLat(e.lngLat)
 				.setHTML(e.features.map(function(feature) {
-					return '<ul class=\"map-popup\"><li><span>' + '".$patientMap['disease']['ds_name']."</span></li><li><span>จังหวัด</span>' + feature.properties.PROV_NAMT + '</li><li><span>ผู้ป่วย</span>' + '".number_format($val['amount'])."</li></ul>';
+					return '<ul class=\"map-popup\"><li><span>' + '".$patientMap['disease']['ds_name']."</span></li><li><span>จังหวัด</span>' + feature.properties.PROV_NAMT + '</li><li><span>ผู้ป่วย</span>' + '".number_format($val['amount'])."</li><li><span>อัตรา</span>' + '".$val['rate']."</li></ul>';
 				}).join(', '))
 				.addTo(map);
 		});";

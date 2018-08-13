@@ -143,7 +143,7 @@ class dashboardController extends DiseasesController
 		foreach ($dsgroups as $val) {
 			$tmpKey = $val->DISEASE;
 			$tmpVal = array('ds_id' => $val->DISEASE, 'ds_name'=>$val->DISNAME, 'ds_group'=>$val->gr);
-			$result[(int)$tmpKey] = $tmpVal;
+			$result[$tmpKey] = $tmpVal;
 		}
 		return $result;
 	}
@@ -266,6 +266,7 @@ class dashboardController extends DiseasesController
 					$rs['prov_name_en'] = $prov[$key];
 					$rs['color'] = $mapColor;
 					$rs['amount'] = $lstPtPerProv[$key];
+					$rs['rate'] = $val;
 					$prov_rs[$key] = $rs;
 				}
 				$result['range'] = array('<0', '1-50', '51-100', '101-150', '150+');
@@ -277,7 +278,7 @@ class dashboardController extends DiseasesController
 				$r3 = ($r2+$x);
 				$r4 = ($r3+$x);
 				$r5 = ($r4+$x);
-				foreach ($lstPtPerProv as $key => $val) {
+				foreach ($ptPerPop as $key => $val) {
 					if ($val <= $r1) {
 						$mapColor = $color['r1'];
 					} elseif ($val <= $r2) {
@@ -295,6 +296,7 @@ class dashboardController extends DiseasesController
 					$rs['prov_name_en'] = $prov[$key];
 					$rs['color'] = $mapColor;
 					$rs['amount'] = $lstPtPerProv[$key];
+					$rs['rate'] = $val;
 					$prov_rs[$key] = $rs;
 				}
 				/* set legend on the map */
