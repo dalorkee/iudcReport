@@ -33,7 +33,7 @@ class dashboardController extends DiseasesController
 		$countPatientPerMonth = $this->getCountPatientPerMonth($rqYear, $ds);
 		$countCaseDeadPerMonth = $this->getCountCaseDeadPerMonth($rqYear, $ds);
 		$countPatientPerWeek = $this->getCountPatientPerWeek($rqYear, $ds);
-		$patientMap = $this->getPatientMap($rqYear, $ds);
+		$patientMap = $this->getPatientMap(2013, $ds);
 		return view('frontend.dashboard',
 			[
 				'dsgroups'=>$dsgroups,
@@ -201,7 +201,7 @@ class dashboardController extends DiseasesController
 		/* resetup population per province is missing add it to 0 */
 		foreach ($prov as $key=>$val) {
 			if (array_key_exists($key, $popPerProv)) {
-				$pop_prov[$key] = $popPerProv[$key];
+				$pop_prov[$key] = (int)$popPerProv[$key];
 			} else {
 				$pop_prov[$key] = 0;
 			}
@@ -240,9 +240,10 @@ class dashboardController extends DiseasesController
 				if ($val <= 0) {
 					$ptPerPop[$key] = 0;
 				} else {
-					$ptPerPop[$key] = (int)(($val*100000)/$pop_prov[$key]);
+					$ptPerPop[$key] = (($val*100000)/$pop_prov[$key]);
 				}
 			}
+			dd($ptPerPop);
 			/* set max && min patient amount */
 			$maxPatient = max($ptPerPop);
 			$minPatient = min($ptPerPop);
