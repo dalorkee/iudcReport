@@ -240,7 +240,7 @@ class dashboardController extends DiseasesController
 				if ($val <= 0) {
 					$ptPerPop[$key] = 0;
 				} else {
-					$ptPerPop[$key] = number_format((int)(($val*100000)/$pop_prov[$key]), 2);
+					$ptPerPop[$key] = (int)(($val*100000)/$pop_prov[$key]);
 				}
 			}
 			/* set max && min patient amount */

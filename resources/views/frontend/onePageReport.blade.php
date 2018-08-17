@@ -251,7 +251,7 @@
 										@if ($patientOnYear['patientThisYear'] > 0 || $top5PtByYear != false)
 											{{ "จังหวัดที่มีอัตราป่วยสูงสุด 5 อันดับแรก คือ " }}
 											@foreach ($top5PtByYear as $key=>$val)
-												{{ $key." (".$val." ต่อประชากรแสนคน) " }}
+												{{ $key." (".number_format($val, 2)." ต่อประชากรแสนคน) " }}
 											@endforeach
 										@endif
 									</div>
@@ -259,7 +259,7 @@
 										@if ($patientOnYear['patientThisYear'] > 0)
 											{{ "ภาคที่มีอัตราป่วยสูงสุด คือ " }}
 											@foreach ($patientByProvRegion as $key=>$val)
-												{{ $key." (".$val." ต่อประชากรแสนคน) " }}
+												{{ $key." (".number_format($val, 2)." ต่อประชากรแสนคน) " }}
 											@endforeach
 										@endif
 									</div>
@@ -505,7 +505,7 @@ if ($patientMap != false) {
 			new mapboxgl.Popup()
 				.setLngLat(e.lngLat)
 				.setHTML(e.features.map(function(feature) {
-					return '<ul class=\"map-popup\"><li><span>' + '".$patientMap['disease']['ds_name']."</span></li><li><span>จังหวัด</span>' + feature.properties.PROV_NAMT + '</li><li><span>ผู้ป่วย</span>' + '".number_format($val['amount'])."</li><li><span>อัตรา</span>' + '".$val['rate']."</li></ul>';
+					return '<ul class=\"map-popup\"><li><span>' + '".$patientMap['disease']['ds_name']."</span></li><li><span>จังหวัด</span>' + feature.properties.PROV_NAMT + '</li><li><span>ผู้ป่วย</span>' + '".number_format($val['amount'])."</li><li><span>อัตรา</span>' + '".number_format($val['rate'], 2)."</li></ul>';
 				}).join(', '))
 				.addTo(map);
 		});";

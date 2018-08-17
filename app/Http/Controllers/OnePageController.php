@@ -63,7 +63,6 @@ class OnePageController extends DiseasesController
 		$patientByOccupation = $this->getPatientByOccupation($rqYear, $ds, $rqWeek);
 		$top5PtByYear = $this->getTop5PtByYear($rqYear, $ds, $rqWeek);
 		$patientByProvRegion = $this->getPatientByProvRegion($rqYear, $ds, $rqWeek);
-		arsort($patientByProvRegion);
 		$patientOnLastWeek = $this->getPatientOnLastWeek($rqYear, $ds);
 		$patintPerWeek = $this->getPatientPerWeek($rqYear, $ds, $rqWeek);
 		$patientMap = $this->getPatientMap($rqYear, $ds, $rqWeek);
@@ -437,11 +436,12 @@ class OnePageController extends DiseasesController
 			$top5Pt = array_slice($ptPerYear, 0, 5, true);
 			foreach ($top5Pt as $val) {
 				$tmp = (($val->amount*100000)/$ptPerProv[$val->PROVINCE]);
-				$result[$prov[$val->PROVINCE]] = number_format($tmp, 2);
+				$result[$prov[$val->PROVINCE]] = $tmp;
 			}
 		} else {
 			$result = false;
 		}
+		arsort($result);
 		return $result;
 	}
 
@@ -484,28 +484,28 @@ class OnePageController extends DiseasesController
 		/* north result */
 		if (count($nPop) > 0) {
 			$nRegion = (((int)$nPt[0]->amount*100000)/(int)$nPop[0]->pop);
-			$nRegion = number_format($nRegion, 2);
+			$nRegion = $nRegion;
 		} else {
 			$nRegion = 0;
 		}
 		/* center result */
 		if (count($cPop) > 0) {
 			$cRegion = (((int)$cPt[0]->amount*100000)/(int)$cPop[0]->pop);
-			$cRegion = number_format($cRegion, 2);
+			$cRegion = $cRegion;
 		} else {
 			$cRegion = 0;
 		}
 		/* north-east result */
 		if (count($nePop) > 0) {
 			$neRegion = (((int)$nePt[0]->amount*100000)/(int)$nePop[0]->pop);
-			$neRegion = number_format($neRegion, 2);
+			$neRegion = $neRegion;
 		} else {
 			$neRegion = 0;
 		}
 		/* south result */
 		if (count($sPop) > 0) {
 			$sRegion = (((int)$sPt[0]->amount*100000)/(int)$sPop[0]->pop);
-			$sRegion = number_format($sRegion, 2);
+			$sRegion = $sRegion;
 		} else {
 			$sRegion = 0;
 		}
@@ -515,6 +515,7 @@ class OnePageController extends DiseasesController
 			'ภาคใต้'=>$sRegion,
 			'ภาคตะวันออกเฉียงเหนือ'=>$neRegion
 		);
+		arsort($result);
 		return $result;
 	}
 
@@ -704,7 +705,7 @@ class OnePageController extends DiseasesController
 				if ($val <= 0) {
 					$ptPerPop[$key] = 0;
 				} else {
-					$ptPerPop[$key] = number_format((int)(($val*100000)/$pop_prov[$key]), 2);
+					$ptPerPop[$key] = (int)(($val*100000)/$pop_prov[$key]);
 				}
 			}
 			/* set max && min patient amount */
