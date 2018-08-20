@@ -33,7 +33,7 @@ class dashboardController extends DiseasesController
 		$countPatientPerMonth = $this->getCountPatientPerMonth($rqYear, $ds);
 		$countCaseDeadPerMonth = $this->getCountCaseDeadPerMonth($rqYear, $ds);
 		$countPatientPerWeek = $this->getCountPatientPerWeek($rqYear, $ds);
-		$patientMap = $this->getPatientMap(2013, $ds);
+		$patientMap = $this->getPatientMap($rqYear, $ds);
 		return view('frontend.dashboard',
 			[
 				'dsgroups'=>$dsgroups,
@@ -237,13 +237,12 @@ class dashboardController extends DiseasesController
 			$result['colors'] = $color;
 			/* set patient formular */
 			foreach ($lstPtPerProv as $key=>$val) {
-				if ($val <= 0) {
+				if ($val <= 0 || $pop_prov[$key] <= 0) {
 					$ptPerPop[$key] = 0;
 				} else {
 					$ptPerPop[$key] = (($val*100000)/$pop_prov[$key]);
 				}
 			}
-			dd($ptPerPop);
 			/* set max && min patient amount */
 			$maxPatient = max($ptPerPop);
 			$minPatient = min($ptPerPop);
