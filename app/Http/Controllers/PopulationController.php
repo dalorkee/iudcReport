@@ -250,5 +250,4 @@ class PopulationController extends Controller
         }
          return $data;
     }
-
 }

@@ -196,4 +196,10 @@ class Controller extends BaseController
           $total_ratio = ($total_deaths*100)/$total_cases;
           return number_format($total_ratio,2);
     }
+    //List of ProvinceCODE
+    public static function get_provincecode_th(){
+      $query = Province::pluck('prov_code');
+      return $query;
+    }
+
 }
