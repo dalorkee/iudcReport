@@ -9,15 +9,26 @@ class OnePageController extends DiseasesController
 	* Display a listing of the resource.
 	* @return \Illuminate\Http\Response
 	*/
+	public $rqDsCode;
+	public function __construct() {
+		$this->rqDsCode = null;
+		return true;
+	}
 	public function index(Request $request) {
 		/* get Disease group name */
 		$dsgroups = $this->getDsNameByDsGroup();
 		/* request var from view */
 		if (isset($request->requestFrm) && $request->requestFrm == "1") {
-			/* selected disease */
-			$ds = $request->disease;
+			$rqYear = $request->year;
+			$selected_week = true;
+			$selected_year = true;
+			if ((int)$request->disease > 0) {
+				$ds = array($request->disease);
+			} else {
+				$ds = parent::setMultiDiseaseCode($request->disease);
+			}
+			$this->rqDsCode = $request->disease;
 			$selected_ds = true;
-			/* selected week number */
 			if ($request->week_number !== 'all') {
 				$week_arr = array();
 				for ($i=1; $i<=$request->week_number; $i++) {
@@ -29,23 +40,20 @@ class OnePageController extends DiseasesController
 				$rqWeek = $request->week_number;
 				$str_week = $request->week_number;
 			}
-			$selected_week = true;
-			/* selected year */
-			$rqYear = $request->year;
-			$selected_year = true;
 		} else {
-			$ds = 78;
-			$rqWeek = 'all';
-			$str_week = 'all';
 			$nowYear = parent::getLastUr506Year();
 			$rqYear = $nowYear;
+			$ds = array(78);
+			$this->rqDsCode = 78;
+			$rqWeek = 'all';
+			$str_week = 'all';
 			$selected_ds = false;
 			$selected_week = false;
 			$selected_year = false;
 		}
 		/* set the last result request var to array */
 		$selectDs = array(
-			'disease'=>$ds,
+			'disease'=>$this->rqDsCode,
 			'selectWeek'=>$rqWeek,
 			'str_week'=>$str_week,
 			'selectYear'=>$rqYear,
@@ -64,7 +72,7 @@ class OnePageController extends DiseasesController
 		$top5PtByYear = $this->getTop5PtByYear($rqYear, $ds, $rqWeek);
 		$patientByProvRegion = $this->getPatientByProvRegion($rqYear, $ds, $rqWeek);
 		$patientOnLastWeek = $this->getPatientOnLastWeek($rqYear, $ds);
-		$patintPerWeek = $this->getPatientPerWeek($rqYear, $ds, $rqWeek);
+		$patientPerWeek = $this->getPatientPerWeek($rqYear, $ds, $rqWeek);
 		$patientMap = $this->getPatientMap($rqYear, $ds, $rqWeek);
 		return view(
 			'frontend.onePageReport',
@@ -81,7 +89,7 @@ class OnePageController extends DiseasesController
 				'top5PtByYear'=>$top5PtByYear,
 				'patientByProvRegion'=>$patientByProvRegion,
 				'patientOnLastWeek'=>$patientOnLastWeek,
-				'patintPerWeek'=>$patintPerWeek,
+				'patintPerWeek'=>$patientPerWeek,
 				'patientMap'=>$patientMap
 			]
 		);
@@ -211,7 +219,7 @@ class OnePageController extends DiseasesController
 			$ratio = 0;
 		}
 		$result['year'] = $year;
-		$result['disease'] = $diseaseCode;
+		$result['disease'] = $this->rqDsCode;
 		$result['ptMale'] = $male;
 		$result['ptFemale'] = $female;
 		$result['ratio'] = $ratio;
@@ -652,7 +660,12 @@ class OnePageController extends DiseasesController
 	private function getPatientMap($year, $diseaseCode, $week_no='all') {
 		/* set disease name to array */
 		$dsgroup = $this->getDsNameByDsGroup();
-		$result['disease'] = $dsgroup[$diseaseCode];
+		$cntDs = count($diseaseCode);
+		if ($cntDs == 1 ) {
+			$result['disease'] = $dsgroup[$diseaseCode[0]];
+		} else {
+			$result['disease'] = $dsgroup[$this->rqDsCode];
+		}
 		/* set provice to array */
 		$lstProv = parent::getProvince();
 		foreach ($lstProv as $val) {
@@ -666,7 +679,7 @@ class OnePageController extends DiseasesController
 		/* resetup population per province is missing add it to 0 */
 		foreach ($prov as $key=>$val) {
 			if (array_key_exists($key, $popPerProv)) {
-				$pop_prov[$key] = $popPerProv[$key];
+				$pop_prov[$key] = (int)$popPerProv[$key];
 			} else {
 				$pop_prov[$key] = 0;
 			}
@@ -702,17 +715,17 @@ class OnePageController extends DiseasesController
 			$result['colors'] = $color;
 			/* set patient formular */
 			foreach ($lstPtPerProv as $key=>$val) {
-				if ($val <= 0) {
+				if ($val <= 0 || $pop_prov[$key] <= 0) {
 					$ptPerPop[$key] = 0;
 				} else {
-					$ptPerPop[$key] = (int)(($val*100000)/$pop_prov[$key]);
+					$ptPerPop[$key] = (($val*100000)/$pop_prov[$key]);
 				}
 			}
 			/* set max && min patient amount */
 			$maxPatient = max($ptPerPop);
 			$minPatient = min($ptPerPop);
 			/* set length for render the map color */
-			if ($diseaseCode == 66) {
+			if ($diseaseCode[0] == 66) {
 				foreach ($ptPerPop as $key=>$val) {
 					if ( $val <= 0) {
 						$mapColor = $color['r1'];

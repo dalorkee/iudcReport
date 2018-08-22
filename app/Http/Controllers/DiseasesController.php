@@ -14,6 +14,21 @@ class DiseasesController extends Controller
 		return $dsgroups;
 	}
 
+	protected function setMultiDiseaseCode($diseaseCode=0) {
+		switch ($diseaseCode) {
+			case -1:
+				$mDsCode = array(26, 27, 66);
+				break;
+			case -2:
+				$mDsCode = array(04, 05, 06);
+				break;
+			default:
+				$mDsCode = array(0);
+				break;
+		}
+		return $mDsCode;
+	}
+
 	protected function getPatientByDisease($tblYear=null, $diseaseCode=null) {
 		$patient = DB::table('ur506_'.$tblYear)
 		->where('DISEASE', $diseaseCode)
@@ -22,15 +37,15 @@ class DiseasesController extends Controller
 		return $patient;
 	}
 
-	protected function countPatientBySex($tblYear=0, $diseaseCode=0, $sex=0, $week_no='all') {
+	protected function countPatientBySex($tblYear=0, $diseaseCode=array(), $sex=0, $week_no='all') {
 		if ($week_no == 'all') {
 			$count = DB::table('ur506_'.$tblYear)
-			->whereIn('DISEASE', [$diseaseCode])
+			->whereIn('DISEASE', $diseaseCode)
 			->where('SEX', $sex)
 			->count();
 		} else {
 			$count = DB::table('ur506_'.$tblYear)
-			->whereIn('DISEASE', [$diseaseCode])
+			->whereIn('DISEASE', $diseaseCode)
 			->whereIn('week_no', $week_no)
 			->where('SEX', $sex)
 			->count();
@@ -38,24 +53,24 @@ class DiseasesController extends Controller
 		return $count;
 	}
 
-	protected function countPatientByAgegroup($tblYear=0, $diseaseCode=0, $condition=array(), $week_no='all') {
+	protected function countPatientByAgegroup($tblYear=0, $diseaseCode=array(), $condition=array(), $week_no='all') {
 		if ($week_no == 'all') {
 			switch ($condition[0]) {
 				case "<":
 					$count = DB::table('ur506_'.$tblYear)
-						->whereIn('DISEASE', [$diseaseCode])
+						->whereIn('DISEASE', $diseaseCode)
 						->where('YEAR', '<', $condition[1])
 						->count();
 					break;
 				case "between":
 					$count = DB::table('ur506_'.$tblYear)
-						->where('DISEASE', $diseaseCode)
+						->whereIn('DISEASE', $diseaseCode)
 						->whereBetween('YEAR', [$condition[1], $condition[2]])
 						->count();
 					break;
 				case ">":
 					$count = DB::table('ur506_'.$tblYear)
-						->whereIn('DISEASE', [$diseaseCode])
+						->whereIn('DISEASE', $diseaseCode)
 						->where('YEAR', '>', $condition[1])
 						->count();
 					break;
@@ -64,21 +79,21 @@ class DiseasesController extends Controller
 			switch ($condition[0]) {
 				case "<":
 					$count = DB::table('ur506_'.$tblYear)
-						->whereIn('DISEASE', [$diseaseCode])
+						->whereIn('DISEASE', $diseaseCode)
 						->whereIn('week_no', $week_no)
 						->where('YEAR', '<', $condition[1])
 						->count();
 					break;
 				case "between":
 					$count = DB::table('ur506_'.$tblYear)
-						->where('DISEASE', $diseaseCode)
+						->whereIn('DISEASE', $diseaseCode)
 						->whereIn('week_no', $week_no)
 						->whereBetween('YEAR', [$condition[1], $condition[2]])
 						->count();
 					break;
 				case ">":
 					$count = DB::table('ur506_'.$tblYear)
-						->whereIn('DISEASE', [$diseaseCode])
+						->whereIn('DISEASE', $diseaseCode)
 						->whereIn('week_no', $week_no)
 						->where('YEAR', '>', $condition[1])
 						->count();
@@ -88,10 +103,10 @@ class DiseasesController extends Controller
 		return $count;
 	}
 
-	protected function countPatientPerMonth($tblYear=null, $diseaseCode=null) {
+	protected function countPatientPerMonth($tblYear=0, $diseaseCode=array()) {
 		$count = DB::table('ur506_'.$tblYear)
 			->select(DB::raw('SUM(IF(DISEASE <> "", 1, 0)) AS amount, MONTH(datesick) AS month, DISEASE As disease'))
-			->whereIn('DISEASE', [$diseaseCode])
+			->whereIn('DISEASE', $diseaseCode)
 			->groupBy(DB::raw('MONTH(DATESICK)'))
 			->orderBy(DB::raw('MONTH(DATESICK)'))
 			->get()
@@ -99,11 +114,11 @@ class DiseasesController extends Controller
 		return $count;
 	}
 
-	protected function countCaseDeadtPerMonth($tblYear=null, $diseaseCode=null) {
+	protected function countCaseDeadtPerMonth($tblYear=0, $diseaseCode=array()) {
 		$count = DB::table('ur506_'.$tblYear)
 			->select(DB::raw('SUM(IF(DISEASE <> "", 1, 0)) AS amount, MONTH(DATEDEATH) AS month, DISEASE As disease'))
 			->where('RESULT', 2)
-			->whereIn('DISEASE', [$diseaseCode])
+			->whereIn('DISEASE', $diseaseCode)
 			->groupBy(DB::raw('MONTH(DATEDEATH)'))
 			->orderBy(DB::raw('MONTH(DATEDEATH)'))
 			->get()
@@ -111,10 +126,10 @@ class DiseasesController extends Controller
 		return $count;
 	}
 
-	protected function countPatientPerWeek($tblYear=null, $diseaseCode=null) {
+	protected function countPatientPerWeek($tblYear=0, $diseaseCode=array()) {
 		$count = DB::table('ur506_'.$tblYear)
 			->select(DB::raw('SUM(IF(DISEASE <> "", 1, 0)) AS amount, week_no AS weeks, DISEASE As disease'))
-			->whereIn('DISEASE', [$diseaseCode])
+			->whereIn('DISEASE', $diseaseCode)
 			->groupBy('week_no')
 			->orderBy('week_no')
 			->get()
@@ -122,12 +137,12 @@ class DiseasesController extends Controller
 		return $count;
 	}
 
-	protected function countPatientByProv($tblYear=0, $prov_code=array(), $diseaseCode=0, $week_no='all') {
+	protected function countPatientByProv($tblYear=0, $prov_code=array(), $diseaseCode=array(), $week_no='all') {
 		if ($week_no == 'all') {
 			$count = DB::table('ur506_'.$tblYear)
 			->select(DB::raw('COUNT(DATESICK) AS amount'))
 			->whereIn('PROVINCE', $prov_code)
-			->where('DISEASE', $diseaseCode)
+			->whereIn('DISEASE', $diseaseCode)
 			->get()
 			->toArray();
 		} else {
@@ -135,7 +150,7 @@ class DiseasesController extends Controller
 			->select(DB::raw('COUNT(DATESICK) AS amount'))
 			->whereIn('PROVINCE', $prov_code)
 			->whereIn('week_no', $week_no)
-			->where('DISEASE', $diseaseCode)
+			->whereIn('DISEASE', $diseaseCode)
 			->get()
 			->toArray();
 		}
@@ -185,11 +200,11 @@ class DiseasesController extends Controller
 		return $result;
 	}
 
-	protected function cntPatientPerYear($tblYear=0, $diseaseCode=0, $week_no='all') {
+	protected function cntPatientPerYear($tblYear=0, $diseaseCode=array(), $week_no='all') {
 		if ($week_no == 'all') {
 			$result =  DB::table('ur506_'.$tblYear)
 			->select(DB::raw('COUNT(DATESICK) AS amount, PROVINCE'))
-			->where('DISEASE', $diseaseCode)
+			->whereIn('DISEASE', $diseaseCode)
 			->groupBy('PROVINCE')
 			->orderBYRaw('COUNT(DATESICK) DESC')
 			->get()
@@ -197,7 +212,7 @@ class DiseasesController extends Controller
 		} else {
 			$result =  DB::table('ur506_'.$tblYear)
 			->select(DB::raw('COUNT(DATESICK) AS amount, PROVINCE'))
-			->where('DISEASE', $diseaseCode)
+			->whereIn('DISEASE', $diseaseCode)
 			->whereIn('week_no', $week_no)
 			->groupBy('PROVINCE')
 			->orderBYRaw('COUNT(DATESICK) DESC')
@@ -365,18 +380,18 @@ class DiseasesController extends Controller
 		return $result;
 	}
 
-	protected function getMinDateSickDate($year=0, $diseaseCode=0, $week_no='all') {
+	protected function getMinDateSickDate($year=0, $diseaseCode=array(), $week_no='all') {
 		if ($week_no == 'all') {
 			$result = DB::table('ur506_'.$year)
 			->select(DB::raw('MIN(DATESICK) AS minDate'))
-			->where('DISEASE', $diseaseCode)
+			->whereIn('DISEASE', $diseaseCode)
 			->get()
 			->toArray();
 		} else {
 			$result = DB::table('ur506_'.$year)
 			->select(DB::raw('MIN(DATESICK) AS minDate'))
 			->whereIn('week_no', $week_no)
-			->where('DISEASE', $diseaseCode)
+			->whereIn('DISEASE', $diseaseCode)
 			->get()
 			->toArray();
 		}
@@ -401,18 +416,18 @@ class DiseasesController extends Controller
 		return $result;
 	}
 
-	protected function patientByYear($year=0, $diseaseCode=0, $week_no='all') {
+	protected function patientByYear($year=0, $diseaseCode=array(), $week_no='all') {
 		if ($week_no == 'all') {
 			$result = DB::table('ur506_'.$year)
 			->select(DB::raw('COUNT(DATESICK) AS patient'))
-			->where('DISEASE', $diseaseCode)
+			->whereIn('DISEASE', $diseaseCode)
 			->get()
 			->toArray();
 		} else {
 			$result = DB::table('ur506_'.$year)
 			->select(DB::raw('COUNT(DATESICK) AS patient'))
 			->whereIn('week_no', $week_no)
-			->where('DISEASE', $diseaseCode)
+			->whereIn('DISEASE', $diseaseCode)
 			->get()
 			->toArray();
 		}
@@ -429,11 +444,11 @@ class DiseasesController extends Controller
 		return $result;
 	}
 
-	protected function countPatientPerProv($year=0, $diseaseCode=0, $week_no='all') {
+	protected function countPatientPerProv($year=0, $diseaseCode=array(), $week_no='all') {
 		if ($week_no == 'all') {
 			$result = DB::table('ur506_'.$year)
 			->select(DB::raw('COUNT(DATESICK) AS patient, province'))
-			->where('DISEASE', $diseaseCode)
+			->whereIn('DISEASE', $diseaseCode)
 			->groupBy('PROVINCE')
 			->orderBy('PROVINCE')
 			->get()
@@ -442,7 +457,7 @@ class DiseasesController extends Controller
 			$result = DB::table('ur506_'.$year)
 			->select(DB::raw('COUNT(DATESICK) AS patient, province'))
 			->whereIn('week_no', $week_no)
-			->where('DISEASE', $diseaseCode)
+			->whereIn('DISEASE', $diseaseCode)
 			->groupBy('PROVINCE')
 			->orderBy('PROVINCE')
 			->get()
@@ -451,11 +466,11 @@ class DiseasesController extends Controller
 		return $result;
 	}
 
-	protected function countCaseResultPerProv($year=0, $diseaseCode=0, $result=0, $week_no='all') {
+	protected function countCaseResultPerProv($year=0, $diseaseCode=array(), $result=0, $week_no='all') {
 		if ($week_no == 'all') {
 			$result = DB::table('ur506_'.$year)
 			->select(DB::raw('COUNT(DATESICK) AS patient, province'))
-			->where('DISEASE', $diseaseCode)
+			->whereIn('DISEASE', $diseaseCode)
 			->where('RESULT', $result)
 			->groupBy('PROVINCE')
 			->orderBy('PROVINCE', 'ASC')
@@ -465,7 +480,7 @@ class DiseasesController extends Controller
 			$result = DB::table('ur506_'.$year)
 			->select(DB::raw('COUNT(DATESICK) AS patient, province'))
 			->whereIn('week_no', $week_no)
-			->where('DISEASE', $diseaseCode)
+			->whereIn('DISEASE', $diseaseCode)
 			->where('RESULT', $result)
 			->groupBy('PROVINCE')
 			->orderBy('PROVINCE', 'ASC')
@@ -499,11 +514,11 @@ class DiseasesController extends Controller
 		return $result;
 	}
 
-	protected function cntPatientByNation($year=0, $diseaseCode=0, $week_no='all') {
+	protected function cntPatientByNation($year=0, $diseaseCode=array(), $week_no='all') {
 		if ($week_no == 'all') {
 			$result = DB::table('ur506_'.$year)
 			->select(DB::raw('COUNT(DATESICK) AS patient, RACE'))
-			->where('DISEASE', $diseaseCode)
+			->whereIn('DISEASE', $diseaseCode)
 			->groupBy('RACE')
 			->orderBy('RACE')
 			->get()
@@ -511,7 +526,7 @@ class DiseasesController extends Controller
 		} else {
 			$result = DB::table('ur506_'.$year)
 			->select(DB::raw('COUNT(DATESICK) AS patient, RACE'))
-			->where('DISEASE', $diseaseCode)
+			->whereIn('DISEASE', $diseaseCode)
 			->whereIn('week_no', $week_no)
 			->groupBy('RACE')
 			->orderBy('RACE')
@@ -521,11 +536,11 @@ class DiseasesController extends Controller
 		return $result;
 	}
 
-	protected function cntPatientByOccupation($year=0, $diseaseCode=0, $week_no='all') {
+	protected function cntPatientByOccupation($year=0, $diseaseCode=array(), $week_no='all') {
 		if ($week_no == 'all') {
 			$result = DB::table('ur506_'.$year)
 			->select(DB::raw('COUNT(DATESICK) AS patient, OCCUPAT'))
-			->where('DISEASE', $diseaseCode)
+			->whereIn('DISEASE', $diseaseCode)
 			->groupBy('OCCUPAT')
 			->orderBy('OCCUPAT')
 			->get()
@@ -533,7 +548,7 @@ class DiseasesController extends Controller
 		} else {
 			$result = DB::table('ur506_'.$year)
 			->select(DB::raw('COUNT(DATESICK) AS patient, OCCUPAT'))
-			->where('DISEASE', $diseaseCode)
+			->whereIn('DISEASE', $diseaseCode)
 			->whereIn('week_no', $week_no)
 			->groupBy('OCCUPAT')
 			->orderBy('OCCUPAT')
@@ -553,11 +568,11 @@ class DiseasesController extends Controller
 		return $result;
 	}
 
-	protected function getPatientPerWeekByProvZone($year=0, $diseaseCode=0, $prov_code=array(), $week_no) {
+	protected function getPatientPerWeekByProvZone($year=0, $diseaseCode=array(), $prov_code=array(), $week_no) {
 		if ($week_no == 'all') {
 			$result = DB::table('ur506_'.$year)
 				->select(DB::raw('SUM(IF(DISEASE <> "", 1, 0)) AS amount, week_no'))
-				->where('DISEASE', $diseaseCode)
+				->whereIn('DISEASE', $diseaseCode)
 				->whereIn('PROVINCE', $prov_code)
 				->groupBy('week_no')
 				->orderBy('week_no')
@@ -566,7 +581,7 @@ class DiseasesController extends Controller
 		} else {
 			$result = DB::table('ur506_'.$year)
 				->select(DB::raw('SUM(IF(DISEASE <> "", 1, 0)) AS amount, week_no'))
-				->where('DISEASE', $diseaseCode)
+				->whereIn('DISEASE', $diseaseCode)
 				->whereIn('PROVINCE', $prov_code)
 				->whereIn('week_no', $week_no)
 				->groupBy('week_no')

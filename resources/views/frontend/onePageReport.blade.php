@@ -116,16 +116,26 @@
 										}
 										$i = 1;
 										foreach ($dsgroups as $dsgroup) {
-											if ($i == 1) {
-												echo "<option value=\"".$dsgroup['ds_id']."\" ".$selected2.">".$dsgroup['ds_name']."</option>\n";
-											} else {
-												echo "<option value=\"".$dsgroup['ds_id']."\">".$dsgroup['ds_name']."</option>\n";
+											if ($dsgroup['ds_id'] > 0) {
+												if ($i == 1) {
+													echo "<option value=\"".$dsgroup['ds_id']."\" ".$selected2.">".$dsgroup['ds_name']."</option>\n";
+												} else {
+													echo "<option value=\"".$dsgroup['ds_id']."\">".$dsgroup['ds_name']."</option>\n";
+												}
 											}
 											$i++;
 										}
 									@endphp
 									</optgroup>
 									<optgroup label="โรคที่มีหลายรหัส">
+										@php
+										foreach ($dsgroups as $dsgroup) {
+											if ($dsgroup['ds_id'] < 0) {
+												echo "<option value=\"".$dsgroup['ds_id']."\">".$dsgroup['ds_name']."</option>\n";
+											}
+										}
+										@endphp
+										<!--
 										<option value="-1">DHF+DSS+DF</option>
 										<option value="-2">Dysentery</option>
 										<option value="-3">Encephalitis</option>
@@ -134,6 +144,7 @@
 										<option value="-6">S.T.I</option>
 										<option value="-7">Tetanus inc.Neo</option>
 										<option value="-8">Tuberculosis</option>
+										-->
 									</optgroup>
 								</select>
 							</div>

@@ -101,8 +101,8 @@
 									<i class="fa fa-bug" aria-hidden="true"></i>
 								</div>
 								<select name="disease" class="form-control select2" style="width:100%;">
-									<optgroup label="โรคที่มี 1 รหัส">
-									<?php
+									<optgroup label="โปรดเลือก">
+									@php
 										if ($selectDs['selected'] == true) {
 											$selected1 = "selected=\"selected\"";
 											$selected2 = null;
@@ -112,16 +112,26 @@
 										}
 										$i = 1;
 										foreach ($dsgroups as $dsgroup) {
-											if ($i == 1) {
-												echo "<option value=\"".$dsgroup['ds_id']."\" ".$selected2.">".$dsgroup['ds_name']."</option>\n";
-											} else {
-												echo "<option value=\"".$dsgroup['ds_id']."\">".$dsgroup['ds_name']."</option>\n";
+											if ($dsgroup['ds_id'] > 0) {
+												if ($i == 1) {
+													echo "<option value=\"".$dsgroup['ds_id']."\" ".$selected2.">".$dsgroup['ds_name']."</option>\n";
+												} else {
+													echo "<option value=\"".$dsgroup['ds_id']."\">".$dsgroup['ds_name']."</option>\n";
+												}
 											}
 											$i++;
 										}
-									?>
+									@endphp
 									</optgroup>
 									<optgroup label="โรคที่มีหลายรหัส">
+										@php
+										foreach ($dsgroups as $dsgroup) {
+											if ($dsgroup['ds_id'] < 0) {
+												echo "<option value=\"".$dsgroup['ds_id']."\">".$dsgroup['ds_name']."</option>\n";
+											}
+										}
+										@endphp
+										<!--
 										<option value="-1">DHF+DSS+DF</option>
 										<option value="-2">Dysentery</option>
 										<option value="-3">Encephalitis</option>
@@ -130,6 +140,7 @@
 										<option value="-6">S.T.I</option>
 										<option value="-7">Tetanus inc.Neo</option>
 										<option value="-8">Tuberculosis</option>
+										-->
 									</optgroup>
 								</select>
 							</div>
@@ -421,9 +432,16 @@ function createBarChart(id, type, options) {
 				@endforeach
 			],
 			backgroundColor: [
-				@for($i=1; $i<=9; $i++)
-					{!! '"#00A65A"'.',' !!}
-				@endfor
+				@php
+					$max = max($cpByAge);
+					foreach($cpByAge as $val) {
+						if ($val == $max) {
+							echo '"#FF6384"'.',';
+						} else {
+							echo '"#00A65A"'.',';
+						}
+					}
+				@endphp
 			]
 		}]
 	};

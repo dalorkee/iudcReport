@@ -6,6 +6,11 @@ use DateTime;
 
 class dashboardController extends DiseasesController
 {
+	public $rqDsCode;
+	public function __construct() {
+		$this->rqDsCode = null;
+		return true;
+	}
 	public function index(Request $request) {
 		/* get Disease group name */
 		$dsgroups = $this->getDsNameByDsGroup();
@@ -18,15 +23,21 @@ class dashboardController extends DiseasesController
 		/* request var from view */
 		if (isset($request) && isset($request->year)) {
 			$rqYear = $request->year;
-			$ds = $request->disease;
+			if ((int)$request->disease > 0) {
+				$ds = array($request->disease);
+			} else {
+				$ds = parent::setMultiDiseaseCode($request->disease);
+			}
+			$this->rqDsCode = $request->disease;
 			$selected = true;
 		} else {
 			$nowYear = parent::getLastUr506Year();
 			$rqYear = $nowYear;
-			$ds = 78;
+			$ds = array(78);
+			$this->rqDsCode = 78;
 			$selected = false;
 		}
-		$selectDs = array('disease'=>$ds, 'selectYear'=>$rqYear, 'selected'=>$selected);
+		$selectDs = array('disease'=>$this->rqDsCode, 'selectYear'=>$rqYear, 'selected'=>$selected);
 		/* pass var for get the result */
 		$countPatientBySex = $this->getCountPatientBySex($rqYear, $ds);
 		$countPatientByAgegroup = $this->getCountPatientByAgegroup($rqYear, $ds);
@@ -51,14 +62,14 @@ class dashboardController extends DiseasesController
 		);
 	}
 
-	public function getCountPatientBySex($tblYear, $diseaseCode) {
+	private function getCountPatientBySex($tblYear, $diseaseCode) {
 		$malePatient = parent::countPatientBySex($tblYear, $diseaseCode, 1);
 		$femalePatient = parent::countPatientBySex($tblYear, $diseaseCode, 2);
 		$result = array('patient' => array('male' => $malePatient, 'female' => $femalePatient));
 		return $result;
 	}
 
-	public function getCountPatientByAgegroup($tblYear, $diseaseCode) {
+	private function getCountPatientByAgegroup($tblYear, $diseaseCode) {
 		$popTotalByAgegroup = $this->getTotalPopByAgegroup($tblYear);
 		if ($popTotalByAgegroup != 0) {
 			/* gruop1 */
@@ -120,15 +131,11 @@ class dashboardController extends DiseasesController
 		// $nowWeek = $date->format('W');
 		$r506Lastweek = parent::getLastWeek($tblYear);
 		$lastWeek = (int)$r506Lastweek[0]->lastweek;
-
-
 		$week_arr = array();
 		for ($i=1; $i<=$lastWeek; $i++) {
 			$week_arr[$i] = 0;
 		}
-
 		$count_arr = parent::countPatientPerWeek($tblYear, $diseaseCode);
-
 		foreach ($count_arr as $val) {
 			$week = $val->weeks;
 
@@ -187,7 +194,12 @@ class dashboardController extends DiseasesController
 	private function getPatientMap($year, $diseaseCode, $week_no='all') {
 		/* set disease name to array */
 		$dsgroup = $this->getDsNameByDsGroup();
-		$result['disease'] = $dsgroup[$diseaseCode];
+		$cntDs = count($diseaseCode);
+		if ($cntDs == 1 ) {
+			$result['disease'] = $dsgroup[$diseaseCode[0]];
+		} else {
+			$result['disease'] = $dsgroup[$this->rqDsCode];
+		}
 		/* set provice to array */
 		$lstProv = parent::getProvince();
 		foreach ($lstProv as $val) {
@@ -247,7 +259,7 @@ class dashboardController extends DiseasesController
 			$maxPatient = max($ptPerPop);
 			$minPatient = min($ptPerPop);
 			/* set length for render the map color */
-			if ($diseaseCode == 66) {
+			if ($diseaseCode[0] == 66) {
 				foreach ($ptPerPop as $key=>$val) {
 					if ( $val <= 0) {
 						$mapColor = $color['r1'];
