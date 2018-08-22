@@ -239,7 +239,7 @@
 								<a href="#">อัตราสูงสุดช่วงอายุ <span class="pull-right text-red"> {{ $ageRange[array_search(max($cpByAge), $cpByAge)] }}</span></a>
 							</li>
 							<li>
-								<a href="#">อัตรา <span class="pull-right text-green"> {{ number_format(max(array_unique($cpByAge)), 2) }}</span></a>
+								<a href="#">อัตราป่วย <span class="pull-right text-green"> {{ number_format(max(array_unique($cpByAge)), 2) }}</span></a>
 							</li>
 						</ul>
 					</div>

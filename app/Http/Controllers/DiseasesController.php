@@ -22,6 +22,24 @@ class DiseasesController extends Controller
 			case -2:
 				$mDsCode = array(04, 05, 06);
 				break;
+			case -3:
+				$mDsCode = array(28, 29);
+				break;
+			case -4:
+				$mDsCode = array(10, 11, 12, 13, 69, 70);
+				break;
+			case -5:
+				$mDsCode = array(21, 22);
+				break;
+			case -6:
+				$mDsCode = array(37, 38, 39, 40, 41, 79, 80, 81);
+				break;
+			case -7:
+				$mDsCode = array(25, 53);
+				break;
+			case -8:
+				$mDsCode = array(32, 33, 34);
+				break;
 			default:
 				$mDsCode = array(0);
 				break;
