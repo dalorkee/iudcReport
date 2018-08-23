@@ -9,12 +9,12 @@ use App\Http\Controllers\Controller;
 
 class DiseasesController extends Controller
 {
-	protected function diseaseGroup() {
+	public static function diseaseGroup() {
 		$dsgroups = DB::table('dsgr')->orderBy('DISNAME')->get();
 		return $dsgroups;
 	}
 
-	protected function setMultiDiseaseCode($diseaseCode=0) {
+	public static function setMultiDiseaseCode($diseaseCode=0) {
 		switch ($diseaseCode) {
 			case -1:
 				$mDsCode = array(26, 27, 66);

@@ -59,6 +59,10 @@ class Controller extends BaseController
       $query = Tumbol::pluck('htype','code');
       return $query;
     }
+    public static function get_dpc_nameth(){
+      $query = Province::pluck('prov_dpc','prov_code');
+      return $query;
+    }
     //list sector
     public static function get_pop_sector($sector){
 
