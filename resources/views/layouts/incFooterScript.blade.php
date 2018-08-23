@@ -17,9 +17,12 @@
 <!-- DataTables -->
 {{ Html::script(('public/AdminLTE-2.4.2/bower_components/datatables.net/js/jquery.dataTables.min.js')) }}
 {{ Html::script(('public/AdminLTE-2.4.2/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js')) }}
+<!-- illbeback -->
+{{ Html::script(('public/components/illbeback/illbeback.js')) }}
 <script>
 $(document).ready(function () {
 	$('.loader').fadeOut('slow');
 	$('#flash-overlay-modal').modal();
+	$("#scroll-to-top").illBeBack();
 });
 </script>

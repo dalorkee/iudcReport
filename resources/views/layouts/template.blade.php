@@ -50,6 +50,7 @@ $pj = 'PJ';
 	<!-- Add the sidebar's background. This div must be placed
 		immediately after the control sidebar -->
 	<div class="control-sidebar-bg"></div>
+	<a href="" id="scroll-to-top"></a>
 </div>
 <!-- ./wrapper -->
 @include('layouts.incFooterScript')
