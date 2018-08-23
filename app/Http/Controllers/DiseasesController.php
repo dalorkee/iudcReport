@@ -218,28 +218,6 @@ class DiseasesController extends Controller
 		return $result;
 	}
 
-	protected function cntPatientPerYear($tblYear=0, $diseaseCode=array(), $week_no='all') {
-		if ($week_no == 'all') {
-			$result =  DB::table('ur506_'.$tblYear)
-			->select(DB::raw('COUNT(DATESICK) AS amount, PROVINCE'))
-			->whereIn('DISEASE', $diseaseCode)
-			->groupBy('PROVINCE')
-			->orderBYRaw('COUNT(DATESICK) DESC')
-			->get()
-			->toArray();
-		} else {
-			$result =  DB::table('ur506_'.$tblYear)
-			->select(DB::raw('COUNT(DATESICK) AS amount, PROVINCE'))
-			->whereIn('DISEASE', $diseaseCode)
-			->whereIn('week_no', $week_no)
-			->groupBy('PROVINCE')
-			->orderBYRaw('COUNT(DATESICK) DESC')
-			->get()
-			->toArray();
-		}
-		return $result;
-	}
-
 	protected function setAgeRange() {
 		$range = array(
 			'g1'=>'<5',
@@ -279,6 +257,23 @@ class DiseasesController extends Controller
 		->where('year_', $year)
 		->get()
 		->toArray();
+		return $result;
+	}
+
+	protected function sumPopByAgegroup($year=0) {
+		$result = DB::table('pop_urban_age_group')
+		->selectRaw('
+			IFNULL(age_0_4,0)+
+			IFNULL(age_5_9,0)+
+			IFNULL(age_10_14,0)+
+			IFNULL(age_15_24,0)+
+			IFNULL(age_25_34,0)+
+			IFNULL(age_35_44,0)+
+			IFNULL(age_45_54,0)+
+			IFNULL(age_55_64,0)+
+			IFNULL(age_65_up,0) AS popOnYear')
+		->where('year_', $year)
+		->get();
 		return $result;
 	}
 
@@ -462,9 +457,31 @@ class DiseasesController extends Controller
 		return $result;
 	}
 
-	protected function countPatientPerProv($year=0, $diseaseCode=array(), $week_no='all') {
+	protected function cntPatientPerYear($tblYear=0, $diseaseCode=array(), $week_no='all') {
 		if ($week_no == 'all') {
-			$result = DB::table('ur506_'.$year)
+			$result =  DB::table('ur506_'.$tblYear)
+			->select(DB::raw('COUNT(DATESICK) AS amount, PROVINCE'))
+			->whereIn('DISEASE', $diseaseCode)
+			->groupBy('PROVINCE')
+			->orderByRaw('COUNT(DATESICK) DESC')
+			->get()
+			->toArray();
+		} else {
+			$result =  DB::table('ur506_'.$tblYear)
+			->select(DB::raw('COUNT(DATESICK) AS amount, PROVINCE'))
+			->whereIn('DISEASE', $diseaseCode)
+			->whereIn('week_no', $week_no)
+			->groupBy('PROVINCE')
+			->orderByRaw('COUNT(DATESICK) DESC')
+			->get()
+			->toArray();
+		}
+		return $result;
+	}
+
+	protected function countPatientPerProv($tblYear=0, $diseaseCode=array(), $week_no='all') {
+		if ($week_no == 'all') {
+			$result = DB::table('ur506_'.$tblYear)
 			->select(DB::raw('COUNT(DATESICK) AS patient, province'))
 			->whereIn('DISEASE', $diseaseCode)
 			->groupBy('PROVINCE')

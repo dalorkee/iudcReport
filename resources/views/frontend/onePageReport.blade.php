@@ -135,16 +135,6 @@
 											}
 										}
 										@endphp
-										<!--
-										<option value="-1">DHF+DSS+DF</option>
-										<option value="-2">Dysentery</option>
-										<option value="-3">Encephalitis</option>
-										<option value="-4">Hepatitis</option>
-										<option value="-5">Measles</option>
-										<option value="-6">S.T.I</option>
-										<option value="-7">Tetanus inc.Neo</option>
-										<option value="-8">Tuberculosis</option>
-										-->
 									</optgroup>
 								</select>
 							</div>
@@ -233,9 +223,10 @@
 										พบผู้ป่วย {{ $patientOnYear['patientThisYear'] }} ราย
 										@if ($patientOnYear['patientThisYear'] > 0)
 											จาก {{ $patientPerProv['cntProv'] }} จังหวัด
-											เสียชีวิต {{ number_format((int)$caseDead['caseDead']) }} ราย
-											อัตราป่วย {{ number_format(((int)$patientOnYear['patientThisYear']*100)/100000, 2) }} ต่อประชากรแสนคน
-											อัตราตาย {{ number_format(((int)$caseDead['caseDead']*100)/100000, 2) }} ต่อประชากรแสนคน
+											เสียชีวิต {{ number_format($caseDead['caseDead']) }} ราย
+											อัตราป่วย {{ number_format($patientOnYear['rate'], 2) }} ต่อประชากรแสนคน
+											อัตราตาย {{ number_format((($caseDead['caseDead']*1000000)/$patientOnYear['popOnYear']), 2) }} ต่อประชากรแสนคน
+											อัตราป่วยตาย {{ number_format((($caseDead['caseDead']*100)/$patientOnYear['patientThisYear']), 2) }} ต่อประชากรแสนคน
 											อัตราส่วนเพศชายต่อเพศหญิง {{ $patientBySex['ratio'] }}
 											กลุ่มอายุที่พบมากที่สุด เรียงตามลำดับ คือ
 											@foreach ($patientByAgeGroup as $key=>$val)

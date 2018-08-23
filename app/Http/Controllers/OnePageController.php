@@ -161,17 +161,25 @@ class OnePageController extends DiseasesController
 	}
 
 	private function getPatientPerYear($year, $diseaseCode, $week_no) {
-		$patientOnYear = parent::patientByYear($year, $diseaseCode, $week_no);
-		if ($patientOnYear[0]->patient > 0) {
+		$result['Year'] = $year;
+		$popOnYearCall = parent::sumPopByAgegroup($year);
+		$popOnYear = (int)$popOnYearCall[0]->popOnYear;
+		$result['popOnYear'] = $popOnYear;
+		$patientOnYearCall = parent::patientByYear($year, $diseaseCode, $week_no);
+		$patientOnYear = (int)$patientOnYearCall[0]->patient;
+		if ($patientOnYear > 0) {
 			$minDate = parent::getMinDateSickDate($year, $diseaseCode, $week_no);
 			$maxDate = parent::getMaxDateSickDate($year, $diseaseCode, $week_no);
-			$result['patientThisYear'] = number_format((int)$patientOnYear[0]->patient);
+			$result['patientThisYear'] = $patientOnYear;
+			$rate = (($patientOnYear*100000)/$popOnYear);
+			$result['rate'] = $rate;
 			$result['minDate'] = parent::cvDateToTH($minDate[0]->minDate);
 			$result['maxDate'] = parent::cvDateToTH($maxDate[0]->maxDate);
 		} else {
 			$dateRange = parent::getDateRangeByWeek($year, $week_no);
 			$cntDateRange = count($dateRange);
 			$result['patientThisYear'] = 0;
+			$result['rate'] = 0;
 			$result['minDate'] = parent::cvDateToTH($dateRange[0]->DATESICK);
 			$result['maxDate'] =parent::cvDateToTH($dateRange[((int)$cntDateRange-1)]->DATESICK);
 		}
@@ -435,15 +443,15 @@ class OnePageController extends DiseasesController
 		/* get population set per province */
 		$lstPopPerProv = parent::totalPopPerProv($year);
 		foreach ($lstPopPerProv as $val) {
-			$ptPerProv[$val->prov_code] = (int)$val->pop;
+			$popPerProv[$val->prov_code] = (int)$val->pop;
 		}
 		/* set patient per year */
-		$ptPerYear = parent::cntPatientPerYear($year, $diseaseCode, $week_no);
-		$cntPatient = count($ptPerYear);
-		if ($cntPatient > 0) {
-			$top5Pt = array_slice($ptPerYear, 0, 5, true);
-			foreach ($top5Pt as $val) {
-				$tmp = (($val->amount*100000)/$ptPerProv[$val->PROVINCE]);
+		$ptPerYear = parent::cntPatientPerYear($year, $diseaseCode, $week_no='all');
+		$cntPtPerYear = count($ptPerYear);
+		if ($cntPtPerYear > 0) {
+			$top5PtPerYear = array_slice($ptPerYear, 0, 5, true);
+			foreach ($top5PtPerYear as $val) {
+				$tmp = (($val->amount*100000)/$popPerProv[$val->PROVINCE]);
 				$result[$prov[$val->PROVINCE]] = $tmp;
 			}
 		} else {
@@ -674,7 +682,7 @@ class OnePageController extends DiseasesController
 		/* set poputation per province to array */
 		$totalPop = parent::totalPopPerProv($year);
 		foreach ($totalPop as $key=>$val) {
-			$popPerProv[$val->prov_code] = $val->pop;
+			$popPerProv[$val->prov_code] = (int)$val->pop;
 		}
 		/* resetup population per province is missing add it to 0 */
 		foreach ($prov as $key=>$val) {
@@ -686,7 +694,8 @@ class OnePageController extends DiseasesController
 		}
 		/* count patient per province */
 		$cntPatient = parent::countPatientPerProv($year, $diseaseCode, $week_no);
-		if (count($cntPatient) > 0) {
+		$countPatient = count($cntPatient);
+		if ($countPatient > 0) {
 			/* push patient to array */
 			$amount_arr = array();
 			foreach ($cntPatient as $val) {
