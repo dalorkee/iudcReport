@@ -14,6 +14,7 @@ class CreateUsersTable extends Migration {
 			$table->engine = 'InnoDB';
 			$table->increments('id')->unsigned();
 			$table->string('positionName', 90)->nullable();
+			$table->string('positionNameEn', 90)->nullable();
 		});
 	}
 	/**

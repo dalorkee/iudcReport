@@ -93,6 +93,18 @@
 		<div class="box-body">
 			<form method="get" action='{{ route('dashboard') }}'>
 				<div class="row">
+					<div class="col-md-2">
+						<div class="form-group ds-filter">
+							<label for="selectYear" class="sr-only">ปี:</label>
+							<div class="input-group date">
+								<div class="input-group-addon">
+									<i class="fa fa-calendar"></i>
+								</div>
+								<input type="text" name="year" class="form-control pull-right" id="select-year">
+							</div>
+						</div>
+					</div>
+
 					<div class="col-md-3">
 						<div class="form-group">
 							<label for="selectDisease" class="sr-only">เลือกโรค:</label>
@@ -131,32 +143,12 @@
 											}
 										}
 										@endphp
-										<!--
-										<option value="-1">DHF+DSS+DF</option>
-										<option value="-2">Dysentery</option>
-										<option value="-3">Encephalitis</option>
-										<option value="-4">Hepatitis</option>
-										<option value="-5">Measles</option>
-										<option value="-6">S.T.I</option>
-										<option value="-7">Tetanus inc.Neo</option>
-										<option value="-8">Tuberculosis</option>
-										-->
 									</optgroup>
 								</select>
 							</div>
 						</div>
 					</div>
-					<div class="col-md-2">
-						<div class="form-group ds-filter">
-							<label for="selectYear" class="sr-only">ปี:</label>
-							<div class="input-group date">
-								<div class="input-group-addon">
-									<i class="fa fa-calendar"></i>
-								</div>
-								<input type="text" name="year" class="form-control pull-right" id="select-year">
-							</div>
-						</div>
-					</div>
+
 					<div class="col-md-2">
 						<div class="form-group">
 							{{ Form::submit('ค้นหา', ['class'=>'btn btn-primary']) }}
@@ -665,6 +657,7 @@ $('document').ready(function () {
 });
 </script>
 <?php
+/*
 	$htm = "";
 	$i = 1;
 	foreach ($patientMap['patient'] as $val) {
@@ -697,8 +690,10 @@ $('document').ready(function () {
 		});";
 		$i++;
 	}
+	*/
 ?>
 <script>
+/*
 	mapboxgl.accessToken = 'pk.eyJ1IjoiZGFsb3JrZWUiLCJhIjoiY2pnbmJrajh4MDZ6aTM0cXZkNDQ0MzI5cCJ9.C2REqhILLm2HKIQSn9Wc0A';
 	var map = new mapboxgl.Map({
 		container: 'map',
@@ -707,7 +702,7 @@ $('document').ready(function () {
 		zoom: 4.5
 	});
 	var layers = [
-		<?php
+		php
 			$str = null;
 			foreach ($patientMap['range'] as $val) {
 				if (is_null($str)) {
@@ -721,7 +716,7 @@ $('document').ready(function () {
 		?>
 	];
 	var colors = [
-		<?php
+		php
 			$str = null;
 			foreach ($patientMap['colors'] as $val) {
 				if (is_null($str)) {
@@ -756,7 +751,7 @@ $('document').ready(function () {
 		trackUserLocation: true
 	}));
 	map.getCanvas().style.cursor = 'default';
-	{!! $htm !!}
+	!! $htm !! */
 </script>
 <!-- bootstrap datepicker -->
 {{ Html::script(('public/AdminLTE-2.4.2/bower_components/moment/min/moment.min.js')) }}
