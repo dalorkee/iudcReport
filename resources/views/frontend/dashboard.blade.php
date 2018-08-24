@@ -656,8 +656,7 @@ $('document').ready(function () {
 	});
 });
 </script>
-<?php
-/*
+@php
 	$htm = "";
 	$i = 1;
 	foreach ($patientMap['patient'] as $val) {
@@ -690,10 +689,8 @@ $('document').ready(function () {
 		});";
 		$i++;
 	}
-	*/
-?>
+@endphp
 <script>
-/*
 	mapboxgl.accessToken = 'pk.eyJ1IjoiZGFsb3JrZWUiLCJhIjoiY2pnbmJrajh4MDZ6aTM0cXZkNDQ0MzI5cCJ9.C2REqhILLm2HKIQSn9Wc0A';
 	var map = new mapboxgl.Map({
 		container: 'map',
@@ -702,7 +699,7 @@ $('document').ready(function () {
 		zoom: 4.5
 	});
 	var layers = [
-		php
+		@php
 			$str = null;
 			foreach ($patientMap['range'] as $val) {
 				if (is_null($str)) {
@@ -713,10 +710,10 @@ $('document').ready(function () {
 				$str = $str."'".$val."'";
 			}
 			echo $str;
-		?>
+		@endphp
 	];
 	var colors = [
-		php
+		@php
 			$str = null;
 			foreach ($patientMap['colors'] as $val) {
 				if (is_null($str)) {
@@ -727,7 +724,7 @@ $('document').ready(function () {
 				$str = $str."'".$val."'";
 			}
 			echo $str;
-		?>
+		@endphp
 	];
 	for (i = 0; i < layers.length; i++) {
 		var layer = layers[i];
@@ -751,7 +748,7 @@ $('document').ready(function () {
 		trackUserLocation: true
 	}));
 	map.getCanvas().style.cursor = 'default';
-	!! $htm !! */
+		{!! $htm !!}
 </script>
 <!-- bootstrap datepicker -->
 {{ Html::script(('public/AdminLTE-2.4.2/bower_components/moment/min/moment.min.js')) }}
