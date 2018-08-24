@@ -5,7 +5,7 @@ use Excel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class ExportPatientController extends DiseasesController
+class ExportPatientController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -62,52 +62,59 @@ class ExportPatientController extends DiseasesController
     public static function get_patient_sick_death_by_month($select_year,$disease_code)
     {
       $tblYear = (isset($select_year))? $select_year : date('Y')-1;
-      $arr_disease_code = (isset($disease_code))? $disease_code : "01";
+      $post_disease_code = (isset($disease_code))? $disease_code : "01";
 
       $get_pop_dpc_group =\App\Http\Controllers\Controller::get_pop_dpc_group();
       $get_provincename_th =\App\Http\Controllers\Controller::get_provincename_th()->toArray();
       $get_dpc_nameth = \App\Http\Controllers\Controller::get_dpc_nameth()->toArray();
 
-      if($arr_disease_code=='26-27-66'){
-            $data[] = DB::table('ur506_'.$tblYear)
-              ->select('prov_dpc','DISEASE', 'PROVINCE')
-              ->selectRaw('sum(if(MONTH(DATESICK) = 1,1,0)) as case_jan,sum(if(MONTH(DATEDEATH) = 1,1,0)) as death_jan')
-              ->selectRaw('sum(if(MONTH(DATESICK) = 2,1,0)) as case_feb,sum(if(MONTH(DATESICK) = 2,1,0)) as death_feb')
-              ->selectRaw('sum(if(MONTH(DATESICK) = 3,1,0)) as case_mar,sum(if(MONTH(DATESICK) = 3,1,0)) as death_mar')
-              ->selectRaw('sum(if(MONTH(DATESICK) = 4,1,0)) as case_apr,sum(if(MONTH(DATESICK) = 4,1,0)) as death_apr')
-              ->selectRaw('sum(if(MONTH(DATESICK) = 5,1,0)) as case_may,sum(if(MONTH(DATESICK) = 5,1,0)) as death_may')
-              ->selectRaw('sum(if(MONTH(DATESICK) = 6,1,0)) as case_jun,sum(if(MONTH(DATESICK) = 6,1,0)) as death_jun')
-              ->selectRaw('sum(if(MONTH(DATESICK) = 7,1,0)) as case_jul,sum(if(MONTH(DATEDEATH) = 7,1,0)) as death_jul')
-              ->selectRaw('sum(if(MONTH(DATESICK) = 8,1,0)) as case_aug,sum(if(MONTH(DATEDEATH) = 8,1,0)) as death_aug')
-              ->selectRaw('sum(if(MONTH(DATESICK) = 9,1,0)) as case_sep,sum(if(MONTH(DATEDEATH) = 9,1,0)) as death_sep')
-              ->selectRaw('sum(if(MONTH(DATESICK) = 10,1,0)) as case_oct,sum(if(MONTH(DATEDEATH) =10,1,0)) as death_oct')
-              ->selectRaw('sum(if(MONTH(DATESICK) = 11,1,0)) as case_nov,sum(if(MONTH(DATEDEATH) = 11,1,0)) as death_nov')
-              ->selectRaw('sum(if(MONTH(DATESICK) = 12,1,0)) as case_dec,sum(if(MONTH(DATEDEATH) = 12,1,0)) as death_dec')
-              ->whereIn('DISEASE',['26','27','66'])
-              ->join('c_province','ur506_'.$tblYear.'.PROVINCE','=','c_province.prov_code')
-              ->groupBy('PROVINCE')
-              ->get();
-          }else{
-            $data[] = DB::table('ur506_'.$tblYear)
-              ->select('prov_dpc','DISEASE', 'PROVINCE')
-              ->selectRaw('sum(if(MONTH(DATESICK) = 1,1,0)) as case_jan,sum(if(MONTH(DATEDEATH) = 1,1,0)) as death_jan')
-              ->selectRaw('sum(if(MONTH(DATESICK) = 2,1,0)) as case_feb,sum(if(MONTH(DATESICK) = 2,1,0)) as death_feb')
-              ->selectRaw('sum(if(MONTH(DATESICK) = 3,1,0)) as case_mar,sum(if(MONTH(DATESICK) = 3,1,0)) as death_mar')
-              ->selectRaw('sum(if(MONTH(DATESICK) = 4,1,0)) as case_apr,sum(if(MONTH(DATESICK) = 4,1,0)) as death_apr')
-              ->selectRaw('sum(if(MONTH(DATESICK) = 5,1,0)) as case_may,sum(if(MONTH(DATESICK) = 5,1,0)) as death_may')
-              ->selectRaw('sum(if(MONTH(DATESICK) = 6,1,0)) as case_jun,sum(if(MONTH(DATESICK) = 6,1,0)) as death_jun')
-              ->selectRaw('sum(if(MONTH(DATESICK) = 7,1,0)) as case_jul,sum(if(MONTH(DATEDEATH) = 7,1,0)) as death_jul')
-              ->selectRaw('sum(if(MONTH(DATESICK) = 8,1,0)) as case_aug,sum(if(MONTH(DATEDEATH) = 8,1,0)) as death_aug')
-              ->selectRaw('sum(if(MONTH(DATESICK) = 9,1,0)) as case_sep,sum(if(MONTH(DATEDEATH) = 9,1,0)) as death_sep')
-              ->selectRaw('sum(if(MONTH(DATESICK) = 10,1,0)) as case_oct,sum(if(MONTH(DATEDEATH) =10,1,0)) as death_oct')
-              ->selectRaw('sum(if(MONTH(DATESICK) = 11,1,0)) as case_nov,sum(if(MONTH(DATEDEATH) = 11,1,0)) as death_nov')
-              ->selectRaw('sum(if(MONTH(DATESICK) = 12,1,0)) as case_dec,sum(if(MONTH(DATEDEATH) = 12,1,0)) as death_dec')
-              ->where('DISEASE','=',$arr_disease_code)
-              ->join('c_province','ur506_'.$tblYear.'.PROVINCE','=','c_province.prov_code')
-              ->groupBy('PROVINCE')
-              ->get();
-          }
+      //Check Disease
+      $disease_code =  explode(",",$post_disease_code);
+      //dd($disease_code);
 
+      if(count($disease_code)>2){
+        //Total>1 DISEASE select
+        $data[] = DB::table('ur506_'.$tblYear)
+          ->select('prov_dpc','DISEASE', 'PROVINCE')
+          ->selectRaw('sum(if(MONTH(DATESICK) = 1,1,0)) as case_jan,sum(if(MONTH(DATEDEATH) = 1,1,0)) as death_jan')
+          ->selectRaw('sum(if(MONTH(DATESICK) = 2,1,0)) as case_feb,sum(if(MONTH(DATESICK) = 2,1,0)) as death_feb')
+          ->selectRaw('sum(if(MONTH(DATESICK) = 3,1,0)) as case_mar,sum(if(MONTH(DATESICK) = 3,1,0)) as death_mar')
+          ->selectRaw('sum(if(MONTH(DATESICK) = 4,1,0)) as case_apr,sum(if(MONTH(DATESICK) = 4,1,0)) as death_apr')
+          ->selectRaw('sum(if(MONTH(DATESICK) = 5,1,0)) as case_may,sum(if(MONTH(DATESICK) = 5,1,0)) as death_may')
+          ->selectRaw('sum(if(MONTH(DATESICK) = 6,1,0)) as case_jun,sum(if(MONTH(DATESICK) = 6,1,0)) as death_jun')
+          ->selectRaw('sum(if(MONTH(DATESICK) = 7,1,0)) as case_jul,sum(if(MONTH(DATEDEATH) = 7,1,0)) as death_jul')
+          ->selectRaw('sum(if(MONTH(DATESICK) = 8,1,0)) as case_aug,sum(if(MONTH(DATEDEATH) = 8,1,0)) as death_aug')
+          ->selectRaw('sum(if(MONTH(DATESICK) = 9,1,0)) as case_sep,sum(if(MONTH(DATEDEATH) = 9,1,0)) as death_sep')
+          ->selectRaw('sum(if(MONTH(DATESICK) = 10,1,0)) as case_oct,sum(if(MONTH(DATEDEATH) =10,1,0)) as death_oct')
+          ->selectRaw('sum(if(MONTH(DATESICK) = 11,1,0)) as case_nov,sum(if(MONTH(DATEDEATH) = 11,1,0)) as death_nov')
+          ->selectRaw('sum(if(MONTH(DATESICK) = 12,1,0)) as case_dec,sum(if(MONTH(DATEDEATH) = 12,1,0)) as death_dec')
+          ->whereIn('DISEASE',$disease_code)
+          ->join('c_province','ur506_'.$tblYear.'.PROVINCE','=','c_province.prov_code')
+          ->groupBy('PROVINCE')
+          ->get();
+
+      }else{
+        // 1 DISEASE SELECT
+        $data[] = DB::table('ur506_'.$tblYear)
+          ->select('prov_dpc','DISEASE', 'PROVINCE')
+          ->selectRaw('sum(if(MONTH(DATESICK) = 1,1,0)) as case_jan,sum(if(MONTH(DATEDEATH) = 1,1,0)) as death_jan')
+          ->selectRaw('sum(if(MONTH(DATESICK) = 2,1,0)) as case_feb,sum(if(MONTH(DATESICK) = 2,1,0)) as death_feb')
+          ->selectRaw('sum(if(MONTH(DATESICK) = 3,1,0)) as case_mar,sum(if(MONTH(DATESICK) = 3,1,0)) as death_mar')
+          ->selectRaw('sum(if(MONTH(DATESICK) = 4,1,0)) as case_apr,sum(if(MONTH(DATESICK) = 4,1,0)) as death_apr')
+          ->selectRaw('sum(if(MONTH(DATESICK) = 5,1,0)) as case_may,sum(if(MONTH(DATESICK) = 5,1,0)) as death_may')
+          ->selectRaw('sum(if(MONTH(DATESICK) = 6,1,0)) as case_jun,sum(if(MONTH(DATESICK) = 6,1,0)) as death_jun')
+          ->selectRaw('sum(if(MONTH(DATESICK) = 7,1,0)) as case_jul,sum(if(MONTH(DATEDEATH) = 7,1,0)) as death_jul')
+          ->selectRaw('sum(if(MONTH(DATESICK) = 8,1,0)) as case_aug,sum(if(MONTH(DATEDEATH) = 8,1,0)) as death_aug')
+          ->selectRaw('sum(if(MONTH(DATESICK) = 9,1,0)) as case_sep,sum(if(MONTH(DATEDEATH) = 9,1,0)) as death_sep')
+          ->selectRaw('sum(if(MONTH(DATESICK) = 10,1,0)) as case_oct,sum(if(MONTH(DATEDEATH) =10,1,0)) as death_oct')
+          ->selectRaw('sum(if(MONTH(DATESICK) = 11,1,0)) as case_nov,sum(if(MONTH(DATEDEATH) = 11,1,0)) as death_nov')
+          ->selectRaw('sum(if(MONTH(DATESICK) = 12,1,0)) as case_dec,sum(if(MONTH(DATEDEATH) = 12,1,0)) as death_dec')
+          ->where('DISEASE','=',$disease_code['0'])
+          ->join('c_province','ur506_'.$tblYear.'.PROVINCE','=','c_province.prov_code')
+          ->groupBy('PROVINCE')
+          ->get();
+      }
+              //if data province is not null set value from DB
               foreach ($data[0] as $key => $val) {
                 $pt_data[$val->PROVINCE]['prov_dpc'] = $val->prov_dpc;
                 $pt_data[$val->PROVINCE]['DISEASE'] = $val->DISEASE;
@@ -143,10 +150,12 @@ class ExportPatientController extends DiseasesController
                 $pt_data[$val->PROVINCE]['total_death'] = $total_death;
 
               }
+              //add province
               foreach ($get_provincename_th as $key => $value) {
                 if (array_key_exists($key, $pt_data)) {
                   $pt_rs[$key] = $pt_data[$key];
                 } else {
+                  //if data province is not set value = 0
                   $pt_rs[$key] = array(    'prov_dpc'=>$get_dpc_nameth[$key],'DISEASE'=>$val->DISEASE,'PROVINCE' => $get_provincename_th[$key],
                                            'case_jan' => "0",'death_jan' => "0",'case_feb' => "0",'death_feb'=> "0",
                                            'case_mar' => "0",'death_mar' => "0",'case_apr'=> "0",'death_apr'=> "0",
@@ -162,88 +171,120 @@ class ExportPatientController extends DiseasesController
     }
 
     public function xls_patient_sick_death_by_month(Request $request){
-      $disease_code = $request->disease_code;
+      $post_disease_code = $request->disease_code;
       $tblYear = $request->select_year;
-      $get_pop_dpc_group =\App\Http\Controllers\Controller::get_pop_dpc_group();
-      $get_provincename_th =\App\Http\Controllers\Controller::get_provincename_th()->toArray();
-      $get_all_disease_array = \App\Http\Controllers\Controller::list_disease()->toArray();
+      $disease_name =\App\Http\Controllers\Controller::All_disease()->toArray();
       $get_dpc_nameth = \App\Http\Controllers\Controller::get_dpc_nameth()->toArray();
-
-      $data[] = array('Reporting Area',
+      $get_provincename_th =\App\Http\Controllers\Controller::get_provincename_th()->toArray();
+      $excel_data[] = array('DPC','Reporting Area',
                       'Cases-jan','Deaths-jan','Cases-Feb','Deaths-Feb','Cases-Mar','Deaths-Mar','Cases-Apr','Deaths-Apr','Cases-May','Deaths-May','Cases-June','Deaths-June',
                       'Cases-July','Deaths-July','Cases-Aug','Deaths-Aug','Cases-Sept','Deaths-Sept','Cases-Oct','Deaths-Oct','Cases-Nov','Deaths-Nov','Cases-Dec','Deaths-Dec',
                       'Total_Cases','Total_Deaths'
                      );
+                     //Check Disease
+                     $disease_code =  explode(",",$post_disease_code);
 
-      // foreach ($get_pop_dpc_group as $dpc_code => $dpc_val)
-      // {
-      //     if($disease_code=='26-27-66'){
-      //       $data1['summary'][] = DB::table('ur506_'.$tblYear)
-      //         ->select('DISEASE', 'PROVINCE')
-      //         ->selectRaw('sum(if(MONTH(DATESICK) = 1,1,0)) as case_jan,sum(if(MONTH(DATEDEATH) = 1,1,0)) as death_jan')
-      //         ->selectRaw('sum(if(MONTH(DATESICK) = 2,1,0)) as case_feb,sum(if(MONTH(DATESICK) = 2,1,0)) as death_feb')
-      //         ->selectRaw('sum(if(MONTH(DATESICK) = 3,1,0)) as case_mar,sum(if(MONTH(DATESICK) = 3,1,0)) as death_mar')
-      //         ->selectRaw('sum(if(MONTH(DATESICK) = 4,1,0)) as case_apr,sum(if(MONTH(DATESICK) = 4,1,0)) as death_apr')
-      //         ->selectRaw('sum(if(MONTH(DATESICK) = 5,1,0)) as case_may,sum(if(MONTH(DATESICK) = 5,1,0)) as death_may')
-      //         ->selectRaw('sum(if(MONTH(DATESICK) = 6,1,0)) as case_jun,sum(if(MONTH(DATESICK) = 6,1,0)) as death_jun')
-      //         ->selectRaw('sum(if(MONTH(DATESICK) = 7,1,0)) as case_jul,sum(if(MONTH(DATEDEATH) = 7,1,0)) as death_jul')
-      //         ->selectRaw('sum(if(MONTH(DATESICK) = 8,1,0)) as case_aug,sum(if(MONTH(DATEDEATH) = 8,1,0)) as death_aug')
-      //         ->selectRaw('sum(if(MONTH(DATESICK) = 9,1,0)) as case_sep,sum(if(MONTH(DATEDEATH) = 9,1,0)) as death_sep')
-      //         ->selectRaw('sum(if(MONTH(DATESICK) = 10,1,0)) as case_oct,sum(if(MONTH(DATEDEATH) =10,1,0)) as death_oct')
-      //         ->selectRaw('sum(if(MONTH(DATESICK) = 11,1,0)) as case_nov,sum(if(MONTH(DATEDEATH) = 11,1,0)) as death_nov')
-      //         ->selectRaw('sum(if(MONTH(DATESICK) = 12,1,0)) as case_dec,sum(if(MONTH(DATEDEATH) = 12,1,0)) as death_dec')
-      //         ->whereIn('DISEASE',['26','27','66'])
-      //         ->whereIn('PROVINCE',$dpc_val)
-      //         ->groupBy('PROVINCE')
-      //         ->get();
-      //     }else{
-      //       $data1['summary'][] = DB::table('ur506_'.$tblYear)
-      //         ->select('DISEASE', 'PROVINCE')
-      //         ->selectRaw('sum(if(MONTH(DATESICK) = 1,1,0)) as case_jan,sum(if(MONTH(DATEDEATH) = 1,1,0)) as death_jan')
-      //         ->selectRaw('sum(if(MONTH(DATESICK) = 2,1,0)) as case_feb,sum(if(MONTH(DATESICK) = 2,1,0)) as death_feb')
-      //         ->selectRaw('sum(if(MONTH(DATESICK) = 3,1,0)) as case_mar,sum(if(MONTH(DATESICK) = 3,1,0)) as death_mar')
-      //         ->selectRaw('sum(if(MONTH(DATESICK) = 4,1,0)) as case_apr,sum(if(MONTH(DATESICK) = 4,1,0)) as death_apr')
-      //         ->selectRaw('sum(if(MONTH(DATESICK) = 5,1,0)) as case_may,sum(if(MONTH(DATESICK) = 5,1,0)) as death_may')
-      //         ->selectRaw('sum(if(MONTH(DATESICK) = 6,1,0)) as case_jun,sum(if(MONTH(DATESICK) = 6,1,0)) as death_jun')
-      //         ->selectRaw('sum(if(MONTH(DATESICK) = 7,1,0)) as case_jul,sum(if(MONTH(DATEDEATH) = 7,1,0)) as death_jul')
-      //         ->selectRaw('sum(if(MONTH(DATESICK) = 8,1,0)) as case_aug,sum(if(MONTH(DATEDEATH) = 8,1,0)) as death_aug')
-      //         ->selectRaw('sum(if(MONTH(DATESICK) = 9,1,0)) as case_sep,sum(if(MONTH(DATEDEATH) = 9,1,0)) as death_sep')
-      //         ->selectRaw('sum(if(MONTH(DATESICK) = 10,1,0)) as case_oct,sum(if(MONTH(DATEDEATH) =10,1,0)) as death_oct')
-      //         ->selectRaw('sum(if(MONTH(DATESICK) = 11,1,0)) as case_nov,sum(if(MONTH(DATEDEATH) = 11,1,0)) as death_nov')
-      //         ->selectRaw('sum(if(MONTH(DATESICK) = 12,1,0)) as case_dec,sum(if(MONTH(DATEDEATH) = 12,1,0)) as death_dec')
-      //         ->where('DISEASE','=',$disease_code)
-      //         ->whereIn('PROVINCE',$dpc_val)
-      //         ->groupBy('PROVINCE')
-      //         ->get();
-      //     }
-      //
-      // }
-      //   //dd($data[1]);
-      //   $arr_dpc_th = array('สคร.1','สคร.2','สคร.3','สคร.4','สคร.5','สคร.6','สคร.7','สคร.8','สคร.9','สคร.10','สคร.11','สคร.12','สปคม.');
-      //   for($i=0;$i<count($data1['summary']);$i++ ){
-      //                 $data[] = array('DPC_GROUP_NAME' => $arr_dpc_th[$i]);
-      //       foreach ($data1['summary'][$i] as $val){
-      //                  $total_case = $val->case_jan+$val->case_feb+$val->case_mar+$val->case_apr+$val->case_may+$val->case_jun+$val->case_jul+$val->case_aug+$val->case_sep+$val->case_oct+$val->case_nov+$val->case_dec;
-      //                  $total_death = $val->death_jan+$val->death_feb+$val->death_mar+$val->death_apr+$val->death_may+$val->death_jun+$val->death_jul+$val->death_aug+$val->death_sep+$val->death_oct+$val->death_nov+$val->death_dec;
-      //                  $data[] = array( 'PROVINCE' => $get_provincename_th[$val->PROVINCE],
-      //                                   'case_jan' => $val->case_jan,'death_jan' => $val->death_jan,'case_feb' => $val->case_feb,'death_feb'=> $val->death_feb,
-      //                                   'case_mar' => $val->case_mar,'death_mar' => $val->death_mar,'case_apr'=> $val->case_apr,'death_apr'=> $val->death_apr,
-      //                                   'case_may' => $val->case_may,'death_may'=> $val->death_may,'case_jun'=> $val->case_jun,'death_jun'=> $val->death_jun,
-      //                                   'case_jul' => $val->case_jul,'death_jul'=> $val->death_jul,'case_aug'=> $val->case_aug,'death_aug'=> $val->death_aug,
-      //                                   'case_sep' => $val->case_sep,'death_sep'=> $val->death_sep,'case_oct'=> $val->case_oct,'death_oct'=> $val->death_oct,
-      //                                   'case_nov' => $val->case_nov,'death_nov'=> $val->death_nov,'case_dec'=> $val->case_dec,'death_dec'=> $val->death_dec,
-      //                                   'total_case' => $total_case, 'total_death' => $total_death
-      //                                  );
-      //       }
-      //   }
-      //  dd($data);
+                     if(count($disease_code)>2){
+                       //Total>1 DISEASE select
+                       $data_query[] = DB::table('ur506_'.$tblYear)
+                         ->select('prov_dpc','DISEASE', 'PROVINCE')
+                         ->selectRaw('sum(if(MONTH(DATESICK) = 1,1,0)) as case_jan,sum(if(MONTH(DATEDEATH) = 1,1,0)) as death_jan')
+                         ->selectRaw('sum(if(MONTH(DATESICK) = 2,1,0)) as case_feb,sum(if(MONTH(DATESICK) = 2,1,0)) as death_feb')
+                         ->selectRaw('sum(if(MONTH(DATESICK) = 3,1,0)) as case_mar,sum(if(MONTH(DATESICK) = 3,1,0)) as death_mar')
+                         ->selectRaw('sum(if(MONTH(DATESICK) = 4,1,0)) as case_apr,sum(if(MONTH(DATESICK) = 4,1,0)) as death_apr')
+                         ->selectRaw('sum(if(MONTH(DATESICK) = 5,1,0)) as case_may,sum(if(MONTH(DATESICK) = 5,1,0)) as death_may')
+                         ->selectRaw('sum(if(MONTH(DATESICK) = 6,1,0)) as case_jun,sum(if(MONTH(DATESICK) = 6,1,0)) as death_jun')
+                         ->selectRaw('sum(if(MONTH(DATESICK) = 7,1,0)) as case_jul,sum(if(MONTH(DATEDEATH) = 7,1,0)) as death_jul')
+                         ->selectRaw('sum(if(MONTH(DATESICK) = 8,1,0)) as case_aug,sum(if(MONTH(DATEDEATH) = 8,1,0)) as death_aug')
+                         ->selectRaw('sum(if(MONTH(DATESICK) = 9,1,0)) as case_sep,sum(if(MONTH(DATEDEATH) = 9,1,0)) as death_sep')
+                         ->selectRaw('sum(if(MONTH(DATESICK) = 10,1,0)) as case_oct,sum(if(MONTH(DATEDEATH) =10,1,0)) as death_oct')
+                         ->selectRaw('sum(if(MONTH(DATESICK) = 11,1,0)) as case_nov,sum(if(MONTH(DATEDEATH) = 11,1,0)) as death_nov')
+                         ->selectRaw('sum(if(MONTH(DATESICK) = 12,1,0)) as case_dec,sum(if(MONTH(DATEDEATH) = 12,1,0)) as death_dec')
+                         ->whereIn('DISEASE',$disease_code)
+                         ->join('c_province','ur506_'.$tblYear.'.PROVINCE','=','c_province.prov_code')
+                         ->groupBy('PROVINCE')
+                         ->get();
 
+                     }else{
+                       // 1 DISEASE SELECT
+                       $data_query[] = DB::table('ur506_'.$tblYear)
+                         ->select('prov_dpc','DISEASE', 'PROVINCE')
+                         ->selectRaw('sum(if(MONTH(DATESICK) = 1,1,0)) as case_jan,sum(if(MONTH(DATEDEATH) = 1,1,0)) as death_jan')
+                         ->selectRaw('sum(if(MONTH(DATESICK) = 2,1,0)) as case_feb,sum(if(MONTH(DATESICK) = 2,1,0)) as death_feb')
+                         ->selectRaw('sum(if(MONTH(DATESICK) = 3,1,0)) as case_mar,sum(if(MONTH(DATESICK) = 3,1,0)) as death_mar')
+                         ->selectRaw('sum(if(MONTH(DATESICK) = 4,1,0)) as case_apr,sum(if(MONTH(DATESICK) = 4,1,0)) as death_apr')
+                         ->selectRaw('sum(if(MONTH(DATESICK) = 5,1,0)) as case_may,sum(if(MONTH(DATESICK) = 5,1,0)) as death_may')
+                         ->selectRaw('sum(if(MONTH(DATESICK) = 6,1,0)) as case_jun,sum(if(MONTH(DATESICK) = 6,1,0)) as death_jun')
+                         ->selectRaw('sum(if(MONTH(DATESICK) = 7,1,0)) as case_jul,sum(if(MONTH(DATEDEATH) = 7,1,0)) as death_jul')
+                         ->selectRaw('sum(if(MONTH(DATESICK) = 8,1,0)) as case_aug,sum(if(MONTH(DATEDEATH) = 8,1,0)) as death_aug')
+                         ->selectRaw('sum(if(MONTH(DATESICK) = 9,1,0)) as case_sep,sum(if(MONTH(DATEDEATH) = 9,1,0)) as death_sep')
+                         ->selectRaw('sum(if(MONTH(DATESICK) = 10,1,0)) as case_oct,sum(if(MONTH(DATEDEATH) =10,1,0)) as death_oct')
+                         ->selectRaw('sum(if(MONTH(DATESICK) = 11,1,0)) as case_nov,sum(if(MONTH(DATEDEATH) = 11,1,0)) as death_nov')
+                         ->selectRaw('sum(if(MONTH(DATESICK) = 12,1,0)) as case_dec,sum(if(MONTH(DATEDEATH) = 12,1,0)) as death_dec')
+                         ->where('DISEASE','=',$disease_code['0'])
+                         ->join('c_province','ur506_'.$tblYear.'.PROVINCE','=','c_province.prov_code')
+                         ->groupBy('PROVINCE')
+                         ->get();
+                     }
+
+                             foreach ($data_query[0] as $key => $val) {
+                               $pt_data[$val->PROVINCE]['prov_dpc'] = $val->prov_dpc;
+                               $pt_data[$val->PROVINCE]['PROVINCE'] = $get_provincename_th[$val->PROVINCE];
+                               $pt_data[$val->PROVINCE]['case_jan'] = $val->case_jan;
+                               $pt_data[$val->PROVINCE]['death_jan'] = $val->death_jan;
+                               $pt_data[$val->PROVINCE]['case_feb'] = $val->case_feb;
+                               $pt_data[$val->PROVINCE]['death_feb'] = $val->death_feb;
+                               $pt_data[$val->PROVINCE]['case_mar'] = $val->case_mar;
+                               $pt_data[$val->PROVINCE]['death_mar'] = $val->death_mar;
+                               $pt_data[$val->PROVINCE]['case_apr'] = $val->case_apr;
+                               $pt_data[$val->PROVINCE]['death_apr'] = $val->death_apr;
+                               $pt_data[$val->PROVINCE]['case_may'] = $val->case_may;
+                               $pt_data[$val->PROVINCE]['death_may'] = $val->death_may;
+                               $pt_data[$val->PROVINCE]['case_jun'] = $val->case_jun;
+                               $pt_data[$val->PROVINCE]['death_jun'] = $val->death_jun;
+                               $pt_data[$val->PROVINCE]['case_jul'] = $val->case_jul;
+                               $pt_data[$val->PROVINCE]['death_jul'] = $val->death_jul;
+                               $pt_data[$val->PROVINCE]['case_aug'] = $val->case_aug;
+                               $pt_data[$val->PROVINCE]['death_aug'] = $val->death_aug;
+                               $pt_data[$val->PROVINCE]['case_sep'] = $val->case_sep;
+                               $pt_data[$val->PROVINCE]['death_sep'] = $val->death_sep;
+                               $pt_data[$val->PROVINCE]['case_oct'] = $val->case_oct;
+                               $pt_data[$val->PROVINCE]['death_oct'] = $val->death_oct;
+                               $pt_data[$val->PROVINCE]['case_nov'] = $val->case_nov;
+                               $pt_data[$val->PROVINCE]['death_nov'] = $val->death_nov;
+                               $pt_data[$val->PROVINCE]['case_dec'] = $val->case_feb;
+                               $pt_data[$val->PROVINCE]['death_dec'] = $val->case_feb;
+                               //Total
+                               $total_case = $val->case_jan+$val->case_feb+$val->case_mar+$val->case_apr+$val->case_may+$val->case_jun+$val->case_jul+$val->case_aug+$val->case_sep+$val->case_oct+$val->case_nov+$val->case_dec;
+                               $total_death = $val->death_jan+$val->death_feb+$val->death_mar+$val->death_apr+$val->death_may+$val->death_jun+$val->death_jul+$val->death_aug+$val->death_sep+$val->death_oct+$val->death_nov+$val->death_dec;
+                               $pt_data[$val->PROVINCE]['total_case'] = ($total_case > 0)? $total_case : '0';
+                               $pt_data[$val->PROVINCE]['total_death'] = ($total_death > 0)? $total_death : '0';
+
+                             }
+                             foreach ($get_provincename_th as $key => $value) {
+                               if (array_key_exists($key, $pt_data)) {
+                                 $excel_data[$key] = $pt_data[$key];
+                               }else{
+                                 $excel_data[$key] = array(     'prov_dpc'=>$get_dpc_nameth[$key],
+                                                          'PROVINCE' => $get_provincename_th[$key],
+                                                          'case_jan' => "0",'death_jan' => "0",'case_feb' => "0",'death_feb'=> "0",
+                                                          'case_mar' => "0",'death_mar' => "0",'case_apr'=> "0",'death_apr'=> "0",
+                                                          'case_may' => "0",'death_may'=> "0",'case_jun'=> "0",'death_jun'=> "0",
+                                                          'case_jul' => "0",'death_jul'=> "0",'case_aug'=> "0",'death_aug'=> "0",
+                                                          'case_sep' => "0",'death_sep'=> "0",'case_oct'=> "0",'death_oct'=> "0",
+                                                          'case_nov' => "0",'death_nov'=> "0",'case_dec'=> "0",'death_dec'=> "0",
+                                                          'total_case' => "0", 'total_death' =>"0"
+                                                     );
+                               }
+                             }
       //filename
-      $filename = 'sick-death-disease'.$disease_code.'-year'.$tblYear;
+      $filename = 'sick-death-disease';
       //sheetname
-      $sheetname = 'Sick-Death-Disease'.$get_all_disease_array[$disease_code];
+      $sheetname = 'sheet1';
+      // header text
+      $header_text = "ตารางข้อมูลผู้ป่วยจำนวนป่วย/ตาย โรค ".$disease_name[$post_disease_code]." ปี ".$tblYear;
 
-      Excel::create($filename, function($excel) use($data,$sheetname) {
+      Excel::create($filename, function($excel) use($excel_data,$sheetname,$header_text) {
           // Set the title
           $excel->setTitle('UCD-Report');
           // Chain the setters
@@ -251,8 +292,11 @@ class ExportPatientController extends DiseasesController
           //description
           $excel->setDescription('สปคม.');
 
-          $excel->sheet($sheetname, function ($sheet) use ($data) {
-               $sheet->fromArray($data, null, 'A1', false, false);
+          $excel->sheet($sheetname, function ($sheet) use ($excel_data,$header_text) {
+              //Header Text
+               $sheet->row(1, [$header_text]);
+               $sheet->setAutoFilter('A2:AB2');
+               $sheet->fromArray($excel_data, null, 'A2', false, false);
            });
        })->download('xlsx');
     }

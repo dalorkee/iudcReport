@@ -39,9 +39,27 @@ class Controller extends BaseController
         //dd($query);
         return $query;
     }
+    public static function list_merge_disease(){
+      $query = DB::table('dsgr')->whereIn('DISEASE',[-1,-2,-3,-4,-5,-6,-7,-8])->pluck('DISNAME','dis_code_grp');
+      return $query;
+    }
+    public static function All_disease(){
+      $dis_all = self::list_disease();
+      $dis_total_code = self::list_merge_disease();
+      foreach ($dis_total_code as $key_merge => $val_merge){
+        //echo $val_merge;
+        self::array_push_assoc($dis_all,$key_merge,$val_merge);
+      }
+      return $dis_all;
+    }
+    public static function array_push_assoc($array, $key, $value){
+    $array[$key] = $value;
+    return $array;
+    }
     //List of ProvinceName TH
     public static function get_provincename_th(){
-      $query = Province::pluck('prov_name','prov_code');
+      $query = Province::orderBy('dpc_code','asc')->pluck('prov_name','prov_code');
+      //$query = DB::table('c_province')->orderBy('dpc_code','asc')->get();
       return $query;
     }
     //List of AmphurName TH
