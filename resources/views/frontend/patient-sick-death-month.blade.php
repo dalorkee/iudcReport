@@ -11,8 +11,6 @@ tr.group:hover {
 <?php
 use \App\Http\Controllers\Controller as Controller;
 use \App\Http\Controllers\ExportPatientController as ExportPatientController;
-use \App\Http\Controllers\DiseasesController as DiseasesController;
-
 
 $arr_month = array('Jan','Feb','Mar','Apr','May','June','July','Aug','Sept','Oct','Nov','Dec','Total');
 $get_all_disease_merge = Controller::list_merge_disease();

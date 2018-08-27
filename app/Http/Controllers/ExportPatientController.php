@@ -64,7 +64,7 @@ class ExportPatientController extends Controller
       $tblYear = (isset($select_year))? $select_year : date('Y')-1;
       $post_disease_code = (isset($disease_code))? $disease_code : "01";
 
-      $get_pop_dpc_group =\App\Http\Controllers\Controller::get_pop_dpc_group();
+      //$get_pop_dpc_group =\App\Http\Controllers\Controller::get_pop_dpc_group();
       $get_provincename_th =\App\Http\Controllers\Controller::get_provincename_th()->toArray();
       $get_dpc_nameth = \App\Http\Controllers\Controller::get_dpc_nameth()->toArray();
 
@@ -281,8 +281,10 @@ class ExportPatientController extends Controller
       $filename = 'sick-death-disease';
       //sheetname
       $sheetname = 'sheet1';
+      //Year to DC
+      $year_th = $tblYear+543;
       // header text
-      $header_text = "ตารางข้อมูลผู้ป่วยจำนวนป่วย/ตาย โรค ".$disease_name[$post_disease_code]." ปี ".$tblYear;
+      $header_text = "ตารางข้อมูลผู้ป่วยจำนวนป่วย/ตาย โรค ".$disease_name[$post_disease_code]." ปี ".$year_th;
 
       Excel::create($filename, function($excel) use($excel_data,$sheetname,$header_text) {
           // Set the title
