@@ -1,8 +1,10 @@
 <?php
-
 namespace App\Http\Controllers;
+
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use DateTime;
+use Illuminate\Support\Str;
 
 class dashboardController extends DiseasesController
 {
@@ -45,6 +47,7 @@ class dashboardController extends DiseasesController
 		$countCaseDeadPerMonth = $this->getCountCaseDeadPerMonth($rqYear, $ds);
 		$countPatientPerWeek = $this->getCountPatientPerWeek($rqYear, $ds);
 		$patientMap = $this->getPatientMap($rqYear, $ds);
+		//$user = $this->getUser();
 		return view('frontend.dashboard',
 			[
 				'dsgroups'=>$dsgroups,
@@ -55,13 +58,23 @@ class dashboardController extends DiseasesController
 				'cDeadPerMonth'=>$countCaseDeadPerMonth,
 				'cpPerWeek'=>$countPatientPerWeek,
 				'selectDs'=>$selectDs,
-				'ageRange' => $ageRange,
-				'monthLabel' => $monthLabel,
+				'ageRange'=>$ageRange,
+				'monthLabel'=>$monthLabel,
 				'patientMap'=>$patientMap
+				//'user'=>$user
 			]
 		);
 	}
-
+/*
+	private function getUser() {
+		$user['id'] = Auth::user()->id;
+		$user['firstName'] = Auth::user()->firstName;
+		$user['lastname'] = Auth::user()->lastname;
+		$user['position'] = Auth::user()->ref_position;
+		$user['register'] = Auth::user()->register;
+		return $user;
+	}
+*/
 	private function getCountPatientBySex($tblYear, $diseaseCode) {
 		$malePatient = parent::countPatientBySex($tblYear, $diseaseCode, 1);
 		$femalePatient = parent::countPatientBySex($tblYear, $diseaseCode, 2);

@@ -312,7 +312,7 @@
 			<div class="col-md-12">
 				<div class="box box-danger">
 					<div class="box-header with-border">
-						<h3 class="box-title"><span class="ds-box-title">แผนที่ผู้ป่วย {{ $patientMap['disease']['ds_name'] }}</span></h3>
+						<h3 class="box-title"><span class="ds-box-title">แผนที่อัตราป่วยรายจังหวัด {{ $patientMap['disease']['ds_name'] }}</span></h3>
 						<div class="box-tools pull-right">
 							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
 							</button>
