@@ -133,7 +133,7 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
                             }
                             ?>
 											<tr>
-                        <td>{{ $data['DPC'] }}</td>
+                        <td>{{ $data['prov_dpc'] }}</td>
 												<td>{{ $data['PROVINCE'] }}</td>
 												<td class="text-center">{{ number_format($data['case_total']) }}</td>
 												<td class="text-center">{{ $cal_ratio_cases }}</td>

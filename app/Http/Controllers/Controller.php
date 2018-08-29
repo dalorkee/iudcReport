@@ -210,11 +210,13 @@ class Controller extends BaseController
     }
     //calculate ratio deaths
     public static function cal_ratio_deaths($total_all_pop,$total_deaths){
+          if($total_deaths<=0) return 0;
           $total_ratio_deaths = $total_deaths*100000/$total_all_pop;
           return number_format($total_ratio_deaths,2);
     }
     //calculate ratio cases-deaths
     public static function cal_ratio_cases_deaths($total_cases,$total_deaths){
+        if($total_deaths<=0) return 0;
           $total_ratio = ($total_deaths*100)/$total_cases;
           return number_format($total_ratio,2);
     }

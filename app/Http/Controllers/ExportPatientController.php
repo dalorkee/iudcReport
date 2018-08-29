@@ -277,12 +277,13 @@ class ExportPatientController extends Controller
                                                      );
                                }
                              }
-      //filename
-      $filename = 'sick-death-disease';
-      //sheetname
-      $sheetname = 'sheet1';
       //Year to DC
       $year_th = $tblYear+543;
+      //filename
+      $filename = 'sick-death-disease'.'-year-'.$year_th;;
+      //sheetname
+      $sheetname = 'sheet1';
+
       // header text
       $header_text = "ตารางข้อมูลผู้ป่วยจำนวนป่วย/ตาย โรค ".$disease_name[$post_disease_code]." ปี ".$year_th;
 
@@ -305,111 +306,156 @@ class ExportPatientController extends Controller
 
     public static function get_patient_sick_death_ratio($select_year,$disease_code){
       $tblYear = (isset($select_year))? $select_year : date('Y')-1;
-      $arr_disease_code = (isset($disease_code))? $disease_code : "01";
-      $get_pop_dpc_group =\App\Http\Controllers\Controller::get_pop_dpc_group();
+      $post_disease_code = (isset($disease_code))? $disease_code : "01";
+
+      $disease_name =\App\Http\Controllers\Controller::All_disease()->toArray();
+      $get_dpc_nameth = \App\Http\Controllers\Controller::get_dpc_nameth()->toArray();
       $get_provincename_th =\App\Http\Controllers\Controller::get_provincename_th()->toArray();
-      foreach ($get_pop_dpc_group as $dpc_code => $dpc_val)
-      {
-           if($arr_disease_code=='26-27-66'){
+
+      //Check Disease
+      $disease_code =  explode(",",$post_disease_code);
+
+      if(count($disease_code)>2){
+        //Total>1 DISEASE select
                $query[] = DB::table('ur506_'.$tblYear)
-                 ->select('DISEASE', 'PROVINCE')
+                 ->select('prov_dpc','DISEASE', 'PROVINCE')
                  ->selectRaw('sum(if(RESULT <> 2,1,0)) AS case_total')
                  ->selectRaw('sum(if(RESULT = 2,1,0)) AS death_total')
-                 ->whereIn('DISEASE',['26','27','66'])
-                 ->whereIn('PROVINCE',$dpc_val)
+                 ->whereIn('DISEASE',$disease_code)
+                 ->join('c_province','ur506_'.$tblYear.'.PROVINCE','=','c_province.prov_code')
                  ->groupBy('PROVINCE')
                  ->get();
            }else{
+              // 1 DISEASE SELECT
                $query[] = DB::table('ur506_'.$tblYear)
-                 ->select('DISEASE', 'PROVINCE')
+                 ->select('prov_dpc','DISEASE', 'PROVINCE')
                  ->selectRaw('sum(if(RESULT <> 2,1,0)) AS case_total')
                  ->selectRaw('sum(if(RESULT = 2,1,0)) AS death_total')
-                 ->where('DISEASE','=',$arr_disease_code)
-                 ->whereIn('PROVINCE',$dpc_val)
+                 ->where('DISEASE','=',$disease_code['0'])
+                 ->join('c_province','ur506_'.$tblYear.'.PROVINCE','=','c_province.prov_code')
                  ->groupBy('PROVINCE')
                  ->get();
            }
-      }
 
-      //dd($query);
-          $arr_dpc_th = array('สคร.1','สคร.2','สคร.3','สคร.4','สคร.5','สคร.6','สคร.7','สคร.8','สคร.9','สคร.10','สคร.11','สคร.12','สปคม.');
-                for($i=0;$i<count($query);$i++ ){
-                      foreach ($query[$i] as $data_key => $data_val)
-                      {
-                          $data2[] = array('DPC' =>  $arr_dpc_th[$i],
-                                          'PROVINCE' => $get_provincename_th[$data_val->PROVINCE],
-                                          'PROVINCE_CODE' => $data_val->PROVINCE,
-                                          'case_total' => $data_val->case_total,
-                                          'death_total' => $data_val->death_total
-                                          );
-                      }
-                }
-      return $data2;
+
+    //  dd($query);
+
+          foreach ($query[0] as $key => $val) {
+            $pt_data[$val->PROVINCE]['prov_dpc'] = $val->prov_dpc;
+            $pt_data[$val->PROVINCE]['PROVINCE'] = $get_provincename_th[$val->PROVINCE];
+            $pt_data[$val->PROVINCE]['PROVINCE_CODE'] = $val->PROVINCE;
+            $pt_data[$val->PROVINCE]['case_total'] = $val->case_total;
+            $pt_data[$val->PROVINCE]['death_total'] = $val->death_total;
+          }
+
+          foreach ($get_provincename_th as $key => $value) {
+            if (array_key_exists($key, $pt_data)) {
+              $excel_data[$key] = $pt_data[$key];
+            }else{
+              $excel_data[$key] = array(  'prov_dpc'=>$get_dpc_nameth[$key],
+                                          'PROVINCE' => $get_provincename_th[$key],
+                                          'PROVINCE_CODE' => $key,
+                                          'case_total' => "0.00",
+                                          'death_total' => "0.00",
+                                  );
+            }
+          }
+          //dd(count($excel_data));
+        return $excel_data;
+
+
     }
 
   public static function xls_patient_sick_death_ratio(Request $request){
     if(empty($request->select_year) || empty($request->disease_code)) return false;
-    $disease_code = $request->disease_code;
+    $post_disease_code = $request->disease_code;
     $tblYear = $request->select_year;
-    $get_pop_dpc_group =\App\Http\Controllers\Controller::get_pop_dpc_group();
+    $disease_name =\App\Http\Controllers\Controller::All_disease()->toArray();
+    $get_dpc_nameth = \App\Http\Controllers\Controller::get_dpc_nameth()->toArray();
     $get_provincename_th =\App\Http\Controllers\Controller::get_provincename_th()->toArray();
-    $get_all_disease_array = \App\Http\Controllers\Controller::list_disease()->toArray();
-    $data[] = array('Reporting Area','จำนวนผู้ป่วย','อัตราป่วย(ต่อประชากรแสนคน)','จำนวนผู้เสียชีวิต','อัตราป่วยตาย(%)','อัตราตาย(ต่อประชากรแสนคน)','จำนวนประชากร');
-    foreach ($get_pop_dpc_group as $dpc_code => $dpc_val)
-    {
-         if($disease_code=='26-27-66'){
-             $query[] = DB::table('ur506_'.$tblYear)
-               ->select('DISEASE', 'PROVINCE')
-               ->selectRaw('sum(if(RESULT <> 2,1,0)) AS case_total')
-               ->selectRaw('sum(if(RESULT = 2,1,0)) AS death_total')
-               ->whereIn('DISEASE',['26','27','66'])
-               ->whereIn('PROVINCE',$dpc_val)
-               ->groupBy('PROVINCE')
-               ->get();
-         }else{
-             $query[] = DB::table('ur506_'.$tblYear)
-               ->select('DISEASE', 'PROVINCE')
-               ->selectRaw('sum(if(RESULT <> 2,1,0)) AS case_total')
-               ->selectRaw('sum(if(RESULT = 2,1,0)) AS death_total')
-               ->where('DISEASE','=',$disease_code)
-               ->whereIn('PROVINCE',$dpc_val)
-               ->groupBy('PROVINCE')
-               ->get();
-         }
-    }
-        $arr_dpc_th = array('สคร.1','สคร.2','สคร.3','สคร.4','สคร.5','สคร.6','สคร.7','สคร.8','สคร.9','สคร.10','สคร.11','สคร.12','สปคม.');
-              for($i=0;$i<count($query);$i++ ){
-                    $data[] = array('DPC_GROUP_NAME' => $arr_dpc_th[$i]);
-                    foreach ($query[$i] as $data_key => $data_val)
-                    {
-                      $total_pop_in_province = PopulationController::all_population_by_province($tblYear);
-                            if(isset($total_pop_in_province[$data_val->PROVINCE]['poptotal_in_province'])){
-                              $total_pop = number_format($total_pop_in_province[$data_val->PROVINCE]['poptotal_in_province']);
-                              $cal_ratio_cases = Controller::cal_ratio_cases($total_pop_in_province[$data_val->PROVINCE]['poptotal_in_province'],$data_val->case_total);
-                              $cal_ratio_deaths = Controller::cal_ratio_cases_deaths($total_pop_in_province[$data_val->PROVINCE]['poptotal_in_province'],$data_val->death_total);
-                              $cal_ratio_cases_deaths = Controller::cal_ratio_cases_deaths($data_val->case_total,$data_val->death_total);
-                            }else{
-                              $total_pop = '0';
-                              $cal_ratio_cases = '0';
-                              $cal_ratio_deaths = '0';
-                            }
-                        //Reporting Area','จำนวนผู้ป่วย','อัตราป่วย(ต่อประชากรแสนคน)','จำนวนผู้เสียชีวิต','อัตราป่วยตาย(%)','อัตราตาย(ต่อประชากรแสนคน)','จำนวนประชากร');
-                        $data[] = array($get_provincename_th[$data_val->PROVINCE], //Reporting Area
-                                        $data_val->case_total, //จำนวนผู้ป่วย
-                                        $cal_ratio_cases,   //อัตราป่วย(ต่อประชากรแสนคน)
-                                        $data_val->death_total, //จำนวนผู้เสียชีวิต
-                                        $cal_ratio_deaths, //อัตราป่วยตาย(%)
-                                        $cal_ratio_cases_deaths,//อัตราตาย(ต่อประชากรแสนคน)
-                                        $total_pop  //จำนวนประชากร
-                        );
-                    }
-              }
-        //filename
-        $filename = 'sick-death-ratio'.$disease_code.'-year'.$tblYear;
-        //sheetname
-        $sheetname = 'Sick-Death-Ratio'.$get_all_disease_array[$disease_code];
+    $excel_data[] = array('DPC','Reporting Area','จำนวนผู้ป่วย','อัตราป่วย(ต่อประชากรแสนคน)','จำนวนผู้เสียชีวิต','อัตราป่วยตาย(%)','อัตราตาย(ต่อประชากรแสนคน)','จำนวนประชากร');
 
-        Excel::create($filename, function($excel) use($data,$sheetname) {
+    //Check Disease
+    $disease_code =  explode(",",$post_disease_code);
+
+        if(count($disease_code)>2){
+          //Total>1 DISEASE select
+                 $query[] = DB::table('ur506_'.$tblYear)
+                   ->select('prov_dpc','DISEASE', 'PROVINCE')
+                   ->selectRaw('sum(if(RESULT <> 2,1,0)) AS case_total')
+                   ->selectRaw('sum(if(RESULT = 2,1,0)) AS death_total')
+                   ->whereIn('DISEASE',$disease_code)
+                   ->join('c_province','ur506_'.$tblYear.'.PROVINCE','=','c_province.prov_code')
+                   ->groupBy('PROVINCE')
+                   ->get();
+        }else{
+          // 1 DISEASE SELECT
+                 $query[] = DB::table('ur506_'.$tblYear)
+                   ->select('prov_dpc','DISEASE', 'PROVINCE')
+                   ->selectRaw('sum(if(RESULT <> 2,1,0)) AS case_total')
+                   ->selectRaw('sum(if(RESULT = 2,1,0)) AS death_total')
+                   ->where('DISEASE','=',$disease_code['0'])
+                   ->join('c_province','ur506_'.$tblYear.'.PROVINCE','=','c_province.prov_code')
+                   ->groupBy('PROVINCE')
+                   ->get();
+        }
+        $total_pop_in_province =\App\Http\Controllers\PopulationController::all_population_by_province($tblYear);
+
+        foreach ($query[0] as $key => $val) {
+            $pt_data[$val->PROVINCE]['prov_dpc'] = $val->prov_dpc; //f1
+            $pt_data[$val->PROVINCE]['PROVINCE'] = $get_provincename_th[$val->PROVINCE]; //f2
+            //$pt_data[$val->PROVINCE]['PROVINCE_CODE'] = $val->PROVINCE;
+            $pt_data[$val->PROVINCE]['case_total'] = $val->case_total; //f3
+            $pt_data[$val->PROVINCE]['death_total'] = $val->death_total; //f5
+
+          if($total_pop_in_province[$val->PROVINCE]['poptotal_in_province']){
+            $pt_data[$val->PROVINCE]['cal_ratio_cases'] = \App\Http\Controllers\Controller::cal_ratio_cases($total_pop_in_province[$val->PROVINCE]['poptotal_in_province'],$val->case_total); //f4
+            $pt_data[$val->PROVINCE]['cal_ratio_cases_deaths'] = \App\Http\Controllers\Controller::cal_ratio_cases_deaths($val->case_total,$val->death_total); //f5
+            $pt_data[$val->PROVINCE]['cal_ratio_deaths'] = Controller::cal_ratio_cases_deaths($total_pop_in_province[$val->PROVINCE]['poptotal_in_province'],$val->death_total); //f6
+            $pt_data[$val->PROVINCE]['total_pop'] = number_format($total_pop_in_province[$val->PROVINCE]['poptotal_in_province']); //f7
+          }else{
+
+            $pt_data[$val->PROVINCE]['cal_ratio_cases'] = 0; //f4
+            $pt_data[$val->PROVINCE]['cal_ratio_cases_deaths'] = 0; //f6
+            $pt_data[$val->PROVINCE]['cal_ratio_deaths'] = 0; //f7
+            $pt_data[$val->PROVINCE]['total_pop'] = 0; //f8
+          }
+
+        }
+
+         //dd($pt_data);
+
+
+
+        //dd($total_pop_in_province);
+
+        foreach ($get_provincename_th as $key => $value) {
+          if (array_key_exists($key, $pt_data)) {
+            $excel_data[$key] = $pt_data[$key];
+          }else{
+            $excel_data[$key] = array(  'prov_dpc'=>$get_dpc_nameth[$key],
+                                        'PROVINCE' => $get_provincename_th[$key],
+                                        "case_total" => "4",
+                                        "death_total" => "0",
+                                        "cal_ratio_cases" => "0",
+                                        "cal_ratio_cases_deaths" => "0",
+                                        "cal_ratio_deaths" => "0",
+                                        "total_pop" => "0",
+                                      );
+          }
+        }
+
+        //Year to DC
+        $year_th = $tblYear+543;
+        //filename
+        $filename = 'sick-death-ratio'.'-year-'.$year_th;
+        //sheetname
+        $sheetname = 'sheet1';
+
+        // header text
+        $header_text = "ตารางข้อมูลอัตราป่วย/อัตราตาย/อัตราป่วย-ตาย จำแนกรายจังหวัด โรค ".$disease_name[$post_disease_code]." ปี ".$year_th;
+
+        Excel::create($filename, function($excel) use($excel_data,$sheetname,$header_text) {
             // Set the title
             $excel->setTitle('UCD-Report');
             // Chain the setters
@@ -417,11 +463,14 @@ class ExportPatientController extends Controller
             //description
             $excel->setDescription('สปคม.');
 
-            $excel->sheet($sheetname, function ($sheet) use ($data) {
-                 $sheet->fromArray($data, null, 'A1', false, false);
+            $excel->sheet($sheetname, function ($sheet) use ($excel_data,$header_text) {
+                //Header Text
+                 $sheet->row(1, [$header_text]);
+                 $sheet->setAutoFilter('A2:H2');
+                 $sheet->fromArray($excel_data, null, 'A2', false, false);
              });
          })->download('xlsx');
-  }
+      }
 
   public static function get_patient_sick_weekly($select_year,$disease_code){
       $tblYear = (isset($select_year))? $select_year : date('Y')-1;
