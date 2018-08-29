@@ -1,5 +1,4 @@
 <?php
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,17 +13,13 @@
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/', function () {
-	return view('index');
-});
 */
 Auth::routes();
-/* Login */
 Route::get('/home', 'HomeController@index')->name('home');
-/* index */
-Route::get('/', 'DashboardController@index')->name('dashboard');
+Route::get('/', 'HomeController@index')->name('index');
+/* dashboard */
+Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
 Route::get('/dbd', 'DashboardController@index')->name('dbd');
-
 /* population */
 Route::get('/population', 'PopulationController@index')->name('population');
 /* view by disease */
@@ -73,9 +68,9 @@ Route::get('/report', function() {
 	return view('frontend.report');
 })->name('report');
 /* Top 10 Disease Patient */
-Route::get('/top10DsPt', 'WeekReportController@index')->name('top10DsPt');
+Route::get('/top10DsPt', 'WeekReportController@index')->name('top10DsPt')->middleware('auth');
 /* One page */
-Route::get('/onePage', 'OnePageController@index')->name('onePage');
+Route::get('/onePage', 'OnePageController@index')->name('onePage')->middleware('auth');
 /* ******** backend ******** */
 Route::get('/backend', function() {
 	return view('backend/index');

@@ -81,6 +81,13 @@
 </section>
 <!-- Main content -->
 <section class="content">
+
+	@if (session('status'))
+		<div class="alert alert-success">
+			{{ session('status') }}
+		</div>
+	@endif
+
 	<div class="box box-primary">
 		<div class="box-header with-border">
 			<h3 class="box-title text-primary" style="font-size:1.10em">ค้นหา</h3>
@@ -104,7 +111,6 @@
 							</div>
 						</div>
 					</div>
-
 					<div class="col-md-3">
 						<div class="form-group">
 							<label for="selectDisease" class="sr-only">เลือกโรค:</label>
@@ -148,9 +154,9 @@
 							</div>
 						</div>
 					</div>
-
 					<div class="col-md-2">
 						<div class="form-group">
+							{{ Form::hidden('_token', 'csrf_token();') }}
 							{{ Form::submit('ค้นหา', ['class'=>'btn btn-primary']) }}
 						</div>
 					</div>
@@ -340,7 +346,7 @@
 			<div class="col-md-12">
 				<div class="box box-info">
 					<div class="box-header with-border">
-						<h3 class="box-title"><span class="ds-box-title">แผนที่ผู้ป่วย {{ $patientMap['disease']['ds_name'] }}</span></h3>
+						<h3 class="box-title"><span class="ds-box-title">แผนที่อัตราป่วยรายจังหวัด {{ $patientMap['disease']['ds_name'] }}</span></h3>
 						<div class="box-tools pull-right">
 							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
 							</button>
@@ -644,7 +650,7 @@ $('document').ready(function () {
 				},
 				scaleLabel: {
 					display: true,
-					labelString: 'จำนวนผู้ป่วยรายสัปดาห์ (ราย)'
+					labelString: 'จำนวนผู้ป่วย (ราย)'
 				}
 			}]
 		},

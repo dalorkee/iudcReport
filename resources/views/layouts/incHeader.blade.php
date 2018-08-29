@@ -1,4 +1,6 @@
-<?php $current_year =  (isset($_GET['year']))? $_GET['year']: date('Y'); ?>
+@php
+	$current_year =  (isset($_GET['year']))? $_GET['year']: date('Y');
+@endphp
 <header class="main-header">
 	<!-- Logo -->
 	<a href="{{ route('population')}}?year=<?php echo $current_year; ?>" class="logo">
@@ -16,7 +18,7 @@
 		<!-- Navbar Right Menu -->
 		<div class="navbar-custom-menu">
 			<ul class="nav navbar-nav">
-				<!-- Messages: style can be found in dropdown.less-->
+				<!-- Messages: style can be found in dropdown.less
 				<li class="dropdown messages-menu">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 						<i class="fa fa-envelope-o"></i>
@@ -25,23 +27,21 @@
 					<ul class="dropdown-menu">
 						<li class="header">You have 4 messages</li>
 						<li>
-							<!-- inner menu: contains the actual data -->
 							<ul class="menu">
-								<li><!-- start message -->
+								<li>
 									<a href="#">
 										<div class="pull-left">
-											{{ Html::image('public/AdminLTE-2.4.2/dist/img/user2-160x160.jpg', 'alt=user image', array('class'=>'img-circle')) }}
+											 Html::image('public/AdminLTE-2.4.2/dist/img/user2-160x160.jpg', 'alt=user image', array('class'=>'img-circle')) }}
 										</div>
 										<h4>Support Team<small><i class="fa fa-clock-o"></i> 5 mins</small></h4>
 										<p>Why not buy a new awesome theme?</p>
 									</a>
 								</li>
-								<!-- end message -->
 							</ul>
 						</li>
 						<li class="footer"><a href="#">See All Messages</a></li>
 					</ul>
-				</li>
+				</li> -->
 				<!-- Notifications: style can be found in dropdown.less -->
 				<!--
 				<li class="dropdown notifications-menu">
@@ -96,16 +96,17 @@
 				<!-- User Account: style can be found in dropdown.less -->
 				<li class="dropdown user user-menu">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-						{{ Html::image('public/AdminLTE-2.4.2/dist/img/user2-160x160.jpg', 'alt=User Image', array('class'=>'user-image')) }}
-						<span class="hidden-xs">Iudc001</span>
+						{{ Html::image('public/images/'.Auth::user()->avatar, 'alt=Avatar', array('class'=>'user-image')) }}
+						<span class="hidden-xs">{{ Auth::user()->firstName }}</span>
 					</a>
 					<ul class="dropdown-menu">
 						<!-- User image -->
 						<li class="user-header">
-							{{ Html::image('public/AdminLTE-2.4.2/dist/img/user2-160x160.jpg', 'alt=User Image', array('class'=>'img-circle')) }}
-							<p>Iudc001 - Web Developer<small>Member since Nov. 2012</small></p>
+							{{ Html::image('public/images/'.Auth::user()->avatar, 'alt=Avatar', array('class'=>'img-circle')) }}
+							<p>{{ Auth::user()->firstName."&nbsp;".Auth::user()->lastname."&nbsp;-&nbsp;".Auth::user()->user_type }}<small>Member since {{ date("jS F, Y", strtotime(Auth::user()->register)) }}</small></p>
 						</li>
 						<!-- Menu Body -->
+						<!--
 						<li class="user-body">
 							<div class="row">
 								<div class="col-xs-4 text-center">
@@ -118,15 +119,17 @@
 									<a href="#">Friends</a>
 								</div>
 							</div>
-							<!-- /.row -->
-						</li>
+						</li> -->
 						<!-- Menu Footer-->
 						<li class="user-footer">
 							<div class="pull-left">
 								<a href="#" class="btn btn-default btn-flat">Profile</a>
 							</div>
 							<div class="pull-right">
-								<a href="#" class="btn btn-default btn-flat">Sign out</a>
+								<a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="btn btn-default btn-flat">Sign out</a>
+								<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+									{{ csrf_field() }}
+								</form>
 							</div>
 						</li>
 					</ul>
