@@ -12,22 +12,24 @@ tr.group:hover {
 use \App\Http\Controllers\Controller as Controller;
 use \App\Http\Controllers\ExportPatientController as ExportPatientController;
 
-//$arr_month = array('Jan','Feb','Mar','Apr','May','June','July','Aug','Sept','Oct','Nov','Dec','Total');
-$get_all_province_th = Controller::get_provincename_th();
+$get_all_disease_merge = Controller::list_merge_disease();
 $get_all_disease = Controller::list_disease();
-$get_all_disease_array = Controller::list_disease()->toArray();
+
 //add array
 function array_push_assoc($array, $key, $value){
 $array[$key] = $value;
 return $array;
 }
-array_push_assoc($get_all_disease,'26-27-66',"DHF Total");
+
+foreach ($get_all_disease_merge as $key_merge => $val_merge){
+
+  array_push_assoc($get_all_disease,$key_merge,$val_merge);
+}
 
 $select_year = (isset($_GET['select_year']))? $_GET['select_year'] : date('Y')-1;
 $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 
 
-//dd($get_all_disease_array);
 ?>
 <!-- Content Header (Page header) -->
 <section class="content-header">
@@ -51,11 +53,11 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 				<div class="box-body">
 				<form action='{{ route('export-patient.sick-weekly') }}' class="form-horizontal" method="get">
 					<div class="box-body">
-						<div class="form-group">
+            <div class="form-group">
 							<label for="input_monthchoose" class="col-sm-2 control-label">โรค</label>
 							<div class="col-sm-4">
 								<select class="form-control" name="disease_code" id="disease_code">
-								@foreach ($get_all_disease as $disease_key => $disease_value)
+								@foreach ($get_all_disease as  $disease_key => $disease_value)
 									<option value="{{ $disease_key }}" <?php if($disease_key == $disease_code){ echo 'selected="selected"'; }?>>{{ $disease_key }} - {{ $disease_value }}</option>
 								@endforeach
 								</select>
@@ -96,7 +98,7 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 	 	<div class="col-md-12">
 			<div class="box box-success">
 				<div class="box-header with-border">
-					<h3 class="box-title"><span class="ds-box-title">ตารางข้อมูลจำนวนป่วย รายสัปดาห์ จำแนกรายจังหวัด โรค <?php if($disease_code=='26-27-66'){ echo 'DHF Total'; } else{ echo $disease_code.' - '.$get_all_disease_array[$disease_code];}?> ปี <?php echo $select_year+543;?></span></h3>
+					<h3 class="box-title"><span class="ds-box-title">ตารางข้อมูลจำนวนป่วย รายสัปดาห์ จำแนกรายจังหวัด โรค <?php echo $get_all_disease[$disease_code];?> ปี <?php echo $select_year+543;?></span></h3>
 				</div>
 				<!-- /.box-header -->
 				<div class="box-body">
@@ -117,7 +119,7 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 											<?php $get_data = ExportPatientController::get_patient_sick_weekly($select_year,$disease_code); ?>
 											@foreach ($get_data as $data)
 											<tr>
-												<td>{{ $data['DPC'] }}</td>
+												<td>{{ $data['prov_dpc'] }}</td>
 												<td>{{ $data['PROVINCE'] }}</td>
 												<td>{{ number_format($data['wk01']) }}</td>
 												<td>{{ number_format($data['wk02']) }}</td>
@@ -193,7 +195,7 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 				</div>
 				<!-- /.box-body -->
 				<div class="box-footer">
-            <a href="{{ route('xls_patient_sick_death_by_month') }}?disease_code={{ $disease_code }}&select_year={{ $select_year }}" class="btn btn-sm btn-success pull-right"><i class="fa fa-download"> </i> ส่งออกข้อมูลเป็น XLS</a>
+            <a href="{{ route('xls_patient_sick_weekly') }}?disease_code={{ $disease_code }}&select_year={{ $select_year }}" class="btn btn-sm btn-success pull-right"><i class="fa fa-download"> </i> ส่งออกข้อมูลเป็น CSV</a>
 				</div>
 				<!-- /.footer -->
 			</div>
