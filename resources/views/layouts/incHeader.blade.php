@@ -5,9 +5,9 @@
 	<!-- Logo -->
 	<a href="{{ route('population')}}?year=<?php echo $current_year; ?>" class="logo">
 		<!-- mini logo for sidebar mini 50x50 pixels -->
-		<span class="logo-mini"><b>U</b>CDD</span>
+		<span class="logo-mini hidden-xs hidden-sm hidden-md hidden-xl hidden-lg"><b>D</b>UDC</span>
 		<!-- logo for regular state and mobile devices -->
-		<span class="logo-lg"><b>UCD</b>&nbsp;Database</span>
+		<span class="logo-lg"><b>DB OF</b>&nbsp;URBAN</span>
 	</a>
 	<!-- Header Navbar: style can be found in header.less -->
 	<nav class="navbar navbar-static-top">
@@ -134,10 +134,10 @@
 						</li>
 					</ul>
 				</li>
-				<!-- Control Sidebar Toggle Button -->
+				<!-- Control Sidebar Toggle Button
 				<li>
 					<a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
-				</li>
+				</li>  -->
 			</ul>
 		</div>
 	</nav>

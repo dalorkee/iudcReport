@@ -577,6 +577,7 @@ map.addControl(new mapboxgl.GeolocateControl({
 	trackUserLocation: true
 }));
 map.getCanvas().style.cursor = 'default';
+map.addControl(new mapboxgl.FullscreenControl());
 @if ($patientMap != false)
 	{!! $htm !!}
 @endif

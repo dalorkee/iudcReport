@@ -754,7 +754,8 @@ $('document').ready(function () {
 		trackUserLocation: true
 	}));
 	map.getCanvas().style.cursor = 'default';
-		{!! $htm !!}
+	map.addControl(new mapboxgl.FullscreenControl());
+	{!! $htm !!}
 </script>
 <!-- bootstrap datepicker -->
 {{ Html::script(('public/AdminLTE-2.4.2/bower_components/moment/min/moment.min.js')) }}
