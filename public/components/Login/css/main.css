@@ -154,7 +154,7 @@ iframe {
   margin: 15px 0 0 0;
   padding: 0;
   font-family: Poppins-Bold;
-font-size: calc(16px + 1vw);
+font-size: calc(14px + .8vw);
 
   color: #367FA9;
   line-height: 1.2;
@@ -163,8 +163,8 @@ font-size: calc(16px + 1vw);
 .login100-form-avatar {
   display: block;
   width: 120px;
-  height: 120px;
-  border-radius: 50%;
+  height: 146px;
+  border-radius: 0%;
   overflow: hidden;
   margin: 10px auto 0 auto;
 }

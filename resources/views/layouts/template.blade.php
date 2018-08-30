@@ -15,7 +15,7 @@
 <!-- Site wrapper -->
 <div class="iudc-header hidden-xs hidden-sm">
 	<figure>
-		<img src="{{ URL::asset('public/images/moph-logo.png') }}" alt="logo" class="moph-logo">
+		<img src="{{ URL::asset('public/images/urban-logo86.png') }}" alt="logo" class="moph-logo">
 	</figure>
 	<div class="iudc-title">
 		<h2>ฐานข้อมูลโรคติดต่อเขตเมือง</h2>
