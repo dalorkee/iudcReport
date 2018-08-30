@@ -28,8 +28,8 @@ class UsersTableSeeder extends Seeder {
 			'created_at'=>Carbon::now()
 		]);
 		DB::table('users')->insert([
-			'username'=>'jjila',
-			'password'=>$this->generatesPassword('hinjampa'),
+			'username'=>'junjila',
+			'password'=>$this->generatesPassword('hinjumpa39'),
 			'titleName'=>'นางสาว',
 			'firstName'=>'จุลจิลา',
 			'lastname'=>'หินจำปา',

@@ -1,12 +1,10 @@
-<?php
-$pj = 'PJ';
-?>
+@php $pj = 'PJ'; @endphp
 <!DOCTYPE html>
 <html>
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>UCDD</title>
+	<title>DUCD</title>
 	<!-- Tell the browser to be responsive to screen width -->
 	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 	@include('layouts.incStylesheet')
@@ -14,17 +12,17 @@ $pj = 'PJ';
 	@yield('incHeaderScript')
 </head>
 <body class="hold-transition skin-purple sidebar-mini">
-<!-- Site wrapper
+<!-- Site wrapper -->
 <div class="iudc-header hidden-xs hidden-sm">
 	<figure>
 		<img src="{{ URL::asset('public/images/moph-logo.png') }}" alt="logo" class="moph-logo">
 	</figure>
 	<div class="iudc-title">
 		<h2>ฐานข้อมูลโรคติดต่อเขตเมือง</h2>
-		<p>Urban Communicable Disease Database</p>
+		<p>Database of urban communicable diseases</p>
 	</div>
 </div>
- -->
+
 <div class="wrapper">
 	@include('layouts.incHeader')
 	<!-- =============================================== -->
@@ -43,9 +41,9 @@ $pj = 'PJ';
 	<!-- /.content-wrapper -->
 	@include('layouts.incFooter')
 	<!-- Control Sidebar -->
-	<aside class="control-sidebar control-sidebar-dark">
-		@include('layouts.incControlSidebar')
-	</aside>
+	<!--<aside class="control-sidebar control-sidebar-dark">
+		 include('layouts.incControlSidebar')
+	</aside>-->
 	<!-- /.control-sidebar -->
 	<!-- Add the sidebar's background. This div must be placed
 		immediately after the control sidebar -->

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
 <head>
-	<title>UCDD::Login</title>
+	<title>DUCD::Login</title>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -27,7 +27,7 @@
 					<span class="login100-form-avatar">
 						{{ Html::image('public/images/moph-logo.png', 'alt=AVATAR') }}
 					</span>
-					<span class="login100-form-title p-b-70">UCD Database</span>
+					<span class="login100-form-title p-b-70">Database of urban diseases</span>
 					<div class="wrap-input100 validate-input m-t-85 m-b-35" data-validate = "Enter username">
 						<input type="text" name="username" id="username" class="input100">
 						<span class="focus-input100" data-placeholder="Username"></span>
