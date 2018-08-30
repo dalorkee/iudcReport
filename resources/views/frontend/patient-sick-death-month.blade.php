@@ -33,7 +33,7 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 ?>
 <!-- Content Header (Page header) -->
 <section class="content-header">
-<h1>รายงานข้อมูลผู้ป่วย <small>รายเดือน</small></h1>
+<h1>รายงานข้อมูลผู้ป่วย</h1>
 <ol class="breadcrumb">
 	<li><a href="{{ route('dashboard') }}"><i class="fa fa-home"></i> หนัาหลัก</a></li>
 	<li><a href="#" class="active">รายงาน</a></li>

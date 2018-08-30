@@ -40,23 +40,23 @@ class ExportPatientController extends Controller
     }
     public function patient_sick_by_age()
     {
-       return view('frontend.patient_sick_by_age');
+       return view('frontend.patient-sick-by-age');
     }
     public function patient_death_by_age()
     {
-       return view('frontend.patient_death_by_age');
+       return view('frontend.patient-death-by-age');
     }
     public function patient_sick_death_by_nation()
     {
-      return view('frontend.patient_sick_death_by_nation');
+      return view('frontend.patient-sick-death-by-nation');
     }
     public function patient_sick_by_occupation()
     {
-      return view('frontend.patient_sick_by_occupation');
+      return view('frontend.patient-sick-by-occupation');
     }
     public function patient_sick_by_sex()
     {
-      return view('frontend.patient_sick_by_sex');
+      return view('frontend.patient-sick-by-sex');
     }
 
     public static function get_patient_sick_death_by_month($select_year,$disease_code)
