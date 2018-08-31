@@ -18,8 +18,8 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/', 'HomeController@index')->name('index');
 /* dashboard */
-Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
-Route::get('/dbd', 'DashboardController@index')->name('dbd');
+Route::get('/dashboard', 'DashboardController@index')->name('dashboard')->middleware('auth');
+Route::get('/dbd', 'DashboardController@index')->name('dbd')->middleware('auth');
 /* population */
 Route::get('/population', 'PopulationController@index')->name('population');
 /* view by disease */
@@ -70,7 +70,7 @@ Route::get('export-patient/export-xls-sick-death-by-nation','ExportPatientContro
 /* Report */
 Route::get('/report', function() {
 	return view('frontend.report');
-})->name('report');
+})->name('report')->middleware('auth');
 /* Top 10 Disease Patient */
 Route::get('/top10DsPt', 'WeekReportController@index')->name('top10DsPt')->middleware('auth');
 /* One page */

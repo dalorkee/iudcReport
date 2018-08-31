@@ -19,7 +19,7 @@
 	</figure>
 	<div class="iudc-title">
 		<h2>ฐานข้อมูลโรคติดต่อเขตเมือง</h2>
-		<p>Database of urban communicable diseases</p>
+		<p>Database of Urban Communicable Diseases</p>
 	</div>
 </div>
 
