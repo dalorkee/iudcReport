@@ -65,7 +65,7 @@ class UsersTableSeeder extends Seeder {
 			'email'=>'dpc001@ucdd.com',
 			'ref_position'=>null,
 			'ref_office'=>2,
-			'user_type'=>'dpc',
+			'user_type'=>'viewer',
 			'avatar'=>'default-avatar.png',
 			'register'=>Carbon::now(),
 			'created_at'=>Carbon::now()
@@ -80,7 +80,7 @@ class UsersTableSeeder extends Seeder {
 			'email'=>'dpc002@ucdd.com',
 			'ref_position'=>null,
 			'ref_office'=>2,
-			'user_type'=>'dpc',
+			'user_type'=>'viewer',
 			'avatar'=>'default-avatar.png',
 			'register'=>Carbon::now(),
 			'created_at'=>Carbon::now()
@@ -95,7 +95,7 @@ class UsersTableSeeder extends Seeder {
 			'email'=>'dpc003@ucdd.com',
 			'ref_position'=>null,
 			'ref_office'=>2,
-			'user_type'=>'dpc',
+			'user_type'=>'viewer',
 			'avatar'=>'default-avatar.png',
 			'register'=>Carbon::now(),
 			'created_at'=>Carbon::now()
@@ -110,7 +110,7 @@ class UsersTableSeeder extends Seeder {
 			'email'=>'dpc004@ucdd.com',
 			'ref_position'=>null,
 			'ref_office'=>2,
-			'user_type'=>'dpc',
+			'user_type'=>'viewer',
 			'avatar'=>'default-avatar.png',
 			'register'=>Carbon::now(),
 			'created_at'=>Carbon::now()
@@ -125,7 +125,7 @@ class UsersTableSeeder extends Seeder {
 			'email'=>'dpc005@ucdd.com',
 			'ref_position'=>null,
 			'ref_office'=>2,
-			'user_type'=>'dpc',
+			'user_type'=>'viewer',
 			'avatar'=>'default-avatar.png',
 			'register'=>Carbon::now(),
 			'created_at'=>Carbon::now()
@@ -140,7 +140,7 @@ class UsersTableSeeder extends Seeder {
 			'email'=>'dpc006@ucdd.com',
 			'ref_position'=>null,
 			'ref_office'=>2,
-			'user_type'=>'dpc',
+			'user_type'=>'viewer',
 			'avatar'=>'default-avatar.png',
 			'register'=>Carbon::now(),
 			'created_at'=>Carbon::now()
@@ -155,7 +155,7 @@ class UsersTableSeeder extends Seeder {
 			'email'=>'dpc007@ucdd.com',
 			'ref_position'=>null,
 			'ref_office'=>2,
-			'user_type'=>'dpc',
+			'user_type'=>'viewer',
 			'avatar'=>'default-avatar.png',
 			'register'=>Carbon::now(),
 			'created_at'=>Carbon::now()
@@ -170,7 +170,7 @@ class UsersTableSeeder extends Seeder {
 			'email'=>'dpc008@ucdd.com',
 			'ref_position'=>null,
 			'ref_office'=>2,
-			'user_type'=>'dpc',
+			'user_type'=>'viewer',
 			'avatar'=>'default-avatar.png',
 			'register'=>Carbon::now(),
 			'created_at'=>Carbon::now()
@@ -185,7 +185,7 @@ class UsersTableSeeder extends Seeder {
 			'email'=>'dpc009@ucdd.com',
 			'ref_position'=>null,
 			'ref_office'=>2,
-			'user_type'=>'dpc',
+			'user_type'=>'viewer',
 			'avatar'=>'default-avatar.png',
 			'register'=>Carbon::now(),
 			'created_at'=>Carbon::now()
@@ -200,7 +200,7 @@ class UsersTableSeeder extends Seeder {
 			'email'=>'dpc010@ucdd.com',
 			'ref_position'=>null,
 			'ref_office'=>2,
-			'user_type'=>'dpc',
+			'user_type'=>'viewer',
 			'avatar'=>'default-avatar.png',
 			'register'=>Carbon::now(),
 			'created_at'=>Carbon::now()
@@ -215,7 +215,7 @@ class UsersTableSeeder extends Seeder {
 			'email'=>'dpc011@ucdd.com',
 			'ref_position'=>null,
 			'ref_office'=>2,
-			'user_type'=>'dpc',
+			'user_type'=>'viewer',
 			'avatar'=>'default-avatar.png',
 			'register'=>Carbon::now(),
 			'created_at'=>Carbon::now()
