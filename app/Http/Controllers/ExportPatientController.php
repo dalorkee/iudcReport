@@ -790,4 +790,1320 @@ class ExportPatientController extends Controller
              });
          })->download('csv');
   }
+  public static function get_patient_sick_by_age($select_year,$disease_code){
+    $tblYear = (isset($select_year))? $select_year : date('Y')-1;
+    $post_disease_code = (isset($disease_code))? $disease_code : "01";
+    $disease_name =\App\Http\Controllers\Controller::All_disease()->toArray();
+    $get_dpc_nameth = \App\Http\Controllers\Controller::get_dpc_nameth()->toArray();
+    $get_provincename_th =\App\Http\Controllers\Controller::get_provincename_th()->toArray();
+    //Check Disease
+    $disease_code =  explode(",",$post_disease_code);
+    if(count($disease_code)>2){
+      $query[] = DB::table('ur506_'.$tblYear)
+      ->select('prov_dpc','PROVINCE')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 0,1,0)) AS case_age_0,SUM(IF(RESULT <> 2 AND YEAR = 1,1,0)) AS case_age_1')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR <> 2,1,0)) AS case_age_2,SUM(IF(RESULT <> 2 AND YEAR = 3,1,0)) AS case_age_3')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 4,1,0)) AS case_age_4,SUM(IF(RESULT <> 2 AND YEAR = 5,1,0)) AS case_age_5')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 6,1,0)) AS case_age_6,SUM(IF(RESULT <> 2 AND YEAR = 7,1,0)) AS case_age_7')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 8,1,0)) AS case_age_8,SUM(IF(RESULT <> 2 AND YEAR = 9,1,0)) AS case_age_9')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 10,1,0)) AS case_age_10,SUM(IF(RESULT <> 2 AND YEAR = 11,1,0)) AS case_age_11')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 12,1,0)) AS case_age_12,SUM(IF(RESULT <> 2 AND YEAR = 13,1,0)) AS case_age_13')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 14,1,0)) AS case_age_14,SUM(IF(RESULT <> 2 AND YEAR = 15,1,0)) AS case_age_15')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 16,1,0)) AS case_age_16,SUM(IF(RESULT <> 2 AND YEAR = 17,1,0)) AS case_age_17')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 18,1,0)) AS case_age_18,SUM(IF(RESULT <> 2 AND YEAR = 19,1,0)) AS case_age_19')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 20,1,0)) AS case_age_20,SUM(IF(RESULT <> 2 AND YEAR = 21,1,0)) AS case_age_21')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 22,1,0)) AS case_age_22,SUM(IF(RESULT <> 2 AND YEAR = 23,1,0)) AS case_age_23')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 24,1,0)) AS case_age_24,SUM(IF(RESULT <> 2 AND YEAR = 25,1,0)) AS case_age_25')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 26,1,0)) AS case_age_26,SUM(IF(RESULT <> 2 AND YEAR = 27,1,0)) AS case_age_27')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 28,1,0)) AS case_age_28,SUM(IF(RESULT <> 2 AND YEAR = 29,1,0)) AS case_age_29')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 30,1,0)) AS case_age_30,SUM(IF(RESULT <> 2 AND YEAR = 31,1,0)) AS case_age_31')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 32,1,0)) AS case_age_32,SUM(IF(RESULT <> 2 AND YEAR = 33,1,0)) AS case_age_33')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 34,1,0)) AS case_age_34,SUM(IF(RESULT <> 2 AND YEAR = 35,1,0)) AS case_age_35')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 36,1,0)) AS case_age_36,SUM(IF(RESULT <> 2 AND YEAR = 37,1,0)) AS case_age_37')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 38,1,0)) AS case_age_38,SUM(IF(RESULT <> 2 AND YEAR = 39,1,0)) AS case_age_39')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 40,1,0)) AS case_age_40,SUM(IF(RESULT <> 2 AND YEAR = 41,1,0)) AS case_age_41')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 42,1,0)) AS case_age_42,SUM(IF(RESULT <> 2 AND YEAR = 43,1,0)) AS case_age_43')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 44,1,0)) AS case_age_44,SUM(IF(RESULT <> 2 AND YEAR = 45,1,0)) AS case_age_45')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 46,1,0)) AS case_age_46,SUM(IF(RESULT <> 2 AND YEAR = 47,1,0)) AS case_age_47')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 48,1,0)) AS case_age_48,SUM(IF(RESULT <> 2 AND YEAR = 49,1,0)) AS case_age_49')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 50,1,0)) AS case_age_50,SUM(IF(RESULT <> 2 AND YEAR = 51,1,0)) AS case_age_51')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 52,1,0)) AS case_age_52,SUM(IF(RESULT <> 2 AND YEAR = 53,1,0)) AS case_age_53')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 54,1,0)) AS case_age_54,SUM(IF(RESULT <> 2 AND YEAR = 55,1,0)) AS case_age_55')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 56,1,0)) AS case_age_56,SUM(IF(RESULT <> 2 AND YEAR = 57,1,0)) AS case_age_57')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 58,1,0)) AS case_age_58,SUM(IF(RESULT <> 2 AND YEAR = 59,1,0)) AS case_age_59')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 60,1,0)) AS case_age_60,SUM(IF(RESULT <> 2 AND YEAR = 61,1,0)) AS case_age_61')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 62,1,0)) AS case_age_62,SUM(IF(RESULT <> 2 AND YEAR = 63,1,0)) AS case_age_63')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 64,1,0)) AS case_age_64,SUM(IF(RESULT <> 2 AND YEAR = 65,1,0)) AS case_age_65')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 66,1,0)) AS case_age_66,SUM(IF(RESULT <> 2 AND YEAR = 67,1,0)) AS case_age_67')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 68,1,0)) AS case_age_68,SUM(IF(RESULT <> 2 AND YEAR = 69,1,0)) AS case_age_69')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 70,1,0)) AS case_age_70,SUM(IF(RESULT <> 2 AND YEAR = 71,1,0)) AS case_age_71')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 72,1,0)) AS case_age_72,SUM(IF(RESULT <> 2 AND YEAR = 73,1,0)) AS case_age_73')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 74,1,0)) AS case_age_74,SUM(IF(RESULT <> 2 AND YEAR = 75,1,0)) AS case_age_75')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 76,1,0)) AS case_age_76,SUM(IF(RESULT <> 2 AND YEAR = 77,1,0)) AS case_age_77')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 78,1,0)) AS case_age_78,SUM(IF(RESULT <> 2 AND YEAR = 79,1,0)) AS case_age_79')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 80,1,0)) AS case_age_80,SUM(IF(RESULT <> 2 AND YEAR = 81,1,0)) AS case_age_81')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 82,1,0)) AS case_age_82,SUM(IF(RESULT <> 2 AND YEAR = 83,1,0)) AS case_age_83')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 84,1,0)) AS case_age_84,SUM(IF(RESULT <> 2 AND YEAR = 85,1,0)) AS case_age_85')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 86,1,0)) AS case_age_86,SUM(IF(RESULT <> 2 AND YEAR = 87,1,0)) AS case_age_87')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 88,1,0)) AS case_age_88,SUM(IF(RESULT <> 2 AND YEAR = 89,1,0)) AS case_age_89')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 90,1,0)) AS case_age_90,SUM(IF(RESULT <> 2 AND YEAR = 91,1,0)) AS case_age_91')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 92,1,0)) AS case_age_92,SUM(IF(RESULT <> 2 AND YEAR = 93,1,0)) AS case_age_93')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 94,1,0)) AS case_age_94,SUM(IF(RESULT <> 2 AND YEAR = 95,1,0)) AS case_age_95')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 96,1,0)) AS case_age_96,SUM(IF(RESULT <> 2 AND YEAR = 97,1,0)) AS case_age_97')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 98,1,0)) AS case_age_98,SUM(IF(RESULT <> 2 AND YEAR = 99,1,0)) AS case_age_99')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR >= 100,1,0)) AS case_age_100')
+      ->whereIn('DISEASE',$disease_code)
+      ->join('c_province','ur506_'.$tblYear.'.PROVINCE','=','c_province.prov_code')
+      ->groupBy('PROVINCE')
+      ->get();
+    }else{
+      $query[] = DB::table('ur506_'.$tblYear)
+      ->select('prov_dpc','PROVINCE')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 0,1,0)) AS case_age_0,SUM(IF(RESULT <> 2 AND YEAR = 1,1,0)) AS case_age_1')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 2,1,0)) AS case_age_2,SUM(IF(RESULT <> 2 AND YEAR = 3,1,0)) AS case_age_3')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 4,1,0)) AS case_age_4,SUM(IF(RESULT <> 2 AND YEAR = 5,1,0)) AS case_age_5')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 6,1,0)) AS case_age_6,SUM(IF(RESULT <> 2 AND YEAR = 7,1,0)) AS case_age_7')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 8,1,0)) AS case_age_8,SUM(IF(RESULT <> 2 AND YEAR = 9,1,0)) AS case_age_9')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 10,1,0)) AS case_age_10,SUM(IF(RESULT <> 2 AND YEAR = 11,1,0)) AS case_age_11')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 12,1,0)) AS case_age_12,SUM(IF(RESULT <> 2 AND YEAR = 13,1,0)) AS case_age_13')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 14,1,0)) AS case_age_14,SUM(IF(RESULT <> 2 AND YEAR = 15,1,0)) AS case_age_15')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 16,1,0)) AS case_age_16,SUM(IF(RESULT <> 2 AND YEAR = 17,1,0)) AS case_age_17')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 18,1,0)) AS case_age_18,SUM(IF(RESULT <> 2 AND YEAR = 19,1,0)) AS case_age_19')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 20,1,0)) AS case_age_20,SUM(IF(RESULT <> 2 AND YEAR = 21,1,0)) AS case_age_21')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 22,1,0)) AS case_age_22,SUM(IF(RESULT <> 2 AND YEAR = 23,1,0)) AS case_age_23')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 24,1,0)) AS case_age_24,SUM(IF(RESULT <> 2 AND YEAR = 25,1,0)) AS case_age_25')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 26,1,0)) AS case_age_26,SUM(IF(RESULT <> 2 AND YEAR = 27,1,0)) AS case_age_27')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 28,1,0)) AS case_age_28,SUM(IF(RESULT <> 2 AND YEAR = 29,1,0)) AS case_age_29')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 30,1,0)) AS case_age_30,SUM(IF(RESULT <> 2 AND YEAR = 31,1,0)) AS case_age_31')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 32,1,0)) AS case_age_32,SUM(IF(RESULT <> 2 AND YEAR = 33,1,0)) AS case_age_33')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 34,1,0)) AS case_age_34,SUM(IF(RESULT <> 2 AND YEAR = 35,1,0)) AS case_age_35')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 36,1,0)) AS case_age_36,SUM(IF(RESULT <> 2 AND YEAR = 37,1,0)) AS case_age_37')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 38,1,0)) AS case_age_38,SUM(IF(RESULT <> 2 AND YEAR = 39,1,0)) AS case_age_39')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 40,1,0)) AS case_age_40,SUM(IF(RESULT <> 2 AND YEAR = 41,1,0)) AS case_age_41')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 42,1,0)) AS case_age_42,SUM(IF(RESULT <> 2 AND YEAR = 43,1,0)) AS case_age_43')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 44,1,0)) AS case_age_44,SUM(IF(RESULT <> 2 AND YEAR = 45,1,0)) AS case_age_45')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 46,1,0)) AS case_age_46,SUM(IF(RESULT <> 2 AND YEAR = 47,1,0)) AS case_age_47')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 48,1,0)) AS case_age_48,SUM(IF(RESULT <> 2 AND YEAR = 49,1,0)) AS case_age_49')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 50,1,0)) AS case_age_50,SUM(IF(RESULT <> 2 AND YEAR = 51,1,0)) AS case_age_51')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 52,1,0)) AS case_age_52,SUM(IF(RESULT <> 2 AND YEAR = 53,1,0)) AS case_age_53')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 54,1,0)) AS case_age_54,SUM(IF(RESULT <> 2 AND YEAR = 55,1,0)) AS case_age_55')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 56,1,0)) AS case_age_56,SUM(IF(RESULT <> 2 AND YEAR = 57,1,0)) AS case_age_57')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 58,1,0)) AS case_age_58,SUM(IF(RESULT <> 2 AND YEAR = 59,1,0)) AS case_age_59')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 60,1,0)) AS case_age_60,SUM(IF(RESULT <> 2 AND YEAR = 61,1,0)) AS case_age_61')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 62,1,0)) AS case_age_62,SUM(IF(RESULT <> 2 AND YEAR = 63,1,0)) AS case_age_63')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 64,1,0)) AS case_age_64,SUM(IF(RESULT <> 2 AND YEAR = 65,1,0)) AS case_age_65')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 66,1,0)) AS case_age_66,SUM(IF(RESULT <> 2 AND YEAR = 67,1,0)) AS case_age_67')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 68,1,0)) AS case_age_68,SUM(IF(RESULT <> 2 AND YEAR = 69,1,0)) AS case_age_69')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 70,1,0)) AS case_age_70,SUM(IF(RESULT <> 2 AND YEAR = 71,1,0)) AS case_age_71')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 72,1,0)) AS case_age_72,SUM(IF(RESULT <> 2 AND YEAR = 73,1,0)) AS case_age_73')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 74,1,0)) AS case_age_74,SUM(IF(RESULT <> 2 AND YEAR = 75,1,0)) AS case_age_75')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 76,1,0)) AS case_age_76,SUM(IF(RESULT <> 2 AND YEAR = 77,1,0)) AS case_age_77')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 78,1,0)) AS case_age_78,SUM(IF(RESULT <> 2 AND YEAR = 79,1,0)) AS case_age_79')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 80,1,0)) AS case_age_80,SUM(IF(RESULT <> 2 AND YEAR = 81,1,0)) AS case_age_81')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 82,1,0)) AS case_age_82,SUM(IF(RESULT <> 2 AND YEAR = 83,1,0)) AS case_age_83')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 84,1,0)) AS case_age_84,SUM(IF(RESULT <> 2 AND YEAR = 85,1,0)) AS case_age_85')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 86,1,0)) AS case_age_86,SUM(IF(RESULT <> 2 AND YEAR = 87,1,0)) AS case_age_87')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 88,1,0)) AS case_age_88,SUM(IF(RESULT <> 2 AND YEAR = 89,1,0)) AS case_age_89')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 90,1,0)) AS case_age_90,SUM(IF(RESULT <> 2 AND YEAR = 91,1,0)) AS case_age_91')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 92,1,0)) AS case_age_92,SUM(IF(RESULT <> 2 AND YEAR = 93,1,0)) AS case_age_93')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 94,1,0)) AS case_age_94,SUM(IF(RESULT <> 2 AND YEAR = 95,1,0)) AS case_age_95')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 96,1,0)) AS case_age_96,SUM(IF(RESULT <> 2 AND YEAR = 97,1,0)) AS case_age_97')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 98,1,0)) AS case_age_98,SUM(IF(RESULT <> 2 AND YEAR = 99,1,0)) AS case_age_99')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR >= 100,1,0)) AS case_age_100')
+      ->where('DISEASE','=',$disease_code['0'])
+      ->join('c_province','ur506_'.$tblYear.'.PROVINCE','=','c_province.prov_code')
+      ->groupBy('PROVINCE')
+      ->get();
+    }
+
+      foreach ($query[0] as $key => $val) {
+        $pt_data[$val->PROVINCE]['prov_dpc'] = $val->prov_dpc;
+        $pt_data[$val->PROVINCE]['PROVINCE'] = $get_provincename_th[$val->PROVINCE];
+        $pt_data[$val->PROVINCE]['case_age_0'] = $val->case_age_0;
+        $pt_data[$val->PROVINCE]['case_age_1'] = $val->case_age_1;
+        $pt_data[$val->PROVINCE]['case_age_2'] = $val->case_age_2;
+        $pt_data[$val->PROVINCE]['case_age_3'] = $val->case_age_3;
+        $pt_data[$val->PROVINCE]['case_age_4'] = $val->case_age_4;
+        $pt_data[$val->PROVINCE]['case_age_5'] = $val->case_age_5;
+        $pt_data[$val->PROVINCE]['case_age_6'] = $val->case_age_6;
+        $pt_data[$val->PROVINCE]['case_age_7'] = $val->case_age_7;
+        $pt_data[$val->PROVINCE]['case_age_8'] = $val->case_age_8;
+        $pt_data[$val->PROVINCE]['case_age_9'] = $val->case_age_9;
+        $pt_data[$val->PROVINCE]['case_age_10'] = $val->case_age_10;
+        $pt_data[$val->PROVINCE]['case_age_11'] = $val->case_age_11;
+        $pt_data[$val->PROVINCE]['case_age_12'] = $val->case_age_12;
+        $pt_data[$val->PROVINCE]['case_age_13'] = $val->case_age_13;
+        $pt_data[$val->PROVINCE]['case_age_14'] = $val->case_age_14;
+        $pt_data[$val->PROVINCE]['case_age_15'] = $val->case_age_15;
+        $pt_data[$val->PROVINCE]['case_age_16'] = $val->case_age_16;
+        $pt_data[$val->PROVINCE]['case_age_17'] = $val->case_age_17;
+        $pt_data[$val->PROVINCE]['case_age_18'] = $val->case_age_18;
+        $pt_data[$val->PROVINCE]['case_age_19'] = $val->case_age_19;
+        $pt_data[$val->PROVINCE]['case_age_20'] = $val->case_age_20;
+        $pt_data[$val->PROVINCE]['case_age_21'] = $val->case_age_21;
+        $pt_data[$val->PROVINCE]['case_age_22'] = $val->case_age_22;
+        $pt_data[$val->PROVINCE]['case_age_23'] = $val->case_age_23;
+        $pt_data[$val->PROVINCE]['case_age_24'] = $val->case_age_24;
+        $pt_data[$val->PROVINCE]['case_age_25'] = $val->case_age_25;
+        $pt_data[$val->PROVINCE]['case_age_26'] = $val->case_age_26;
+        $pt_data[$val->PROVINCE]['case_age_27'] = $val->case_age_27;
+        $pt_data[$val->PROVINCE]['case_age_28'] = $val->case_age_28;
+        $pt_data[$val->PROVINCE]['case_age_29'] = $val->case_age_29;
+        $pt_data[$val->PROVINCE]['case_age_30'] = $val->case_age_30;
+        $pt_data[$val->PROVINCE]['case_age_31'] = $val->case_age_31;
+        $pt_data[$val->PROVINCE]['case_age_32'] = $val->case_age_32;
+        $pt_data[$val->PROVINCE]['case_age_33'] = $val->case_age_33;
+        $pt_data[$val->PROVINCE]['case_age_34'] = $val->case_age_34;
+        $pt_data[$val->PROVINCE]['case_age_35'] = $val->case_age_35;
+        $pt_data[$val->PROVINCE]['case_age_36'] = $val->case_age_36;
+        $pt_data[$val->PROVINCE]['case_age_37'] = $val->case_age_37;
+        $pt_data[$val->PROVINCE]['case_age_38'] = $val->case_age_38;
+        $pt_data[$val->PROVINCE]['case_age_39'] = $val->case_age_39;
+        $pt_data[$val->PROVINCE]['case_age_40'] = $val->case_age_40;
+        $pt_data[$val->PROVINCE]['case_age_41'] = $val->case_age_41;
+        $pt_data[$val->PROVINCE]['case_age_42'] = $val->case_age_42;
+        $pt_data[$val->PROVINCE]['case_age_43'] = $val->case_age_43;
+        $pt_data[$val->PROVINCE]['case_age_44'] = $val->case_age_44;
+        $pt_data[$val->PROVINCE]['case_age_45'] = $val->case_age_45;
+        $pt_data[$val->PROVINCE]['case_age_46'] = $val->case_age_46;
+        $pt_data[$val->PROVINCE]['case_age_47'] = $val->case_age_47;
+        $pt_data[$val->PROVINCE]['case_age_48'] = $val->case_age_48;
+        $pt_data[$val->PROVINCE]['case_age_49'] = $val->case_age_49;
+        $pt_data[$val->PROVINCE]['case_age_50'] = $val->case_age_50;
+        $pt_data[$val->PROVINCE]['case_age_51'] = $val->case_age_51;
+        $pt_data[$val->PROVINCE]['case_age_52'] = $val->case_age_52;
+        $pt_data[$val->PROVINCE]['case_age_53'] = $val->case_age_53;
+        $pt_data[$val->PROVINCE]['case_age_54'] = $val->case_age_54;
+        $pt_data[$val->PROVINCE]['case_age_55'] = $val->case_age_55;
+        $pt_data[$val->PROVINCE]['case_age_56'] = $val->case_age_56;
+        $pt_data[$val->PROVINCE]['case_age_57'] = $val->case_age_57;
+        $pt_data[$val->PROVINCE]['case_age_58'] = $val->case_age_58;
+        $pt_data[$val->PROVINCE]['case_age_59'] = $val->case_age_59;
+        $pt_data[$val->PROVINCE]['case_age_60'] = $val->case_age_60;
+        $pt_data[$val->PROVINCE]['case_age_61'] = $val->case_age_61;
+        $pt_data[$val->PROVINCE]['case_age_62'] = $val->case_age_62;
+        $pt_data[$val->PROVINCE]['case_age_63'] = $val->case_age_63;
+        $pt_data[$val->PROVINCE]['case_age_64'] = $val->case_age_64;
+        $pt_data[$val->PROVINCE]['case_age_65'] = $val->case_age_65;
+        $pt_data[$val->PROVINCE]['case_age_66'] = $val->case_age_66;
+        $pt_data[$val->PROVINCE]['case_age_67'] = $val->case_age_67;
+        $pt_data[$val->PROVINCE]['case_age_68'] = $val->case_age_68;
+        $pt_data[$val->PROVINCE]['case_age_69'] = $val->case_age_69;
+        $pt_data[$val->PROVINCE]['case_age_70'] = $val->case_age_70;
+        $pt_data[$val->PROVINCE]['case_age_71'] = $val->case_age_71;
+        $pt_data[$val->PROVINCE]['case_age_72'] = $val->case_age_72;
+        $pt_data[$val->PROVINCE]['case_age_73'] = $val->case_age_73;
+        $pt_data[$val->PROVINCE]['case_age_74'] = $val->case_age_74;
+        $pt_data[$val->PROVINCE]['case_age_75'] = $val->case_age_75;
+        $pt_data[$val->PROVINCE]['case_age_76'] = $val->case_age_76;
+        $pt_data[$val->PROVINCE]['case_age_77'] = $val->case_age_77;
+        $pt_data[$val->PROVINCE]['case_age_78'] = $val->case_age_78;
+        $pt_data[$val->PROVINCE]['case_age_79'] = $val->case_age_79;
+        $pt_data[$val->PROVINCE]['case_age_80'] = $val->case_age_80;
+        $pt_data[$val->PROVINCE]['case_age_81'] = $val->case_age_81;
+        $pt_data[$val->PROVINCE]['case_age_82'] = $val->case_age_82;
+        $pt_data[$val->PROVINCE]['case_age_83'] = $val->case_age_83;
+        $pt_data[$val->PROVINCE]['case_age_84'] = $val->case_age_84;
+        $pt_data[$val->PROVINCE]['case_age_85'] = $val->case_age_85;
+        $pt_data[$val->PROVINCE]['case_age_86'] = $val->case_age_86;
+        $pt_data[$val->PROVINCE]['case_age_87'] = $val->case_age_87;
+        $pt_data[$val->PROVINCE]['case_age_88'] = $val->case_age_88;
+        $pt_data[$val->PROVINCE]['case_age_89'] = $val->case_age_89;
+        $pt_data[$val->PROVINCE]['case_age_90'] = $val->case_age_90;
+        $pt_data[$val->PROVINCE]['case_age_91'] = $val->case_age_91;
+        $pt_data[$val->PROVINCE]['case_age_92'] = $val->case_age_92;
+        $pt_data[$val->PROVINCE]['case_age_93'] = $val->case_age_93;
+        $pt_data[$val->PROVINCE]['case_age_94'] = $val->case_age_94;
+        $pt_data[$val->PROVINCE]['case_age_95'] = $val->case_age_95;
+        $pt_data[$val->PROVINCE]['case_age_96'] = $val->case_age_96;
+        $pt_data[$val->PROVINCE]['case_age_97'] = $val->case_age_97;
+        $pt_data[$val->PROVINCE]['case_age_98'] = $val->case_age_98;
+        $pt_data[$val->PROVINCE]['case_age_99'] = $val->case_age_99;
+        $pt_data[$val->PROVINCE]['case_age_100'] = $val->case_age_100;
+
+      }
+
+        foreach ($get_provincename_th as $key => $value) {
+          if (array_key_exists($key, $pt_data)) {
+            $excel_data[$key] = $pt_data[$key];
+          }else{
+            $excel_data[$key] = array(  'prov_dpc'=>$get_dpc_nameth[$key],
+                                        'PROVINCE' => $get_provincename_th[$key],
+                                        'case_age_0' => 0,'case_age_1' => 0,'case_age_2' => 0,'case_age_3' => 0,'case_age_4' => 0,
+                                        'case_age_5' => 0,'case_age_6' => 0,'case_age_7' => 0,'case_age_8' => 0,'case_age_9' => 0,
+                                        'case_age_10' => 0,'case_age_11' => 0,'case_age_12' => 0,'case_age_13' => 0,'case_age_14' => 0,
+                                        'case_age_15' => 0,'case_age_16' => 0,'case_age_17' => 0,'case_age_18' => 0,'case_age_19' => 0,
+                                        'case_age_20' => 0,'case_age_21' => 0,'case_age_22' => 0,'case_age_23' => 0,'case_age_24' => 0,
+                                        'case_age_25' => 0,'case_age_26' => 0,'case_age_27' => 0,'case_age_28' => 0,'case_age_29' => 0,
+                                        'case_age_30' => 0,'case_age_31' => 0,'case_age_32' => 0,'case_age_33' => 0,'case_age_34' => 0,
+                                        'case_age_35' => 0,'case_age_36' => 0,'case_age_37' => 0,'case_age_38' => 0,'case_age_39' => 0,
+                                        'case_age_40' => 0,'case_age_41' => 0,'case_age_42' => 0,'case_age_43' => 0,'case_age_44' => 0,
+                                        'case_age_45' => 0,'case_age_46' => 0,'case_age_47' => 0,'case_age_48' => 0,'case_age_49' => 0,
+                                        'case_age_50' => 0,'case_age_51' => 0,'case_age_52' => 0,'case_age_53' => 0,'case_age_54' => 0,
+                                        'case_age_55' => 0,'case_age_56' => 0,'case_age_57' => 0,'case_age_58' => 0,'case_age_59' => 0,
+                                        'case_age_60' => 0,'case_age_61' => 0,'case_age_62' => 0,'case_age_63' => 0,'case_age_64' => 0,
+                                        'case_age_65' => 0,'case_age_66' => 0,'case_age_67' => 0,'case_age_68' => 0,'case_age_69' => 0,
+                                        'case_age_70' => 0,'case_age_71' => 0,'case_age_72' => 0,'case_age_73' => 0,'case_age_74' => 0,
+                                        'case_age_75' => 0,'case_age_76' => 0,'case_age_77' => 0,'case_age_78' => 0,'case_age_79' => 0,
+                                        'case_age_80' => 0,'case_age_81' => 0,'case_age_82' => 0,'case_age_83' => 0,'case_age_84' => 0,
+                                        'case_age_85' => 0,'case_age_86' => 0,'case_age_87' => 0,'case_age_88' => 0,'case_age_89' => 0,
+                                        'case_age_90' => 0,'case_age_91' => 0,'case_age_92' => 0,'case_age_93' => 0,'case_age_94' => 0,
+                                        'case_age_95' => 0,'case_age_96' => 0,'case_age_97' => 0,'case_age_98' => 0,'case_age_99' => 0,
+                                        'case_age_100' => 0
+                                );
+          }
+        }
+        return $excel_data;
+  }
+  public static function xls_patient_sick_by_age(Request $request){
+    if(empty($request->select_year) || empty($request->disease_code)) return false;
+    $post_disease_code = $request->disease_code;
+    $tblYear = $request->select_year;
+    $disease_name =\App\Http\Controllers\Controller::All_disease()->toArray();
+    $get_dpc_nameth = \App\Http\Controllers\Controller::get_dpc_nameth()->toArray();
+    $get_provincename_th =\App\Http\Controllers\Controller::get_provincename_th()->toArray();
+    //Col A1 Excel
+    $excel_data[] = array('DPC','Reporting Area','age-0','age-1','age-2','age-3','age-4','age-5','age-6','age-7','age-8','age-9','age-10','age-11','age-12',
+                          'age-13','age-14','age-15','age-16','age-17','age-18','age-19','age-20','age-21','age-22','age-23','age-24','age-25','age-26',
+                          'age-27','age-28','age-29','age-30','age-31','age-32','age-33','age-34','age-35','age-36','age-37','age-38','age-39',
+                          'age-40','age-41','age-42','age-43','age-44','age-45','age-46','age-47','age-48','age-49','age-50','age-51','age-52','age-53','age-54',
+                          'age-55','age-56','age-57','age-58','age-59','age-60','age-61','age-62','age-63','age-64','age-65','age-66','age-67','age-68','age-69','age-70','age-71','age-72','age-73','age-74','age-75','age-76','age-77','age-78','age-79',
+                          'age-80','age-81','age-82','age-83','age-84','age-85','age-86','age-87','age-88','age-89','age-90','age-91','age-91','age-93','age-94','age-95','age-96','age-97','age-98','age-99','age->=100'
+                         );
+    //Check Disease
+    $disease_code =  explode(",",$post_disease_code);
+    if(count($disease_code)>2){
+      $query[] = DB::table('ur506_'.$tblYear)
+      ->select('prov_dpc','PROVINCE')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 0,1,0)) AS case_age_0,SUM(IF(RESULT <> 2 AND YEAR = 1,1,0)) AS case_age_1')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR <> 2,1,0)) AS case_age_2,SUM(IF(RESULT <> 2 AND YEAR = 3,1,0)) AS case_age_3')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 4,1,0)) AS case_age_4,SUM(IF(RESULT <> 2 AND YEAR = 5,1,0)) AS case_age_5')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 6,1,0)) AS case_age_6,SUM(IF(RESULT <> 2 AND YEAR = 7,1,0)) AS case_age_7')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 8,1,0)) AS case_age_8,SUM(IF(RESULT <> 2 AND YEAR = 9,1,0)) AS case_age_9')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 10,1,0)) AS case_age_10,SUM(IF(RESULT <> 2 AND YEAR = 11,1,0)) AS case_age_11')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 12,1,0)) AS case_age_12,SUM(IF(RESULT <> 2 AND YEAR = 13,1,0)) AS case_age_13')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 14,1,0)) AS case_age_14,SUM(IF(RESULT <> 2 AND YEAR = 15,1,0)) AS case_age_15')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 16,1,0)) AS case_age_16,SUM(IF(RESULT <> 2 AND YEAR = 17,1,0)) AS case_age_17')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 18,1,0)) AS case_age_18,SUM(IF(RESULT <> 2 AND YEAR = 19,1,0)) AS case_age_19')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 20,1,0)) AS case_age_20,SUM(IF(RESULT <> 2 AND YEAR = 21,1,0)) AS case_age_21')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 22,1,0)) AS case_age_22,SUM(IF(RESULT <> 2 AND YEAR = 23,1,0)) AS case_age_23')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 24,1,0)) AS case_age_24,SUM(IF(RESULT <> 2 AND YEAR = 25,1,0)) AS case_age_25')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 26,1,0)) AS case_age_26,SUM(IF(RESULT <> 2 AND YEAR = 27,1,0)) AS case_age_27')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 28,1,0)) AS case_age_28,SUM(IF(RESULT <> 2 AND YEAR = 29,1,0)) AS case_age_29')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 30,1,0)) AS case_age_30,SUM(IF(RESULT <> 2 AND YEAR = 31,1,0)) AS case_age_31')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 32,1,0)) AS case_age_32,SUM(IF(RESULT <> 2 AND YEAR = 33,1,0)) AS case_age_33')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 34,1,0)) AS case_age_34,SUM(IF(RESULT <> 2 AND YEAR = 35,1,0)) AS case_age_35')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 36,1,0)) AS case_age_36,SUM(IF(RESULT <> 2 AND YEAR = 37,1,0)) AS case_age_37')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 38,1,0)) AS case_age_38,SUM(IF(RESULT <> 2 AND YEAR = 39,1,0)) AS case_age_39')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 40,1,0)) AS case_age_40,SUM(IF(RESULT <> 2 AND YEAR = 41,1,0)) AS case_age_41')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 42,1,0)) AS case_age_42,SUM(IF(RESULT <> 2 AND YEAR = 43,1,0)) AS case_age_43')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 44,1,0)) AS case_age_44,SUM(IF(RESULT <> 2 AND YEAR = 45,1,0)) AS case_age_45')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 46,1,0)) AS case_age_46,SUM(IF(RESULT <> 2 AND YEAR = 47,1,0)) AS case_age_47')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 48,1,0)) AS case_age_48,SUM(IF(RESULT <> 2 AND YEAR = 49,1,0)) AS case_age_49')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 50,1,0)) AS case_age_50,SUM(IF(RESULT <> 2 AND YEAR = 51,1,0)) AS case_age_51')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 52,1,0)) AS case_age_52,SUM(IF(RESULT <> 2 AND YEAR = 53,1,0)) AS case_age_53')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 54,1,0)) AS case_age_54,SUM(IF(RESULT <> 2 AND YEAR = 55,1,0)) AS case_age_55')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 56,1,0)) AS case_age_56,SUM(IF(RESULT <> 2 AND YEAR = 57,1,0)) AS case_age_57')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 58,1,0)) AS case_age_58,SUM(IF(RESULT <> 2 AND YEAR = 59,1,0)) AS case_age_59')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 60,1,0)) AS case_age_60,SUM(IF(RESULT <> 2 AND YEAR = 61,1,0)) AS case_age_61')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 62,1,0)) AS case_age_62,SUM(IF(RESULT <> 2 AND YEAR = 63,1,0)) AS case_age_63')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 64,1,0)) AS case_age_64,SUM(IF(RESULT <> 2 AND YEAR = 65,1,0)) AS case_age_65')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 66,1,0)) AS case_age_66,SUM(IF(RESULT <> 2 AND YEAR = 67,1,0)) AS case_age_67')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 68,1,0)) AS case_age_68,SUM(IF(RESULT <> 2 AND YEAR = 69,1,0)) AS case_age_69')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 70,1,0)) AS case_age_70,SUM(IF(RESULT <> 2 AND YEAR = 71,1,0)) AS case_age_71')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 72,1,0)) AS case_age_72,SUM(IF(RESULT <> 2 AND YEAR = 73,1,0)) AS case_age_73')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 74,1,0)) AS case_age_74,SUM(IF(RESULT <> 2 AND YEAR = 75,1,0)) AS case_age_75')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 76,1,0)) AS case_age_76,SUM(IF(RESULT <> 2 AND YEAR = 77,1,0)) AS case_age_77')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 78,1,0)) AS case_age_78,SUM(IF(RESULT <> 2 AND YEAR = 79,1,0)) AS case_age_79')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 80,1,0)) AS case_age_80,SUM(IF(RESULT <> 2 AND YEAR = 81,1,0)) AS case_age_81')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 82,1,0)) AS case_age_82,SUM(IF(RESULT <> 2 AND YEAR = 83,1,0)) AS case_age_83')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 84,1,0)) AS case_age_84,SUM(IF(RESULT <> 2 AND YEAR = 85,1,0)) AS case_age_85')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 86,1,0)) AS case_age_86,SUM(IF(RESULT <> 2 AND YEAR = 87,1,0)) AS case_age_87')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 88,1,0)) AS case_age_88,SUM(IF(RESULT <> 2 AND YEAR = 89,1,0)) AS case_age_89')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 90,1,0)) AS case_age_90,SUM(IF(RESULT <> 2 AND YEAR = 91,1,0)) AS case_age_91')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 92,1,0)) AS case_age_92,SUM(IF(RESULT <> 2 AND YEAR = 93,1,0)) AS case_age_93')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 94,1,0)) AS case_age_94,SUM(IF(RESULT <> 2 AND YEAR = 95,1,0)) AS case_age_95')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 96,1,0)) AS case_age_96,SUM(IF(RESULT <> 2 AND YEAR = 97,1,0)) AS case_age_97')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 98,1,0)) AS case_age_98,SUM(IF(RESULT <> 2 AND YEAR = 99,1,0)) AS case_age_99')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR >= 100,1,0)) AS case_age_100')
+      ->whereIn('DISEASE',$disease_code)
+      ->join('c_province','ur506_'.$tblYear.'.PROVINCE','=','c_province.prov_code')
+      ->groupBy('PROVINCE')
+      ->get();
+    }else{
+      $query[] = DB::table('ur506_'.$tblYear)
+      ->select('prov_dpc','PROVINCE')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 0,1,0)) AS case_age_0,SUM(IF(RESULT <> 2 AND YEAR = 1,1,0)) AS case_age_1')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 2,1,0)) AS case_age_2,SUM(IF(RESULT <> 2 AND YEAR = 3,1,0)) AS case_age_3')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 4,1,0)) AS case_age_4,SUM(IF(RESULT <> 2 AND YEAR = 5,1,0)) AS case_age_5')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 6,1,0)) AS case_age_6,SUM(IF(RESULT <> 2 AND YEAR = 7,1,0)) AS case_age_7')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 8,1,0)) AS case_age_8,SUM(IF(RESULT <> 2 AND YEAR = 9,1,0)) AS case_age_9')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 10,1,0)) AS case_age_10,SUM(IF(RESULT <> 2 AND YEAR = 11,1,0)) AS case_age_11')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 12,1,0)) AS case_age_12,SUM(IF(RESULT <> 2 AND YEAR = 13,1,0)) AS case_age_13')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 14,1,0)) AS case_age_14,SUM(IF(RESULT <> 2 AND YEAR = 15,1,0)) AS case_age_15')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 16,1,0)) AS case_age_16,SUM(IF(RESULT <> 2 AND YEAR = 17,1,0)) AS case_age_17')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 18,1,0)) AS case_age_18,SUM(IF(RESULT <> 2 AND YEAR = 19,1,0)) AS case_age_19')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 20,1,0)) AS case_age_20,SUM(IF(RESULT <> 2 AND YEAR = 21,1,0)) AS case_age_21')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 22,1,0)) AS case_age_22,SUM(IF(RESULT <> 2 AND YEAR = 23,1,0)) AS case_age_23')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 24,1,0)) AS case_age_24,SUM(IF(RESULT <> 2 AND YEAR = 25,1,0)) AS case_age_25')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 26,1,0)) AS case_age_26,SUM(IF(RESULT <> 2 AND YEAR = 27,1,0)) AS case_age_27')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 28,1,0)) AS case_age_28,SUM(IF(RESULT <> 2 AND YEAR = 29,1,0)) AS case_age_29')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 30,1,0)) AS case_age_30,SUM(IF(RESULT <> 2 AND YEAR = 31,1,0)) AS case_age_31')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 32,1,0)) AS case_age_32,SUM(IF(RESULT <> 2 AND YEAR = 33,1,0)) AS case_age_33')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 34,1,0)) AS case_age_34,SUM(IF(RESULT <> 2 AND YEAR = 35,1,0)) AS case_age_35')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 36,1,0)) AS case_age_36,SUM(IF(RESULT <> 2 AND YEAR = 37,1,0)) AS case_age_37')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 38,1,0)) AS case_age_38,SUM(IF(RESULT <> 2 AND YEAR = 39,1,0)) AS case_age_39')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 40,1,0)) AS case_age_40,SUM(IF(RESULT <> 2 AND YEAR = 41,1,0)) AS case_age_41')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 42,1,0)) AS case_age_42,SUM(IF(RESULT <> 2 AND YEAR = 43,1,0)) AS case_age_43')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 44,1,0)) AS case_age_44,SUM(IF(RESULT <> 2 AND YEAR = 45,1,0)) AS case_age_45')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 46,1,0)) AS case_age_46,SUM(IF(RESULT <> 2 AND YEAR = 47,1,0)) AS case_age_47')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 48,1,0)) AS case_age_48,SUM(IF(RESULT <> 2 AND YEAR = 49,1,0)) AS case_age_49')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 50,1,0)) AS case_age_50,SUM(IF(RESULT <> 2 AND YEAR = 51,1,0)) AS case_age_51')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 52,1,0)) AS case_age_52,SUM(IF(RESULT <> 2 AND YEAR = 53,1,0)) AS case_age_53')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 54,1,0)) AS case_age_54,SUM(IF(RESULT <> 2 AND YEAR = 55,1,0)) AS case_age_55')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 56,1,0)) AS case_age_56,SUM(IF(RESULT <> 2 AND YEAR = 57,1,0)) AS case_age_57')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 58,1,0)) AS case_age_58,SUM(IF(RESULT <> 2 AND YEAR = 59,1,0)) AS case_age_59')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 60,1,0)) AS case_age_60,SUM(IF(RESULT <> 2 AND YEAR = 61,1,0)) AS case_age_61')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 62,1,0)) AS case_age_62,SUM(IF(RESULT <> 2 AND YEAR = 63,1,0)) AS case_age_63')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 64,1,0)) AS case_age_64,SUM(IF(RESULT <> 2 AND YEAR = 65,1,0)) AS case_age_65')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 66,1,0)) AS case_age_66,SUM(IF(RESULT <> 2 AND YEAR = 67,1,0)) AS case_age_67')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 68,1,0)) AS case_age_68,SUM(IF(RESULT <> 2 AND YEAR = 69,1,0)) AS case_age_69')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 70,1,0)) AS case_age_70,SUM(IF(RESULT <> 2 AND YEAR = 71,1,0)) AS case_age_71')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 72,1,0)) AS case_age_72,SUM(IF(RESULT <> 2 AND YEAR = 73,1,0)) AS case_age_73')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 74,1,0)) AS case_age_74,SUM(IF(RESULT <> 2 AND YEAR = 75,1,0)) AS case_age_75')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 76,1,0)) AS case_age_76,SUM(IF(RESULT <> 2 AND YEAR = 77,1,0)) AS case_age_77')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 78,1,0)) AS case_age_78,SUM(IF(RESULT <> 2 AND YEAR = 79,1,0)) AS case_age_79')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 80,1,0)) AS case_age_80,SUM(IF(RESULT <> 2 AND YEAR = 81,1,0)) AS case_age_81')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 82,1,0)) AS case_age_82,SUM(IF(RESULT <> 2 AND YEAR = 83,1,0)) AS case_age_83')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 84,1,0)) AS case_age_84,SUM(IF(RESULT <> 2 AND YEAR = 85,1,0)) AS case_age_85')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 86,1,0)) AS case_age_86,SUM(IF(RESULT <> 2 AND YEAR = 87,1,0)) AS case_age_87')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 88,1,0)) AS case_age_88,SUM(IF(RESULT <> 2 AND YEAR = 89,1,0)) AS case_age_89')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 90,1,0)) AS case_age_90,SUM(IF(RESULT <> 2 AND YEAR = 91,1,0)) AS case_age_91')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 92,1,0)) AS case_age_92,SUM(IF(RESULT <> 2 AND YEAR = 93,1,0)) AS case_age_93')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 94,1,0)) AS case_age_94,SUM(IF(RESULT <> 2 AND YEAR = 95,1,0)) AS case_age_95')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 96,1,0)) AS case_age_96,SUM(IF(RESULT <> 2 AND YEAR = 97,1,0)) AS case_age_97')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR = 98,1,0)) AS case_age_98,SUM(IF(RESULT <> 2 AND YEAR = 99,1,0)) AS case_age_99')
+      ->selectRaw('SUM(IF(RESULT <> 2 AND YEAR >= 100,1,0)) AS case_age_100')
+      ->where('DISEASE','=',$disease_code['0'])
+      ->join('c_province','ur506_'.$tblYear.'.PROVINCE','=','c_province.prov_code')
+      ->groupBy('PROVINCE')
+      ->get();
+    }
+
+      foreach ($query[0] as $key => $val) {
+        $pt_data[$val->PROVINCE]['prov_dpc'] = $val->prov_dpc;
+        $pt_data[$val->PROVINCE]['PROVINCE'] = $get_provincename_th[$val->PROVINCE];
+        $pt_data[$val->PROVINCE]['case_age_0'] = $val->case_age_0;
+        $pt_data[$val->PROVINCE]['case_age_1'] = $val->case_age_1;
+        $pt_data[$val->PROVINCE]['case_age_2'] = $val->case_age_2;
+        $pt_data[$val->PROVINCE]['case_age_3'] = $val->case_age_3;
+        $pt_data[$val->PROVINCE]['case_age_4'] = $val->case_age_4;
+        $pt_data[$val->PROVINCE]['case_age_5'] = $val->case_age_5;
+        $pt_data[$val->PROVINCE]['case_age_6'] = $val->case_age_6;
+        $pt_data[$val->PROVINCE]['case_age_7'] = $val->case_age_7;
+        $pt_data[$val->PROVINCE]['case_age_8'] = $val->case_age_8;
+        $pt_data[$val->PROVINCE]['case_age_9'] = $val->case_age_9;
+        $pt_data[$val->PROVINCE]['case_age_10'] = $val->case_age_10;
+        $pt_data[$val->PROVINCE]['case_age_11'] = $val->case_age_11;
+        $pt_data[$val->PROVINCE]['case_age_12'] = $val->case_age_12;
+        $pt_data[$val->PROVINCE]['case_age_13'] = $val->case_age_13;
+        $pt_data[$val->PROVINCE]['case_age_14'] = $val->case_age_14;
+        $pt_data[$val->PROVINCE]['case_age_15'] = $val->case_age_15;
+        $pt_data[$val->PROVINCE]['case_age_16'] = $val->case_age_16;
+        $pt_data[$val->PROVINCE]['case_age_17'] = $val->case_age_17;
+        $pt_data[$val->PROVINCE]['case_age_18'] = $val->case_age_18;
+        $pt_data[$val->PROVINCE]['case_age_19'] = $val->case_age_19;
+        $pt_data[$val->PROVINCE]['case_age_20'] = $val->case_age_20;
+        $pt_data[$val->PROVINCE]['case_age_21'] = $val->case_age_21;
+        $pt_data[$val->PROVINCE]['case_age_22'] = $val->case_age_22;
+        $pt_data[$val->PROVINCE]['case_age_23'] = $val->case_age_23;
+        $pt_data[$val->PROVINCE]['case_age_24'] = $val->case_age_24;
+        $pt_data[$val->PROVINCE]['case_age_25'] = $val->case_age_25;
+        $pt_data[$val->PROVINCE]['case_age_26'] = $val->case_age_26;
+        $pt_data[$val->PROVINCE]['case_age_27'] = $val->case_age_27;
+        $pt_data[$val->PROVINCE]['case_age_28'] = $val->case_age_28;
+        $pt_data[$val->PROVINCE]['case_age_29'] = $val->case_age_29;
+        $pt_data[$val->PROVINCE]['case_age_30'] = $val->case_age_30;
+        $pt_data[$val->PROVINCE]['case_age_31'] = $val->case_age_31;
+        $pt_data[$val->PROVINCE]['case_age_32'] = $val->case_age_32;
+        $pt_data[$val->PROVINCE]['case_age_33'] = $val->case_age_33;
+        $pt_data[$val->PROVINCE]['case_age_34'] = $val->case_age_34;
+        $pt_data[$val->PROVINCE]['case_age_35'] = $val->case_age_35;
+        $pt_data[$val->PROVINCE]['case_age_36'] = $val->case_age_36;
+        $pt_data[$val->PROVINCE]['case_age_37'] = $val->case_age_37;
+        $pt_data[$val->PROVINCE]['case_age_38'] = $val->case_age_38;
+        $pt_data[$val->PROVINCE]['case_age_39'] = $val->case_age_39;
+        $pt_data[$val->PROVINCE]['case_age_40'] = $val->case_age_40;
+        $pt_data[$val->PROVINCE]['case_age_41'] = $val->case_age_41;
+        $pt_data[$val->PROVINCE]['case_age_42'] = $val->case_age_42;
+        $pt_data[$val->PROVINCE]['case_age_43'] = $val->case_age_43;
+        $pt_data[$val->PROVINCE]['case_age_44'] = $val->case_age_44;
+        $pt_data[$val->PROVINCE]['case_age_45'] = $val->case_age_45;
+        $pt_data[$val->PROVINCE]['case_age_46'] = $val->case_age_46;
+        $pt_data[$val->PROVINCE]['case_age_47'] = $val->case_age_47;
+        $pt_data[$val->PROVINCE]['case_age_48'] = $val->case_age_48;
+        $pt_data[$val->PROVINCE]['case_age_49'] = $val->case_age_49;
+        $pt_data[$val->PROVINCE]['case_age_50'] = $val->case_age_50;
+        $pt_data[$val->PROVINCE]['case_age_51'] = $val->case_age_51;
+        $pt_data[$val->PROVINCE]['case_age_52'] = $val->case_age_52;
+        $pt_data[$val->PROVINCE]['case_age_53'] = $val->case_age_53;
+        $pt_data[$val->PROVINCE]['case_age_54'] = $val->case_age_54;
+        $pt_data[$val->PROVINCE]['case_age_55'] = $val->case_age_55;
+        $pt_data[$val->PROVINCE]['case_age_56'] = $val->case_age_56;
+        $pt_data[$val->PROVINCE]['case_age_57'] = $val->case_age_57;
+        $pt_data[$val->PROVINCE]['case_age_58'] = $val->case_age_58;
+        $pt_data[$val->PROVINCE]['case_age_59'] = $val->case_age_59;
+        $pt_data[$val->PROVINCE]['case_age_60'] = $val->case_age_60;
+        $pt_data[$val->PROVINCE]['case_age_61'] = $val->case_age_61;
+        $pt_data[$val->PROVINCE]['case_age_62'] = $val->case_age_62;
+        $pt_data[$val->PROVINCE]['case_age_63'] = $val->case_age_63;
+        $pt_data[$val->PROVINCE]['case_age_64'] = $val->case_age_64;
+        $pt_data[$val->PROVINCE]['case_age_65'] = $val->case_age_65;
+        $pt_data[$val->PROVINCE]['case_age_66'] = $val->case_age_66;
+        $pt_data[$val->PROVINCE]['case_age_67'] = $val->case_age_67;
+        $pt_data[$val->PROVINCE]['case_age_68'] = $val->case_age_68;
+        $pt_data[$val->PROVINCE]['case_age_69'] = $val->case_age_69;
+        $pt_data[$val->PROVINCE]['case_age_70'] = $val->case_age_70;
+        $pt_data[$val->PROVINCE]['case_age_71'] = $val->case_age_71;
+        $pt_data[$val->PROVINCE]['case_age_72'] = $val->case_age_72;
+        $pt_data[$val->PROVINCE]['case_age_73'] = $val->case_age_73;
+        $pt_data[$val->PROVINCE]['case_age_74'] = $val->case_age_74;
+        $pt_data[$val->PROVINCE]['case_age_75'] = $val->case_age_75;
+        $pt_data[$val->PROVINCE]['case_age_76'] = $val->case_age_76;
+        $pt_data[$val->PROVINCE]['case_age_77'] = $val->case_age_77;
+        $pt_data[$val->PROVINCE]['case_age_78'] = $val->case_age_78;
+        $pt_data[$val->PROVINCE]['case_age_79'] = $val->case_age_79;
+        $pt_data[$val->PROVINCE]['case_age_80'] = $val->case_age_80;
+        $pt_data[$val->PROVINCE]['case_age_81'] = $val->case_age_81;
+        $pt_data[$val->PROVINCE]['case_age_82'] = $val->case_age_82;
+        $pt_data[$val->PROVINCE]['case_age_83'] = $val->case_age_83;
+        $pt_data[$val->PROVINCE]['case_age_84'] = $val->case_age_84;
+        $pt_data[$val->PROVINCE]['case_age_85'] = $val->case_age_85;
+        $pt_data[$val->PROVINCE]['case_age_86'] = $val->case_age_86;
+        $pt_data[$val->PROVINCE]['case_age_87'] = $val->case_age_87;
+        $pt_data[$val->PROVINCE]['case_age_88'] = $val->case_age_88;
+        $pt_data[$val->PROVINCE]['case_age_89'] = $val->case_age_89;
+        $pt_data[$val->PROVINCE]['case_age_90'] = $val->case_age_90;
+        $pt_data[$val->PROVINCE]['case_age_91'] = $val->case_age_91;
+        $pt_data[$val->PROVINCE]['case_age_92'] = $val->case_age_92;
+        $pt_data[$val->PROVINCE]['case_age_93'] = $val->case_age_93;
+        $pt_data[$val->PROVINCE]['case_age_94'] = $val->case_age_94;
+        $pt_data[$val->PROVINCE]['case_age_95'] = $val->case_age_95;
+        $pt_data[$val->PROVINCE]['case_age_96'] = $val->case_age_96;
+        $pt_data[$val->PROVINCE]['case_age_97'] = $val->case_age_97;
+        $pt_data[$val->PROVINCE]['case_age_98'] = $val->case_age_98;
+        $pt_data[$val->PROVINCE]['case_age_99'] = $val->case_age_99;
+        $pt_data[$val->PROVINCE]['case_age_100'] = $val->case_age_100;
+
+      }
+
+        foreach ($get_provincename_th as $key => $value) {
+          if (array_key_exists($key, $pt_data)) {
+            $excel_data[$key] = $pt_data[$key];
+          }else{
+            $excel_data[$key] = array(  'prov_dpc'=>$get_dpc_nameth[$key],
+                                        'PROVINCE' => $get_provincename_th[$key],
+                                        'case_age_0' => "0",'case_age_1' => "0",'case_age_2' => "0",'case_age_3' => "0",'case_age_4' => "0",
+                                        'case_age_5' => "0",'case_age_6' => "0",'case_age_7' => "0",'case_age_8' => "0",'case_age_9' => "0",
+                                        'case_age_10' => "0",'case_age_11' => "0",'case_age_12' => "0",'case_age_13' => "0",'case_age_14' => "0",
+                                        'case_age_15' => "0",'case_age_16' => "0",'case_age_17' => "0",'case_age_18' => "0",'case_age_19' => "0",
+                                        'case_age_20' => "0",'case_age_21' => "0",'case_age_22' => "0",'case_age_23' => "0",'case_age_24' => "0",
+                                        'case_age_25' => "0",'case_age_26' => "0",'case_age_27' => "0",'case_age_28' => "0",'case_age_29' => "0",
+                                        'case_age_30' => "0",'case_age_31' => "0",'case_age_32' => "0",'case_age_33' => "0",'case_age_34' => "0",
+                                        'case_age_35' => "0",'case_age_36' => "0",'case_age_37' => "0",'case_age_38' => "0",'case_age_39' => "0",
+                                        'case_age_40' => "0",'case_age_41' => "0",'case_age_42' => "0",'case_age_43' => "0",'case_age_44' => "0",
+                                        'case_age_45' => "0",'case_age_46' => "0",'case_age_47' => "0",'case_age_48' => "0",'case_age_49' => "0",
+                                        'case_age_50' => "0",'case_age_51' => "0",'case_age_52' => "0",'case_age_53' => "0",'case_age_54' => "0",
+                                        'case_age_55' => "0",'case_age_56' => "0",'case_age_57' => "0",'case_age_58' => "0",'case_age_59' => "0",
+                                        'case_age_60' => "0",'case_age_61' => "0",'case_age_62' => "0",'case_age_63' => "0",'case_age_64' => "0",
+                                        'case_age_65' => "0",'case_age_66' => "0",'case_age_67' => "0",'case_age_68' => "0",'case_age_69' => "0",
+                                        'case_age_70' => "0",'case_age_71' => "0",'case_age_72' => "0",'case_age_73' => "0",'case_age_74' => "0",
+                                        'case_age_75' => "0",'case_age_76' => "0",'case_age_77' => "0",'case_age_78' => "0",'case_age_79' => "0",
+                                        'case_age_80' => "0",'case_age_81' => "0",'case_age_82' => "0",'case_age_83' => "0",'case_age_84' => "0",
+                                        'case_age_85' => "0",'case_age_86' => "0",'case_age_87' => "0",'case_age_88' => "0",'case_age_89' => "0",
+                                        'case_age_90' => "0",'case_age_91' => "0",'case_age_92' => "0",'case_age_93' => "0",'case_age_94' => "0",
+                                        'case_age_95' => "0",'case_age_96' => "0",'case_age_97' => "0",'case_age_98' => "0",'case_age_99' => "0",
+                                        'case_age_100' => 0
+                                );
+          }
+        }
+        //Year to DC
+        $year_th = $tblYear+543;
+        //filename
+        $filename = 'sick-age'.'-year-'.$year_th;
+        //sheetname
+        $sheetname = 'sheet1';
+
+        // header text
+        $header_text = "ตารางข้อมูลจำนวนป่วย ตามอายุ จำแนกรายจังหวัด โรค ".$disease_name[$post_disease_code]." ปี ".$year_th;
+
+        Excel::create($filename, function($excel) use($excel_data,$sheetname,$header_text) {
+            // Set the title
+            $excel->setTitle('UCD-Report');
+            // Chain the setters
+            $excel->setCreator('Talek Team')->setCompany('Talek Team');
+            //description
+            $excel->setDescription('สปคม.');
+
+            $excel->sheet($sheetname, function ($sheet) use ($excel_data,$header_text) {
+                //Header Text
+                 $sheet->row(1, [$header_text]);
+                 $sheet->setAutoFilter('A2:H2');
+                 $sheet->fromArray($excel_data, null, 'A2', false, false);
+             });
+         })->download('csv');
+  }
+  public static function get_patient_death_by_age($select_year,$disease_code){
+    $tblYear = (isset($select_year))? $select_year : date('Y')-1;
+    $post_disease_code = (isset($disease_code))? $disease_code : "01";
+    $disease_name =\App\Http\Controllers\Controller::All_disease()->toArray();
+    $get_dpc_nameth = \App\Http\Controllers\Controller::get_dpc_nameth()->toArray();
+    $get_provincename_th =\App\Http\Controllers\Controller::get_provincename_th()->toArray();
+    //Check Disease
+    $disease_code =  explode(",",$post_disease_code);
+    if(count($disease_code)>2){
+      $query[] = DB::table('ur506_'.$tblYear)
+      ->select('prov_dpc','PROVINCE')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 0,1,0)) AS death_age_0,SUM(IF(RESULT = 2 AND YEAR = 1,1,0)) AS death_age_1')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR <> 2,1,0)) AS death_age_2,SUM(IF(RESULT = 2 AND YEAR = 3,1,0)) AS death_age_3')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 4,1,0)) AS death_age_4,SUM(IF(RESULT = 2 AND YEAR = 5,1,0)) AS death_age_5')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 6,1,0)) AS death_age_6,SUM(IF(RESULT = 2 AND YEAR = 7,1,0)) AS death_age_7')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 8,1,0)) AS death_age_8,SUM(IF(RESULT = 2 AND YEAR = 9,1,0)) AS death_age_9')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 10,1,0)) AS death_age_10,SUM(IF(RESULT = 2 AND YEAR = 11,1,0)) AS death_age_11')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 12,1,0)) AS death_age_12,SUM(IF(RESULT = 2 AND YEAR = 13,1,0)) AS death_age_13')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 14,1,0)) AS death_age_14,SUM(IF(RESULT = 2 AND YEAR = 15,1,0)) AS death_age_15')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 16,1,0)) AS death_age_16,SUM(IF(RESULT = 2 AND YEAR = 17,1,0)) AS death_age_17')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 18,1,0)) AS death_age_18,SUM(IF(RESULT = 2 AND YEAR = 19,1,0)) AS death_age_19')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 20,1,0)) AS death_age_20,SUM(IF(RESULT = 2 AND YEAR = 21,1,0)) AS death_age_21')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 22,1,0)) AS death_age_22,SUM(IF(RESULT = 2 AND YEAR = 23,1,0)) AS death_age_23')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 24,1,0)) AS death_age_24,SUM(IF(RESULT = 2 AND YEAR = 25,1,0)) AS death_age_25')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 26,1,0)) AS death_age_26,SUM(IF(RESULT = 2 AND YEAR = 27,1,0)) AS death_age_27')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 28,1,0)) AS death_age_28,SUM(IF(RESULT = 2 AND YEAR = 29,1,0)) AS death_age_29')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 30,1,0)) AS death_age_30,SUM(IF(RESULT = 2 AND YEAR = 31,1,0)) AS death_age_31')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 32,1,0)) AS death_age_32,SUM(IF(RESULT = 2 AND YEAR = 33,1,0)) AS death_age_33')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 34,1,0)) AS death_age_34,SUM(IF(RESULT = 2 AND YEAR = 35,1,0)) AS death_age_35')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 36,1,0)) AS death_age_36,SUM(IF(RESULT = 2 AND YEAR = 37,1,0)) AS death_age_37')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 38,1,0)) AS death_age_38,SUM(IF(RESULT = 2 AND YEAR = 39,1,0)) AS death_age_39')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 40,1,0)) AS death_age_40,SUM(IF(RESULT = 2 AND YEAR = 41,1,0)) AS death_age_41')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 42,1,0)) AS death_age_42,SUM(IF(RESULT = 2 AND YEAR = 43,1,0)) AS death_age_43')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 44,1,0)) AS death_age_44,SUM(IF(RESULT = 2 AND YEAR = 45,1,0)) AS death_age_45')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 46,1,0)) AS death_age_46,SUM(IF(RESULT = 2 AND YEAR = 47,1,0)) AS death_age_47')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 48,1,0)) AS death_age_48,SUM(IF(RESULT = 2 AND YEAR = 49,1,0)) AS death_age_49')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 50,1,0)) AS death_age_50,SUM(IF(RESULT = 2 AND YEAR = 51,1,0)) AS death_age_51')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 52,1,0)) AS death_age_52,SUM(IF(RESULT = 2 AND YEAR = 53,1,0)) AS death_age_53')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 54,1,0)) AS death_age_54,SUM(IF(RESULT = 2 AND YEAR = 55,1,0)) AS death_age_55')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 56,1,0)) AS death_age_56,SUM(IF(RESULT = 2 AND YEAR = 57,1,0)) AS death_age_57')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 58,1,0)) AS death_age_58,SUM(IF(RESULT = 2 AND YEAR = 59,1,0)) AS death_age_59')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 60,1,0)) AS death_age_60,SUM(IF(RESULT = 2 AND YEAR = 61,1,0)) AS death_age_61')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 62,1,0)) AS death_age_62,SUM(IF(RESULT = 2 AND YEAR = 63,1,0)) AS death_age_63')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 64,1,0)) AS death_age_64,SUM(IF(RESULT = 2 AND YEAR = 65,1,0)) AS death_age_65')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 66,1,0)) AS death_age_66,SUM(IF(RESULT = 2 AND YEAR = 67,1,0)) AS death_age_67')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 68,1,0)) AS death_age_68,SUM(IF(RESULT = 2 AND YEAR = 69,1,0)) AS death_age_69')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 70,1,0)) AS death_age_70,SUM(IF(RESULT = 2 AND YEAR = 71,1,0)) AS death_age_71')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 72,1,0)) AS death_age_72,SUM(IF(RESULT = 2 AND YEAR = 73,1,0)) AS death_age_73')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 74,1,0)) AS death_age_74,SUM(IF(RESULT = 2 AND YEAR = 75,1,0)) AS death_age_75')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 76,1,0)) AS death_age_76,SUM(IF(RESULT = 2 AND YEAR = 77,1,0)) AS death_age_77')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 78,1,0)) AS death_age_78,SUM(IF(RESULT = 2 AND YEAR = 79,1,0)) AS death_age_79')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 80,1,0)) AS death_age_80,SUM(IF(RESULT = 2 AND YEAR = 81,1,0)) AS death_age_81')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 82,1,0)) AS death_age_82,SUM(IF(RESULT = 2 AND YEAR = 83,1,0)) AS death_age_83')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 84,1,0)) AS death_age_84,SUM(IF(RESULT = 2 AND YEAR = 85,1,0)) AS death_age_85')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 86,1,0)) AS death_age_86,SUM(IF(RESULT = 2 AND YEAR = 87,1,0)) AS death_age_87')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 88,1,0)) AS death_age_88,SUM(IF(RESULT = 2 AND YEAR = 89,1,0)) AS death_age_89')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 90,1,0)) AS death_age_90,SUM(IF(RESULT = 2 AND YEAR = 91,1,0)) AS death_age_91')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 92,1,0)) AS death_age_92,SUM(IF(RESULT = 2 AND YEAR = 93,1,0)) AS death_age_93')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 94,1,0)) AS death_age_94,SUM(IF(RESULT = 2 AND YEAR = 95,1,0)) AS death_age_95')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 96,1,0)) AS death_age_96,SUM(IF(RESULT = 2 AND YEAR = 97,1,0)) AS death_age_97')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 98,1,0)) AS death_age_98,SUM(IF(RESULT = 2 AND YEAR = 99,1,0)) AS death_age_99')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR >= 100,1,0)) AS death_age_100')
+      ->whereIn('DISEASE',$disease_code)
+      ->join('c_province','ur506_'.$tblYear.'.PROVINCE','=','c_province.prov_code')
+      ->groupBy('PROVINCE')
+      ->get();
+    }else{
+      $query[] = DB::table('ur506_'.$tblYear)
+      ->select('prov_dpc','PROVINCE')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 0,1,0)) AS death_age_0,SUM(IF(RESULT = 2 AND YEAR = 1,1,0)) AS death_age_1')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 2,1,0)) AS death_age_2,SUM(IF(RESULT = 2 AND YEAR = 3,1,0)) AS death_age_3')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 4,1,0)) AS death_age_4,SUM(IF(RESULT = 2 AND YEAR = 5,1,0)) AS death_age_5')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 6,1,0)) AS death_age_6,SUM(IF(RESULT = 2 AND YEAR = 7,1,0)) AS death_age_7')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 8,1,0)) AS death_age_8,SUM(IF(RESULT = 2 AND YEAR = 9,1,0)) AS death_age_9')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 10,1,0)) AS death_age_10,SUM(IF(RESULT = 2 AND YEAR = 11,1,0)) AS death_age_11')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 12,1,0)) AS death_age_12,SUM(IF(RESULT = 2 AND YEAR = 13,1,0)) AS death_age_13')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 14,1,0)) AS death_age_14,SUM(IF(RESULT = 2 AND YEAR = 15,1,0)) AS death_age_15')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 16,1,0)) AS death_age_16,SUM(IF(RESULT = 2 AND YEAR = 17,1,0)) AS death_age_17')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 18,1,0)) AS death_age_18,SUM(IF(RESULT = 2 AND YEAR = 19,1,0)) AS death_age_19')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 20,1,0)) AS death_age_20,SUM(IF(RESULT = 2 AND YEAR = 21,1,0)) AS death_age_21')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 22,1,0)) AS death_age_22,SUM(IF(RESULT = 2 AND YEAR = 23,1,0)) AS death_age_23')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 24,1,0)) AS death_age_24,SUM(IF(RESULT = 2 AND YEAR = 25,1,0)) AS death_age_25')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 26,1,0)) AS death_age_26,SUM(IF(RESULT = 2 AND YEAR = 27,1,0)) AS death_age_27')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 28,1,0)) AS death_age_28,SUM(IF(RESULT = 2 AND YEAR = 29,1,0)) AS death_age_29')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 30,1,0)) AS death_age_30,SUM(IF(RESULT = 2 AND YEAR = 31,1,0)) AS death_age_31')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 32,1,0)) AS death_age_32,SUM(IF(RESULT = 2 AND YEAR = 33,1,0)) AS death_age_33')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 34,1,0)) AS death_age_34,SUM(IF(RESULT = 2 AND YEAR = 35,1,0)) AS death_age_35')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 36,1,0)) AS death_age_36,SUM(IF(RESULT = 2 AND YEAR = 37,1,0)) AS death_age_37')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 38,1,0)) AS death_age_38,SUM(IF(RESULT = 2 AND YEAR = 39,1,0)) AS death_age_39')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 40,1,0)) AS death_age_40,SUM(IF(RESULT = 2 AND YEAR = 41,1,0)) AS death_age_41')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 42,1,0)) AS death_age_42,SUM(IF(RESULT = 2 AND YEAR = 43,1,0)) AS death_age_43')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 44,1,0)) AS death_age_44,SUM(IF(RESULT = 2 AND YEAR = 45,1,0)) AS death_age_45')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 46,1,0)) AS death_age_46,SUM(IF(RESULT = 2 AND YEAR = 47,1,0)) AS death_age_47')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 48,1,0)) AS death_age_48,SUM(IF(RESULT = 2 AND YEAR = 49,1,0)) AS death_age_49')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 50,1,0)) AS death_age_50,SUM(IF(RESULT = 2 AND YEAR = 51,1,0)) AS death_age_51')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 52,1,0)) AS death_age_52,SUM(IF(RESULT = 2 AND YEAR = 53,1,0)) AS death_age_53')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 54,1,0)) AS death_age_54,SUM(IF(RESULT = 2 AND YEAR = 55,1,0)) AS death_age_55')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 56,1,0)) AS death_age_56,SUM(IF(RESULT = 2 AND YEAR = 57,1,0)) AS death_age_57')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 58,1,0)) AS death_age_58,SUM(IF(RESULT = 2 AND YEAR = 59,1,0)) AS death_age_59')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 60,1,0)) AS death_age_60,SUM(IF(RESULT = 2 AND YEAR = 61,1,0)) AS death_age_61')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 62,1,0)) AS death_age_62,SUM(IF(RESULT = 2 AND YEAR = 63,1,0)) AS death_age_63')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 64,1,0)) AS death_age_64,SUM(IF(RESULT = 2 AND YEAR = 65,1,0)) AS death_age_65')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 66,1,0)) AS death_age_66,SUM(IF(RESULT = 2 AND YEAR = 67,1,0)) AS death_age_67')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 68,1,0)) AS death_age_68,SUM(IF(RESULT = 2 AND YEAR = 69,1,0)) AS death_age_69')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 70,1,0)) AS death_age_70,SUM(IF(RESULT = 2 AND YEAR = 71,1,0)) AS death_age_71')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 72,1,0)) AS death_age_72,SUM(IF(RESULT = 2 AND YEAR = 73,1,0)) AS death_age_73')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 74,1,0)) AS death_age_74,SUM(IF(RESULT = 2 AND YEAR = 75,1,0)) AS death_age_75')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 76,1,0)) AS death_age_76,SUM(IF(RESULT = 2 AND YEAR = 77,1,0)) AS death_age_77')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 78,1,0)) AS death_age_78,SUM(IF(RESULT = 2 AND YEAR = 79,1,0)) AS death_age_79')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 80,1,0)) AS death_age_80,SUM(IF(RESULT = 2 AND YEAR = 81,1,0)) AS death_age_81')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 82,1,0)) AS death_age_82,SUM(IF(RESULT = 2 AND YEAR = 83,1,0)) AS death_age_83')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 84,1,0)) AS death_age_84,SUM(IF(RESULT = 2 AND YEAR = 85,1,0)) AS death_age_85')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 86,1,0)) AS death_age_86,SUM(IF(RESULT = 2 AND YEAR = 87,1,0)) AS death_age_87')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 88,1,0)) AS death_age_88,SUM(IF(RESULT = 2 AND YEAR = 89,1,0)) AS death_age_89')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 90,1,0)) AS death_age_90,SUM(IF(RESULT = 2 AND YEAR = 91,1,0)) AS death_age_91')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 92,1,0)) AS death_age_92,SUM(IF(RESULT = 2 AND YEAR = 93,1,0)) AS death_age_93')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 94,1,0)) AS death_age_94,SUM(IF(RESULT = 2 AND YEAR = 95,1,0)) AS death_age_95')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 96,1,0)) AS death_age_96,SUM(IF(RESULT = 2 AND YEAR = 97,1,0)) AS death_age_97')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 98,1,0)) AS death_age_98,SUM(IF(RESULT = 2 AND YEAR = 99,1,0)) AS death_age_99')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR >= 100,1,0)) AS death_age_100')
+      ->where('DISEASE','=',$disease_code['0'])
+      ->join('c_province','ur506_'.$tblYear.'.PROVINCE','=','c_province.prov_code')
+      ->groupBy('PROVINCE')
+      ->get();
+    }
+
+      foreach ($query[0] as $key => $val) {
+        $pt_data[$val->PROVINCE]['prov_dpc'] = $val->prov_dpc;
+        $pt_data[$val->PROVINCE]['PROVINCE'] = $get_provincename_th[$val->PROVINCE];
+        $pt_data[$val->PROVINCE]['death_age_0'] = $val->death_age_0;
+        $pt_data[$val->PROVINCE]['death_age_1'] = $val->death_age_1;
+        $pt_data[$val->PROVINCE]['death_age_2'] = $val->death_age_2;
+        $pt_data[$val->PROVINCE]['death_age_3'] = $val->death_age_3;
+        $pt_data[$val->PROVINCE]['death_age_4'] = $val->death_age_4;
+        $pt_data[$val->PROVINCE]['death_age_5'] = $val->death_age_5;
+        $pt_data[$val->PROVINCE]['death_age_6'] = $val->death_age_6;
+        $pt_data[$val->PROVINCE]['death_age_7'] = $val->death_age_7;
+        $pt_data[$val->PROVINCE]['death_age_8'] = $val->death_age_8;
+        $pt_data[$val->PROVINCE]['death_age_9'] = $val->death_age_9;
+        $pt_data[$val->PROVINCE]['death_age_10'] = $val->death_age_10;
+        $pt_data[$val->PROVINCE]['death_age_11'] = $val->death_age_11;
+        $pt_data[$val->PROVINCE]['death_age_12'] = $val->death_age_12;
+        $pt_data[$val->PROVINCE]['death_age_13'] = $val->death_age_13;
+        $pt_data[$val->PROVINCE]['death_age_14'] = $val->death_age_14;
+        $pt_data[$val->PROVINCE]['death_age_15'] = $val->death_age_15;
+        $pt_data[$val->PROVINCE]['death_age_16'] = $val->death_age_16;
+        $pt_data[$val->PROVINCE]['death_age_17'] = $val->death_age_17;
+        $pt_data[$val->PROVINCE]['death_age_18'] = $val->death_age_18;
+        $pt_data[$val->PROVINCE]['death_age_19'] = $val->death_age_19;
+        $pt_data[$val->PROVINCE]['death_age_20'] = $val->death_age_20;
+        $pt_data[$val->PROVINCE]['death_age_21'] = $val->death_age_21;
+        $pt_data[$val->PROVINCE]['death_age_22'] = $val->death_age_22;
+        $pt_data[$val->PROVINCE]['death_age_23'] = $val->death_age_23;
+        $pt_data[$val->PROVINCE]['death_age_24'] = $val->death_age_24;
+        $pt_data[$val->PROVINCE]['death_age_25'] = $val->death_age_25;
+        $pt_data[$val->PROVINCE]['death_age_26'] = $val->death_age_26;
+        $pt_data[$val->PROVINCE]['death_age_27'] = $val->death_age_27;
+        $pt_data[$val->PROVINCE]['death_age_28'] = $val->death_age_28;
+        $pt_data[$val->PROVINCE]['death_age_29'] = $val->death_age_29;
+        $pt_data[$val->PROVINCE]['death_age_30'] = $val->death_age_30;
+        $pt_data[$val->PROVINCE]['death_age_31'] = $val->death_age_31;
+        $pt_data[$val->PROVINCE]['death_age_32'] = $val->death_age_32;
+        $pt_data[$val->PROVINCE]['death_age_33'] = $val->death_age_33;
+        $pt_data[$val->PROVINCE]['death_age_34'] = $val->death_age_34;
+        $pt_data[$val->PROVINCE]['death_age_35'] = $val->death_age_35;
+        $pt_data[$val->PROVINCE]['death_age_36'] = $val->death_age_36;
+        $pt_data[$val->PROVINCE]['death_age_37'] = $val->death_age_37;
+        $pt_data[$val->PROVINCE]['death_age_38'] = $val->death_age_38;
+        $pt_data[$val->PROVINCE]['death_age_39'] = $val->death_age_39;
+        $pt_data[$val->PROVINCE]['death_age_40'] = $val->death_age_40;
+        $pt_data[$val->PROVINCE]['death_age_41'] = $val->death_age_41;
+        $pt_data[$val->PROVINCE]['death_age_42'] = $val->death_age_42;
+        $pt_data[$val->PROVINCE]['death_age_43'] = $val->death_age_43;
+        $pt_data[$val->PROVINCE]['death_age_44'] = $val->death_age_44;
+        $pt_data[$val->PROVINCE]['death_age_45'] = $val->death_age_45;
+        $pt_data[$val->PROVINCE]['death_age_46'] = $val->death_age_46;
+        $pt_data[$val->PROVINCE]['death_age_47'] = $val->death_age_47;
+        $pt_data[$val->PROVINCE]['death_age_48'] = $val->death_age_48;
+        $pt_data[$val->PROVINCE]['death_age_49'] = $val->death_age_49;
+        $pt_data[$val->PROVINCE]['death_age_50'] = $val->death_age_50;
+        $pt_data[$val->PROVINCE]['death_age_51'] = $val->death_age_51;
+        $pt_data[$val->PROVINCE]['death_age_52'] = $val->death_age_52;
+        $pt_data[$val->PROVINCE]['death_age_53'] = $val->death_age_53;
+        $pt_data[$val->PROVINCE]['death_age_54'] = $val->death_age_54;
+        $pt_data[$val->PROVINCE]['death_age_55'] = $val->death_age_55;
+        $pt_data[$val->PROVINCE]['death_age_56'] = $val->death_age_56;
+        $pt_data[$val->PROVINCE]['death_age_57'] = $val->death_age_57;
+        $pt_data[$val->PROVINCE]['death_age_58'] = $val->death_age_58;
+        $pt_data[$val->PROVINCE]['death_age_59'] = $val->death_age_59;
+        $pt_data[$val->PROVINCE]['death_age_60'] = $val->death_age_60;
+        $pt_data[$val->PROVINCE]['death_age_61'] = $val->death_age_61;
+        $pt_data[$val->PROVINCE]['death_age_62'] = $val->death_age_62;
+        $pt_data[$val->PROVINCE]['death_age_63'] = $val->death_age_63;
+        $pt_data[$val->PROVINCE]['death_age_64'] = $val->death_age_64;
+        $pt_data[$val->PROVINCE]['death_age_65'] = $val->death_age_65;
+        $pt_data[$val->PROVINCE]['death_age_66'] = $val->death_age_66;
+        $pt_data[$val->PROVINCE]['death_age_67'] = $val->death_age_67;
+        $pt_data[$val->PROVINCE]['death_age_68'] = $val->death_age_68;
+        $pt_data[$val->PROVINCE]['death_age_69'] = $val->death_age_69;
+        $pt_data[$val->PROVINCE]['death_age_70'] = $val->death_age_70;
+        $pt_data[$val->PROVINCE]['death_age_71'] = $val->death_age_71;
+        $pt_data[$val->PROVINCE]['death_age_72'] = $val->death_age_72;
+        $pt_data[$val->PROVINCE]['death_age_73'] = $val->death_age_73;
+        $pt_data[$val->PROVINCE]['death_age_74'] = $val->death_age_74;
+        $pt_data[$val->PROVINCE]['death_age_75'] = $val->death_age_75;
+        $pt_data[$val->PROVINCE]['death_age_76'] = $val->death_age_76;
+        $pt_data[$val->PROVINCE]['death_age_77'] = $val->death_age_77;
+        $pt_data[$val->PROVINCE]['death_age_78'] = $val->death_age_78;
+        $pt_data[$val->PROVINCE]['death_age_79'] = $val->death_age_79;
+        $pt_data[$val->PROVINCE]['death_age_80'] = $val->death_age_80;
+        $pt_data[$val->PROVINCE]['death_age_81'] = $val->death_age_81;
+        $pt_data[$val->PROVINCE]['death_age_82'] = $val->death_age_82;
+        $pt_data[$val->PROVINCE]['death_age_83'] = $val->death_age_83;
+        $pt_data[$val->PROVINCE]['death_age_84'] = $val->death_age_84;
+        $pt_data[$val->PROVINCE]['death_age_85'] = $val->death_age_85;
+        $pt_data[$val->PROVINCE]['death_age_86'] = $val->death_age_86;
+        $pt_data[$val->PROVINCE]['death_age_87'] = $val->death_age_87;
+        $pt_data[$val->PROVINCE]['death_age_88'] = $val->death_age_88;
+        $pt_data[$val->PROVINCE]['death_age_89'] = $val->death_age_89;
+        $pt_data[$val->PROVINCE]['death_age_90'] = $val->death_age_90;
+        $pt_data[$val->PROVINCE]['death_age_91'] = $val->death_age_91;
+        $pt_data[$val->PROVINCE]['death_age_92'] = $val->death_age_92;
+        $pt_data[$val->PROVINCE]['death_age_93'] = $val->death_age_93;
+        $pt_data[$val->PROVINCE]['death_age_94'] = $val->death_age_94;
+        $pt_data[$val->PROVINCE]['death_age_95'] = $val->death_age_95;
+        $pt_data[$val->PROVINCE]['death_age_96'] = $val->death_age_96;
+        $pt_data[$val->PROVINCE]['death_age_97'] = $val->death_age_97;
+        $pt_data[$val->PROVINCE]['death_age_98'] = $val->death_age_98;
+        $pt_data[$val->PROVINCE]['death_age_99'] = $val->death_age_99;
+        $pt_data[$val->PROVINCE]['death_age_100'] = $val->death_age_100;
+
+      }
+
+        foreach ($get_provincename_th as $key => $value) {
+          if (array_key_exists($key, $pt_data)) {
+            $excel_data[$key] = $pt_data[$key];
+          }else{
+            $excel_data[$key] = array(  'prov_dpc'=>$get_dpc_nameth[$key],
+                                        'PROVINCE' => $get_provincename_th[$key],
+                                        'death_age_0' => "0",'death_age_1' => "0",'death_age_2' => "0",'death_age_3' => "0",'death_age_4' => "0",
+                                        'death_age_5' => "0",'death_age_6' => "0",'death_age_7' => "0",'death_age_8' => "0",'death_age_9' => "0",
+                                        'death_age_10' => "0",'death_age_11' => "0",'death_age_12' => "0",'death_age_13' => "0",'death_age_14' => "0",
+                                        'death_age_15' => "0",'death_age_16' => "0",'death_age_17' => "0",'death_age_18' => "0",'death_age_19' => "0",
+                                        'death_age_20' => "0",'death_age_21' => "0",'death_age_22' => "0",'death_age_23' => "0",'death_age_24' => "0",
+                                        'death_age_25' => "0",'death_age_26' => "0",'death_age_27' => "0",'death_age_28' => "0",'death_age_29' => "0",
+                                        'death_age_30' => "0",'death_age_31' => "0",'death_age_32' => "0",'death_age_33' => "0",'death_age_34' => "0",
+                                        'death_age_35' => "0",'death_age_36' => "0",'death_age_37' => "0",'death_age_38' => "0",'death_age_39' => "0",
+                                        'death_age_40' => "0",'death_age_41' => "0",'death_age_42' => "0",'death_age_43' => "0",'death_age_44' => "0",
+                                        'death_age_45' => "0",'death_age_46' => "0",'death_age_47' => "0",'death_age_48' => "0",'death_age_49' => "0",
+                                        'death_age_50' => "0",'death_age_51' => "0",'death_age_52' => "0",'death_age_53' => "0",'death_age_54' => "0",
+                                        'death_age_55' => "0",'death_age_56' => "0",'death_age_57' => "0",'death_age_58' => "0",'death_age_59' => "0",
+                                        'death_age_60' => "0",'death_age_61' => "0",'death_age_62' => "0",'death_age_63' => "0",'death_age_64' => "0",
+                                        'death_age_65' => "0",'death_age_66' => "0",'death_age_67' => "0",'death_age_68' => "0",'death_age_69' => "0",
+                                        'death_age_70' => "0",'death_age_71' => "0",'death_age_72' => "0",'death_age_73' => "0",'death_age_74' => "0",
+                                        'death_age_75' => "0",'death_age_76' => "0",'death_age_77' => "0",'death_age_78' => "0",'death_age_79' => "0",
+                                        'death_age_80' => "0",'death_age_81' => "0",'death_age_82' => "0",'death_age_83' => "0",'death_age_84' => "0",
+                                        'death_age_85' => "0",'death_age_86' => "0",'death_age_87' => "0",'death_age_88' => "0",'death_age_89' => "0",
+                                        'death_age_90' => "0",'death_age_91' => "0",'death_age_92' => "0",'death_age_93' => "0",'death_age_94' => "0",
+                                        'death_age_95' => "0",'death_age_96' => "0",'death_age_97' => "0",'death_age_98' => "0",'death_age_99' => "0",
+                                        'death_age_100' => 0
+                                );
+          }
+        }
+        return $excel_data;
+  }
+  public static function xls_patient_death_by_age(Request $request){
+    if(empty($request->select_year) || empty($request->disease_code)) return false;
+    $post_disease_code = $request->disease_code;
+    $tblYear = $request->select_year;
+    $disease_name =\App\Http\Controllers\Controller::All_disease()->toArray();
+    $get_dpc_nameth = \App\Http\Controllers\Controller::get_dpc_nameth()->toArray();
+    $get_provincename_th =\App\Http\Controllers\Controller::get_provincename_th()->toArray();
+    //Col A1 Excel
+    $excel_data[] = array('DPC','Reporting Area','age-0','age-1','age-2','age-3','age-4','age-5','age-6','age-7','age-8','age-9','age-10','age-11','age-12',
+                          'age-13','age-14','age-15','age-16','age-17','age-18','age-19','age-20','age-21','age-22','age-23','age-24','age-25','age-26',
+                          'age-27','age-28','age-29','age-30','age-31','age-32','age-33','age-34','age-35','age-36','age-37','age-38','age-39',
+                          'age-40','age-41','age-42','age-43','age-44','age-45','age-46','age-47','age-48','age-49','age-50','age-51','age-52','age-53','age-54',
+                          'age-55','age-56','age-57','age-58','age-59','age-60','age-61','age-62','age-63','age-64','age-65','age-66','age-67','age-68','age-69','age-70','age-71','age-72','age-73','age-74','age-75','age-76','age-77','age-78','age-79',
+                          'age-80','age-81','age-82','age-83','age-84','age-85','age-86','age-87','age-88','age-89','age-90','age-91','age-91','age-93','age-94','age-95','age-96','age-97','age-98','age-99','age->=100'
+                         );
+    //Check Disease
+    $disease_code =  explode(",",$post_disease_code);
+    if(count($disease_code)>2){
+      $query[] = DB::table('ur506_'.$tblYear)
+      ->select('prov_dpc','PROVINCE')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 0,1,0)) AS death_age_0,SUM(IF(RESULT = 2 AND YEAR = 1,1,0)) AS death_age_1')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR <> 2,1,0)) AS death_age_2,SUM(IF(RESULT = 2 AND YEAR = 3,1,0)) AS death_age_3')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 4,1,0)) AS death_age_4,SUM(IF(RESULT = 2 AND YEAR = 5,1,0)) AS death_age_5')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 6,1,0)) AS death_age_6,SUM(IF(RESULT = 2 AND YEAR = 7,1,0)) AS death_age_7')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 8,1,0)) AS death_age_8,SUM(IF(RESULT = 2 AND YEAR = 9,1,0)) AS death_age_9')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 10,1,0)) AS death_age_10,SUM(IF(RESULT = 2 AND YEAR = 11,1,0)) AS death_age_11')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 12,1,0)) AS death_age_12,SUM(IF(RESULT = 2 AND YEAR = 13,1,0)) AS death_age_13')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 14,1,0)) AS death_age_14,SUM(IF(RESULT = 2 AND YEAR = 15,1,0)) AS death_age_15')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 16,1,0)) AS death_age_16,SUM(IF(RESULT = 2 AND YEAR = 17,1,0)) AS death_age_17')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 18,1,0)) AS death_age_18,SUM(IF(RESULT = 2 AND YEAR = 19,1,0)) AS death_age_19')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 20,1,0)) AS death_age_20,SUM(IF(RESULT = 2 AND YEAR = 21,1,0)) AS death_age_21')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 22,1,0)) AS death_age_22,SUM(IF(RESULT = 2 AND YEAR = 23,1,0)) AS death_age_23')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 24,1,0)) AS death_age_24,SUM(IF(RESULT = 2 AND YEAR = 25,1,0)) AS death_age_25')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 26,1,0)) AS death_age_26,SUM(IF(RESULT = 2 AND YEAR = 27,1,0)) AS death_age_27')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 28,1,0)) AS death_age_28,SUM(IF(RESULT = 2 AND YEAR = 29,1,0)) AS death_age_29')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 30,1,0)) AS death_age_30,SUM(IF(RESULT = 2 AND YEAR = 31,1,0)) AS death_age_31')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 32,1,0)) AS death_age_32,SUM(IF(RESULT = 2 AND YEAR = 33,1,0)) AS death_age_33')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 34,1,0)) AS death_age_34,SUM(IF(RESULT = 2 AND YEAR = 35,1,0)) AS death_age_35')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 36,1,0)) AS death_age_36,SUM(IF(RESULT = 2 AND YEAR = 37,1,0)) AS death_age_37')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 38,1,0)) AS death_age_38,SUM(IF(RESULT = 2 AND YEAR = 39,1,0)) AS death_age_39')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 40,1,0)) AS death_age_40,SUM(IF(RESULT = 2 AND YEAR = 41,1,0)) AS death_age_41')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 42,1,0)) AS death_age_42,SUM(IF(RESULT = 2 AND YEAR = 43,1,0)) AS death_age_43')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 44,1,0)) AS death_age_44,SUM(IF(RESULT = 2 AND YEAR = 45,1,0)) AS death_age_45')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 46,1,0)) AS death_age_46,SUM(IF(RESULT = 2 AND YEAR = 47,1,0)) AS death_age_47')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 48,1,0)) AS death_age_48,SUM(IF(RESULT = 2 AND YEAR = 49,1,0)) AS death_age_49')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 50,1,0)) AS death_age_50,SUM(IF(RESULT = 2 AND YEAR = 51,1,0)) AS death_age_51')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 52,1,0)) AS death_age_52,SUM(IF(RESULT = 2 AND YEAR = 53,1,0)) AS death_age_53')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 54,1,0)) AS death_age_54,SUM(IF(RESULT = 2 AND YEAR = 55,1,0)) AS death_age_55')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 56,1,0)) AS death_age_56,SUM(IF(RESULT = 2 AND YEAR = 57,1,0)) AS death_age_57')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 58,1,0)) AS death_age_58,SUM(IF(RESULT = 2 AND YEAR = 59,1,0)) AS death_age_59')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 60,1,0)) AS death_age_60,SUM(IF(RESULT = 2 AND YEAR = 61,1,0)) AS death_age_61')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 62,1,0)) AS death_age_62,SUM(IF(RESULT = 2 AND YEAR = 63,1,0)) AS death_age_63')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 64,1,0)) AS death_age_64,SUM(IF(RESULT = 2 AND YEAR = 65,1,0)) AS death_age_65')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 66,1,0)) AS death_age_66,SUM(IF(RESULT = 2 AND YEAR = 67,1,0)) AS death_age_67')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 68,1,0)) AS death_age_68,SUM(IF(RESULT = 2 AND YEAR = 69,1,0)) AS death_age_69')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 70,1,0)) AS death_age_70,SUM(IF(RESULT = 2 AND YEAR = 71,1,0)) AS death_age_71')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 72,1,0)) AS death_age_72,SUM(IF(RESULT = 2 AND YEAR = 73,1,0)) AS death_age_73')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 74,1,0)) AS death_age_74,SUM(IF(RESULT = 2 AND YEAR = 75,1,0)) AS death_age_75')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 76,1,0)) AS death_age_76,SUM(IF(RESULT = 2 AND YEAR = 77,1,0)) AS death_age_77')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 78,1,0)) AS death_age_78,SUM(IF(RESULT = 2 AND YEAR = 79,1,0)) AS death_age_79')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 80,1,0)) AS death_age_80,SUM(IF(RESULT = 2 AND YEAR = 81,1,0)) AS death_age_81')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 82,1,0)) AS death_age_82,SUM(IF(RESULT = 2 AND YEAR = 83,1,0)) AS death_age_83')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 84,1,0)) AS death_age_84,SUM(IF(RESULT = 2 AND YEAR = 85,1,0)) AS death_age_85')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 86,1,0)) AS death_age_86,SUM(IF(RESULT = 2 AND YEAR = 87,1,0)) AS death_age_87')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 88,1,0)) AS death_age_88,SUM(IF(RESULT = 2 AND YEAR = 89,1,0)) AS death_age_89')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 90,1,0)) AS death_age_90,SUM(IF(RESULT = 2 AND YEAR = 91,1,0)) AS death_age_91')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 92,1,0)) AS death_age_92,SUM(IF(RESULT = 2 AND YEAR = 93,1,0)) AS death_age_93')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 94,1,0)) AS death_age_94,SUM(IF(RESULT = 2 AND YEAR = 95,1,0)) AS death_age_95')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 96,1,0)) AS death_age_96,SUM(IF(RESULT = 2 AND YEAR = 97,1,0)) AS death_age_97')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 98,1,0)) AS death_age_98,SUM(IF(RESULT = 2 AND YEAR = 99,1,0)) AS death_age_99')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR >= 100,1,0)) AS death_age_100')
+      ->whereIn('DISEASE',$disease_code)
+      ->join('c_province','ur506_'.$tblYear.'.PROVINCE','=','c_province.prov_code')
+      ->groupBy('PROVINCE')
+      ->get();
+    }else{
+      $query[] = DB::table('ur506_'.$tblYear)
+      ->select('prov_dpc','PROVINCE')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 0,1,0)) AS death_age_0,SUM(IF(RESULT = 2 AND YEAR = 1,1,0)) AS death_age_1')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 2,1,0)) AS death_age_2,SUM(IF(RESULT = 2 AND YEAR = 3,1,0)) AS death_age_3')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 4,1,0)) AS death_age_4,SUM(IF(RESULT = 2 AND YEAR = 5,1,0)) AS death_age_5')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 6,1,0)) AS death_age_6,SUM(IF(RESULT = 2 AND YEAR = 7,1,0)) AS death_age_7')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 8,1,0)) AS death_age_8,SUM(IF(RESULT = 2 AND YEAR = 9,1,0)) AS death_age_9')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 10,1,0)) AS death_age_10,SUM(IF(RESULT = 2 AND YEAR = 11,1,0)) AS death_age_11')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 12,1,0)) AS death_age_12,SUM(IF(RESULT = 2 AND YEAR = 13,1,0)) AS death_age_13')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 14,1,0)) AS death_age_14,SUM(IF(RESULT = 2 AND YEAR = 15,1,0)) AS death_age_15')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 16,1,0)) AS death_age_16,SUM(IF(RESULT = 2 AND YEAR = 17,1,0)) AS death_age_17')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 18,1,0)) AS death_age_18,SUM(IF(RESULT = 2 AND YEAR = 19,1,0)) AS death_age_19')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 20,1,0)) AS death_age_20,SUM(IF(RESULT = 2 AND YEAR = 21,1,0)) AS death_age_21')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 22,1,0)) AS death_age_22,SUM(IF(RESULT = 2 AND YEAR = 23,1,0)) AS death_age_23')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 24,1,0)) AS death_age_24,SUM(IF(RESULT = 2 AND YEAR = 25,1,0)) AS death_age_25')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 26,1,0)) AS death_age_26,SUM(IF(RESULT = 2 AND YEAR = 27,1,0)) AS death_age_27')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 28,1,0)) AS death_age_28,SUM(IF(RESULT = 2 AND YEAR = 29,1,0)) AS death_age_29')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 30,1,0)) AS death_age_30,SUM(IF(RESULT = 2 AND YEAR = 31,1,0)) AS death_age_31')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 32,1,0)) AS death_age_32,SUM(IF(RESULT = 2 AND YEAR = 33,1,0)) AS death_age_33')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 34,1,0)) AS death_age_34,SUM(IF(RESULT = 2 AND YEAR = 35,1,0)) AS death_age_35')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 36,1,0)) AS death_age_36,SUM(IF(RESULT = 2 AND YEAR = 37,1,0)) AS death_age_37')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 38,1,0)) AS death_age_38,SUM(IF(RESULT = 2 AND YEAR = 39,1,0)) AS death_age_39')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 40,1,0)) AS death_age_40,SUM(IF(RESULT = 2 AND YEAR = 41,1,0)) AS death_age_41')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 42,1,0)) AS death_age_42,SUM(IF(RESULT = 2 AND YEAR = 43,1,0)) AS death_age_43')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 44,1,0)) AS death_age_44,SUM(IF(RESULT = 2 AND YEAR = 45,1,0)) AS death_age_45')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 46,1,0)) AS death_age_46,SUM(IF(RESULT = 2 AND YEAR = 47,1,0)) AS death_age_47')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 48,1,0)) AS death_age_48,SUM(IF(RESULT = 2 AND YEAR = 49,1,0)) AS death_age_49')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 50,1,0)) AS death_age_50,SUM(IF(RESULT = 2 AND YEAR = 51,1,0)) AS death_age_51')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 52,1,0)) AS death_age_52,SUM(IF(RESULT = 2 AND YEAR = 53,1,0)) AS death_age_53')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 54,1,0)) AS death_age_54,SUM(IF(RESULT = 2 AND YEAR = 55,1,0)) AS death_age_55')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 56,1,0)) AS death_age_56,SUM(IF(RESULT = 2 AND YEAR = 57,1,0)) AS death_age_57')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 58,1,0)) AS death_age_58,SUM(IF(RESULT = 2 AND YEAR = 59,1,0)) AS death_age_59')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 60,1,0)) AS death_age_60,SUM(IF(RESULT = 2 AND YEAR = 61,1,0)) AS death_age_61')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 62,1,0)) AS death_age_62,SUM(IF(RESULT = 2 AND YEAR = 63,1,0)) AS death_age_63')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 64,1,0)) AS death_age_64,SUM(IF(RESULT = 2 AND YEAR = 65,1,0)) AS death_age_65')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 66,1,0)) AS death_age_66,SUM(IF(RESULT = 2 AND YEAR = 67,1,0)) AS death_age_67')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 68,1,0)) AS death_age_68,SUM(IF(RESULT = 2 AND YEAR = 69,1,0)) AS death_age_69')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 70,1,0)) AS death_age_70,SUM(IF(RESULT = 2 AND YEAR = 71,1,0)) AS death_age_71')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 72,1,0)) AS death_age_72,SUM(IF(RESULT = 2 AND YEAR = 73,1,0)) AS death_age_73')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 74,1,0)) AS death_age_74,SUM(IF(RESULT = 2 AND YEAR = 75,1,0)) AS death_age_75')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 76,1,0)) AS death_age_76,SUM(IF(RESULT = 2 AND YEAR = 77,1,0)) AS death_age_77')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 78,1,0)) AS death_age_78,SUM(IF(RESULT = 2 AND YEAR = 79,1,0)) AS death_age_79')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 80,1,0)) AS death_age_80,SUM(IF(RESULT = 2 AND YEAR = 81,1,0)) AS death_age_81')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 82,1,0)) AS death_age_82,SUM(IF(RESULT = 2 AND YEAR = 83,1,0)) AS death_age_83')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 84,1,0)) AS death_age_84,SUM(IF(RESULT = 2 AND YEAR = 85,1,0)) AS death_age_85')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 86,1,0)) AS death_age_86,SUM(IF(RESULT = 2 AND YEAR = 87,1,0)) AS death_age_87')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 88,1,0)) AS death_age_88,SUM(IF(RESULT = 2 AND YEAR = 89,1,0)) AS death_age_89')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 90,1,0)) AS death_age_90,SUM(IF(RESULT = 2 AND YEAR = 91,1,0)) AS death_age_91')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 92,1,0)) AS death_age_92,SUM(IF(RESULT = 2 AND YEAR = 93,1,0)) AS death_age_93')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 94,1,0)) AS death_age_94,SUM(IF(RESULT = 2 AND YEAR = 95,1,0)) AS death_age_95')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 96,1,0)) AS death_age_96,SUM(IF(RESULT = 2 AND YEAR = 97,1,0)) AS death_age_97')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR = 98,1,0)) AS death_age_98,SUM(IF(RESULT = 2 AND YEAR = 99,1,0)) AS death_age_99')
+      ->selectRaw('SUM(IF(RESULT = 2 AND YEAR >= 100,1,0)) AS death_age_100')
+      ->where('DISEASE','=',$disease_code['0'])
+      ->join('c_province','ur506_'.$tblYear.'.PROVINCE','=','c_province.prov_code')
+      ->groupBy('PROVINCE')
+      ->get();
+    }
+
+      foreach ($query[0] as $key => $val) {
+        $pt_data[$val->PROVINCE]['prov_dpc'] = $val->prov_dpc;
+        $pt_data[$val->PROVINCE]['PROVINCE'] = $get_provincename_th[$val->PROVINCE];
+        $pt_data[$val->PROVINCE]['death_age_0'] = $val->death_age_0;
+        $pt_data[$val->PROVINCE]['death_age_1'] = $val->death_age_1;
+        $pt_data[$val->PROVINCE]['death_age_2'] = $val->death_age_2;
+        $pt_data[$val->PROVINCE]['death_age_3'] = $val->death_age_3;
+        $pt_data[$val->PROVINCE]['death_age_4'] = $val->death_age_4;
+        $pt_data[$val->PROVINCE]['death_age_5'] = $val->death_age_5;
+        $pt_data[$val->PROVINCE]['death_age_6'] = $val->death_age_6;
+        $pt_data[$val->PROVINCE]['death_age_7'] = $val->death_age_7;
+        $pt_data[$val->PROVINCE]['death_age_8'] = $val->death_age_8;
+        $pt_data[$val->PROVINCE]['death_age_9'] = $val->death_age_9;
+        $pt_data[$val->PROVINCE]['death_age_10'] = $val->death_age_10;
+        $pt_data[$val->PROVINCE]['death_age_11'] = $val->death_age_11;
+        $pt_data[$val->PROVINCE]['death_age_12'] = $val->death_age_12;
+        $pt_data[$val->PROVINCE]['death_age_13'] = $val->death_age_13;
+        $pt_data[$val->PROVINCE]['death_age_14'] = $val->death_age_14;
+        $pt_data[$val->PROVINCE]['death_age_15'] = $val->death_age_15;
+        $pt_data[$val->PROVINCE]['death_age_16'] = $val->death_age_16;
+        $pt_data[$val->PROVINCE]['death_age_17'] = $val->death_age_17;
+        $pt_data[$val->PROVINCE]['death_age_18'] = $val->death_age_18;
+        $pt_data[$val->PROVINCE]['death_age_19'] = $val->death_age_19;
+        $pt_data[$val->PROVINCE]['death_age_20'] = $val->death_age_20;
+        $pt_data[$val->PROVINCE]['death_age_21'] = $val->death_age_21;
+        $pt_data[$val->PROVINCE]['death_age_22'] = $val->death_age_22;
+        $pt_data[$val->PROVINCE]['death_age_23'] = $val->death_age_23;
+        $pt_data[$val->PROVINCE]['death_age_24'] = $val->death_age_24;
+        $pt_data[$val->PROVINCE]['death_age_25'] = $val->death_age_25;
+        $pt_data[$val->PROVINCE]['death_age_26'] = $val->death_age_26;
+        $pt_data[$val->PROVINCE]['death_age_27'] = $val->death_age_27;
+        $pt_data[$val->PROVINCE]['death_age_28'] = $val->death_age_28;
+        $pt_data[$val->PROVINCE]['death_age_29'] = $val->death_age_29;
+        $pt_data[$val->PROVINCE]['death_age_30'] = $val->death_age_30;
+        $pt_data[$val->PROVINCE]['death_age_31'] = $val->death_age_31;
+        $pt_data[$val->PROVINCE]['death_age_32'] = $val->death_age_32;
+        $pt_data[$val->PROVINCE]['death_age_33'] = $val->death_age_33;
+        $pt_data[$val->PROVINCE]['death_age_34'] = $val->death_age_34;
+        $pt_data[$val->PROVINCE]['death_age_35'] = $val->death_age_35;
+        $pt_data[$val->PROVINCE]['death_age_36'] = $val->death_age_36;
+        $pt_data[$val->PROVINCE]['death_age_37'] = $val->death_age_37;
+        $pt_data[$val->PROVINCE]['death_age_38'] = $val->death_age_38;
+        $pt_data[$val->PROVINCE]['death_age_39'] = $val->death_age_39;
+        $pt_data[$val->PROVINCE]['death_age_40'] = $val->death_age_40;
+        $pt_data[$val->PROVINCE]['death_age_41'] = $val->death_age_41;
+        $pt_data[$val->PROVINCE]['death_age_42'] = $val->death_age_42;
+        $pt_data[$val->PROVINCE]['death_age_43'] = $val->death_age_43;
+        $pt_data[$val->PROVINCE]['death_age_44'] = $val->death_age_44;
+        $pt_data[$val->PROVINCE]['death_age_45'] = $val->death_age_45;
+        $pt_data[$val->PROVINCE]['death_age_46'] = $val->death_age_46;
+        $pt_data[$val->PROVINCE]['death_age_47'] = $val->death_age_47;
+        $pt_data[$val->PROVINCE]['death_age_48'] = $val->death_age_48;
+        $pt_data[$val->PROVINCE]['death_age_49'] = $val->death_age_49;
+        $pt_data[$val->PROVINCE]['death_age_50'] = $val->death_age_50;
+        $pt_data[$val->PROVINCE]['death_age_51'] = $val->death_age_51;
+        $pt_data[$val->PROVINCE]['death_age_52'] = $val->death_age_52;
+        $pt_data[$val->PROVINCE]['death_age_53'] = $val->death_age_53;
+        $pt_data[$val->PROVINCE]['death_age_54'] = $val->death_age_54;
+        $pt_data[$val->PROVINCE]['death_age_55'] = $val->death_age_55;
+        $pt_data[$val->PROVINCE]['death_age_56'] = $val->death_age_56;
+        $pt_data[$val->PROVINCE]['death_age_57'] = $val->death_age_57;
+        $pt_data[$val->PROVINCE]['death_age_58'] = $val->death_age_58;
+        $pt_data[$val->PROVINCE]['death_age_59'] = $val->death_age_59;
+        $pt_data[$val->PROVINCE]['death_age_60'] = $val->death_age_60;
+        $pt_data[$val->PROVINCE]['death_age_61'] = $val->death_age_61;
+        $pt_data[$val->PROVINCE]['death_age_62'] = $val->death_age_62;
+        $pt_data[$val->PROVINCE]['death_age_63'] = $val->death_age_63;
+        $pt_data[$val->PROVINCE]['death_age_64'] = $val->death_age_64;
+        $pt_data[$val->PROVINCE]['death_age_65'] = $val->death_age_65;
+        $pt_data[$val->PROVINCE]['death_age_66'] = $val->death_age_66;
+        $pt_data[$val->PROVINCE]['death_age_67'] = $val->death_age_67;
+        $pt_data[$val->PROVINCE]['death_age_68'] = $val->death_age_68;
+        $pt_data[$val->PROVINCE]['death_age_69'] = $val->death_age_69;
+        $pt_data[$val->PROVINCE]['death_age_70'] = $val->death_age_70;
+        $pt_data[$val->PROVINCE]['death_age_71'] = $val->death_age_71;
+        $pt_data[$val->PROVINCE]['death_age_72'] = $val->death_age_72;
+        $pt_data[$val->PROVINCE]['death_age_73'] = $val->death_age_73;
+        $pt_data[$val->PROVINCE]['death_age_74'] = $val->death_age_74;
+        $pt_data[$val->PROVINCE]['death_age_75'] = $val->death_age_75;
+        $pt_data[$val->PROVINCE]['death_age_76'] = $val->death_age_76;
+        $pt_data[$val->PROVINCE]['death_age_77'] = $val->death_age_77;
+        $pt_data[$val->PROVINCE]['death_age_78'] = $val->death_age_78;
+        $pt_data[$val->PROVINCE]['death_age_79'] = $val->death_age_79;
+        $pt_data[$val->PROVINCE]['death_age_80'] = $val->death_age_80;
+        $pt_data[$val->PROVINCE]['death_age_81'] = $val->death_age_81;
+        $pt_data[$val->PROVINCE]['death_age_82'] = $val->death_age_82;
+        $pt_data[$val->PROVINCE]['death_age_83'] = $val->death_age_83;
+        $pt_data[$val->PROVINCE]['death_age_84'] = $val->death_age_84;
+        $pt_data[$val->PROVINCE]['death_age_85'] = $val->death_age_85;
+        $pt_data[$val->PROVINCE]['death_age_86'] = $val->death_age_86;
+        $pt_data[$val->PROVINCE]['death_age_87'] = $val->death_age_87;
+        $pt_data[$val->PROVINCE]['death_age_88'] = $val->death_age_88;
+        $pt_data[$val->PROVINCE]['death_age_89'] = $val->death_age_89;
+        $pt_data[$val->PROVINCE]['death_age_90'] = $val->death_age_90;
+        $pt_data[$val->PROVINCE]['death_age_91'] = $val->death_age_91;
+        $pt_data[$val->PROVINCE]['death_age_92'] = $val->death_age_92;
+        $pt_data[$val->PROVINCE]['death_age_93'] = $val->death_age_93;
+        $pt_data[$val->PROVINCE]['death_age_94'] = $val->death_age_94;
+        $pt_data[$val->PROVINCE]['death_age_95'] = $val->death_age_95;
+        $pt_data[$val->PROVINCE]['death_age_96'] = $val->death_age_96;
+        $pt_data[$val->PROVINCE]['death_age_97'] = $val->death_age_97;
+        $pt_data[$val->PROVINCE]['death_age_98'] = $val->death_age_98;
+        $pt_data[$val->PROVINCE]['death_age_99'] = $val->death_age_99;
+        $pt_data[$val->PROVINCE]['death_age_100'] = $val->death_age_100;
+
+      }
+
+        foreach ($get_provincename_th as $key => $value) {
+          if (array_key_exists($key, $pt_data)) {
+            $excel_data[$key] = $pt_data[$key];
+          }else{
+            $excel_data[$key] = array(  'prov_dpc'=>$get_dpc_nameth[$key],
+                                        'PROVINCE' => $get_provincename_th[$key],
+                                        'death_age_0' => "0",'death_age_1' => "0",'death_age_2' => "0",'death_age_3' => "0",'death_age_4' => "0",
+                                        'death_age_5' => "0",'death_age_6' => "0",'death_age_7' => "0",'death_age_8' => "0",'death_age_9' => "0",
+                                        'death_age_10' => "0",'death_age_11' => "0",'death_age_12' => "0",'death_age_13' => "0",'death_age_14' => "0",
+                                        'death_age_15' => "0",'death_age_16' => "0",'death_age_17' => "0",'death_age_18' => "0",'death_age_19' => "0",
+                                        'death_age_20' => "0",'death_age_21' => "0",'death_age_22' => "0",'death_age_23' => "0",'death_age_24' => "0",
+                                        'death_age_25' => "0",'death_age_26' => "0",'death_age_27' => "0",'death_age_28' => "0",'death_age_29' => "0",
+                                        'death_age_30' => "0",'death_age_31' => "0",'death_age_32' => "0",'death_age_33' => "0",'death_age_34' => "0",
+                                        'death_age_35' => "0",'death_age_36' => "0",'death_age_37' => "0",'death_age_38' => "0",'death_age_39' => "0",
+                                        'death_age_40' => "0",'death_age_41' => "0",'death_age_42' => "0",'death_age_43' => "0",'death_age_44' => "0",
+                                        'death_age_45' => "0",'death_age_46' => "0",'death_age_47' => "0",'death_age_48' => "0",'death_age_49' => "0",
+                                        'death_age_50' => "0",'death_age_51' => "0",'death_age_52' => "0",'death_age_53' => "0",'death_age_54' => "0",
+                                        'death_age_55' => "0",'death_age_56' => "0",'death_age_57' => "0",'death_age_58' => "0",'death_age_59' => "0",
+                                        'death_age_60' => "0",'death_age_61' => "0",'death_age_62' => "0",'death_age_63' => "0",'death_age_64' => "0",
+                                        'death_age_65' => "0",'death_age_66' => "0",'death_age_67' => "0",'death_age_68' => "0",'death_age_69' => "0",
+                                        'death_age_70' => "0",'death_age_71' => "0",'death_age_72' => "0",'death_age_73' => "0",'death_age_74' => "0",
+                                        'death_age_75' => "0",'death_age_76' => "0",'death_age_77' => "0",'death_age_78' => "0",'death_age_79' => "0",
+                                        'death_age_80' => "0",'death_age_81' => "0",'death_age_82' => "0",'death_age_83' => "0",'death_age_84' => "0",
+                                        'death_age_85' => "0",'death_age_86' => "0",'death_age_87' => "0",'death_age_88' => "0",'death_age_89' => "0",
+                                        'death_age_90' => "0",'death_age_91' => "0",'death_age_92' => "0",'death_age_93' => "0",'death_age_94' => "0",
+                                        'death_age_95' => "0",'death_age_96' => "0",'death_age_97' => "0",'death_age_98' => "0",'death_age_99' => "0",
+                                        'death_age_100' => 0
+                                );
+          }
+        }
+        //Year to DC
+        $year_th = $tblYear+543;
+        //filename
+        $filename = 'sick-death'.'-year-'.$year_th;
+        //sheetname
+        $sheetname = 'sheet1';
+
+        // header text
+        $header_text = "ตารางข้อมูลจำนวนตาย ตามอายุ จำแนกรายจังหวัด โรค ".$disease_name[$post_disease_code]." ปี ".$year_th;
+
+        Excel::create($filename, function($excel) use($excel_data,$sheetname,$header_text) {
+            // Set the title
+            $excel->setTitle('UCD-Report');
+            // Chain the setters
+            $excel->setCreator('Talek Team')->setCompany('Talek Team');
+            //description
+            $excel->setDescription('สปคม.');
+
+            $excel->sheet($sheetname, function ($sheet) use ($excel_data,$header_text) {
+                //Header Text
+                 $sheet->row(1, [$header_text]);
+                 $sheet->setAutoFilter('A2:H2');
+                 $sheet->fromArray($excel_data, null, 'A2', false, false);
+             });
+         })->download('csv');
+  }
+  public static function get_patient_sick_death_by_nation($select_year,$disease_code){
+    $tblYear = (isset($select_year))? $select_year : date('Y')-1;
+    $post_disease_code = (isset($disease_code))? $disease_code : "01";
+    $disease_name =\App\Http\Controllers\Controller::All_disease()->toArray();
+    $get_dpc_nameth = \App\Http\Controllers\Controller::get_dpc_nameth()->toArray();
+    $get_provincename_th =\App\Http\Controllers\Controller::get_provincename_th()->toArray();
+    //Check Disease
+    $disease_code =  explode(",",$post_disease_code);
+    if(count($disease_code)>2){
+        $query[] = DB::table('ur506_'.$tblYear)
+        ->select('prov_dpc','PROVINCE')
+        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 1,1,0)) AS case_th,SUM(IF(RESULT = 2 AND RACE = 1,1,0)) AS death_th')
+        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 3,1,0)) AS case_bm,SUM(IF(RESULT = 2 AND RACE = 3,1,0)) AS death_bm')
+        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 4,1,0)) AS case_ms,SUM(IF(RESULT = 2 AND RACE = 4,1,0)) AS death_ms')
+        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 5,1,0)) AS case_cd,SUM(IF(RESULT = 2 AND RACE = 5,1,0)) AS death_cd')
+        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 6,1,0)) AS case_los,SUM(IF(RESULT = 2 AND RACE = 6,1,0)) AS death_los')
+        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 7,1,0)) AS case_vn,SUM(IF(RESULT = 2 AND RACE = 7,1,0)) AS death_vn')
+        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 2,1,0)) AS case_ch,SUM(IF(RESULT = 2 AND RACE = 2,1,0)) AS death_ch')
+        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 8,1,0)) AS case_oth,SUM(IF(RESULT = 2 AND RACE = 8,1,0)) AS death_oth')
+        ->whereIn('DISEASE',$disease_code)
+        ->join('c_province','ur506_'.$tblYear.'.PROVINCE','=','c_province.prov_code')
+        ->groupBy('PROVINCE')
+        ->get();
+    }else{
+        $query[] = DB::table('ur506_'.$tblYear)
+        ->select('prov_dpc','PROVINCE')
+        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 1,1,0)) AS case_th,SUM(IF(RESULT = 2 AND RACE = 1,1,0)) AS death_th')
+        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 3,1,0)) AS case_bm,SUM(IF(RESULT = 2 AND RACE = 3,1,0)) AS death_bm')
+        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 4,1,0)) AS case_ms,SUM(IF(RESULT = 2 AND RACE = 4,1,0)) AS death_ms')
+        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 5,1,0)) AS case_cd,SUM(IF(RESULT = 2 AND RACE = 5,1,0)) AS death_cd')
+        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 6,1,0)) AS case_los,SUM(IF(RESULT = 2 AND RACE = 6,1,0)) AS death_los')
+        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 7,1,0)) AS case_vn,SUM(IF(RESULT = 2 AND RACE = 7,1,0)) AS death_vn')
+        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 2,1,0)) AS case_ch,SUM(IF(RESULT = 2 AND RACE = 2,1,0)) AS death_ch')
+        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 8,1,0)) AS case_oth,SUM(IF(RESULT = 2 AND RACE = 8,1,0)) AS death_oth')
+        ->where('DISEASE','=',$disease_code['0'])
+        ->join('c_province','ur506_'.$tblYear.'.PROVINCE','=','c_province.prov_code')
+        ->groupBy('PROVINCE')
+        ->get();
+    }
+    foreach ($query[0] as $key => $val) {
+      $pt_data[$val->PROVINCE]['prov_dpc'] = $val->prov_dpc;
+      $pt_data[$val->PROVINCE]['PROVINCE'] = $get_provincename_th[$val->PROVINCE];
+      $pt_data[$val->PROVINCE]['case_th'] = $val->case_th;
+      $pt_data[$val->PROVINCE]['death_th'] = $val->death_th;
+      $pt_data[$val->PROVINCE]['case_bm'] = $val->case_bm;
+      $pt_data[$val->PROVINCE]['death_bm'] = $val->death_bm;
+      $pt_data[$val->PROVINCE]['case_ms'] = $val->case_ms;
+      $pt_data[$val->PROVINCE]['death_ms'] = $val->death_ms;
+      $pt_data[$val->PROVINCE]['case_cd'] = $val->case_cd;
+      $pt_data[$val->PROVINCE]['death_cd'] = $val->death_cd;
+      $pt_data[$val->PROVINCE]['case_los'] = $val->case_los;
+      $pt_data[$val->PROVINCE]['death_los'] = $val->death_los;
+      $pt_data[$val->PROVINCE]['case_vn'] = $val->case_vn;
+      $pt_data[$val->PROVINCE]['death_vn'] = $val->death_vn;
+      $pt_data[$val->PROVINCE]['case_ch'] = $val->case_ch;
+      $pt_data[$val->PROVINCE]['death_ch'] = $val->death_ch;
+      $pt_data[$val->PROVINCE]['case_oth'] = $val->case_oth;
+      $pt_data[$val->PROVINCE]['death_oth'] = $val->death_oth;
+      $total_case = $val->case_th+$val->case_bm+$val->case_ms+$val->case_cd+$val->case_los+$val->case_vn+$val->case_ch+$val->case_oth;
+      $total_death = $val->death_th+$val->death_bm+$val->death_ms+$val->death_cd+$val->death_los+$val->death_vn+$val->death_ch+$val->death_oth;
+      $pt_data[$val->PROVINCE]['total_case'] = $total_case;
+      $pt_data[$val->PROVINCE]['total_death'] = $total_death;
+    }
+
+    foreach ($get_provincename_th as $key => $value) {
+      if (array_key_exists($key, $pt_data)) {
+        $excel_data[$key] = $pt_data[$key];
+      }else{
+        $excel_data[$key] = array(  'prov_dpc'=>$get_dpc_nameth[$key],
+                                    'PROVINCE' => $get_provincename_th[$key],
+                                    'case_th' => "0",'death_th' => "0",'case_bm' => "0",'death_bm' => "0",'case_ms' => "0",
+                                    'death_ms' => "0",'case_cd' => "0",'death_cd' => "0",'case_los' => "0",'death_los' => "0",
+                                    'case_vn' => "0",'death_vn' => "0",'case_ch' => "0",'death_ch' => "0",'case_oth' => "0",
+                                    'death_oth' => "0",'total_case' => "0",'total_death' => "0"
+                            );
+      }
+    }
+  //dd($excel_data);
+  return $excel_data;
+  }
+  public static function xls_patient_sick_death_by_nation(Request $request){
+    if(empty($request->select_year) || empty($request->disease_code)) return false;
+    $post_disease_code = $request->disease_code;
+    $tblYear = $request->select_year;
+    $disease_name =\App\Http\Controllers\Controller::All_disease()->toArray();
+    $get_dpc_nameth = \App\Http\Controllers\Controller::get_dpc_nameth()->toArray();
+    $get_provincename_th =\App\Http\Controllers\Controller::get_provincename_th()->toArray();
+    //Col A1 Excel
+    $excel_data[] = array('DPC','Reporting Area','รวม-ป่วย','รวม-ตาย','ป่วย-ไทย','ตาย-ไทย','ป่วย-พม่า','ตาย-พม่า','ป่วย-มาเลเซีย','ตาย-มาเลเซีย','ป่วย-กัมพูชา','ตาย-กัมพูชา',
+                          'ป่วย-ลาว','ตาย-ลาว','ป่วย-เวียดนาม','ตาย-เวียดนาม','ป่วย-จีน','ตาย-จีน','ป่วย-อื่นๆ','ตาย-อื่นๆ'
+                         );
+    //Check Disease
+    $disease_code =  explode(",",$post_disease_code);
+    if(count($disease_code)>2){
+        $query[] = DB::table('ur506_'.$tblYear)
+        ->select('prov_dpc','PROVINCE')
+        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 1,1,0)) AS case_th,SUM(IF(RESULT = 2 AND RACE = 1,1,0)) AS death_th')
+        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 3,1,0)) AS case_bm,SUM(IF(RESULT = 2 AND RACE = 3,1,0)) AS death_bm')
+        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 4,1,0)) AS case_ms,SUM(IF(RESULT = 2 AND RACE = 4,1,0)) AS death_ms')
+        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 5,1,0)) AS case_cd,SUM(IF(RESULT = 2 AND RACE = 5,1,0)) AS death_cd')
+        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 6,1,0)) AS case_los,SUM(IF(RESULT = 2 AND RACE = 6,1,0)) AS death_los')
+        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 7,1,0)) AS case_vn,SUM(IF(RESULT = 2 AND RACE = 7,1,0)) AS death_vn')
+        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 2,1,0)) AS case_ch,SUM(IF(RESULT = 2 AND RACE = 2,1,0)) AS death_ch')
+        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 8,1,0)) AS case_oth,SUM(IF(RESULT = 2 AND RACE = 8,1,0)) AS death_oth')
+        ->whereIn('DISEASE',$disease_code)
+        ->join('c_province','ur506_'.$tblYear.'.PROVINCE','=','c_province.prov_code')
+        ->groupBy('PROVINCE')
+        ->get();
+    }else{
+        $query[] = DB::table('ur506_'.$tblYear)
+        ->select('prov_dpc','PROVINCE')
+        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 1,1,0)) AS case_th,SUM(IF(RESULT = 2 AND RACE = 1,1,0)) AS death_th')
+        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 3,1,0)) AS case_bm,SUM(IF(RESULT = 2 AND RACE = 3,1,0)) AS death_bm')
+        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 4,1,0)) AS case_ms,SUM(IF(RESULT = 2 AND RACE = 4,1,0)) AS death_ms')
+        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 5,1,0)) AS case_cd,SUM(IF(RESULT = 2 AND RACE = 5,1,0)) AS death_cd')
+        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 6,1,0)) AS case_los,SUM(IF(RESULT = 2 AND RACE = 6,1,0)) AS death_los')
+        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 7,1,0)) AS case_vn,SUM(IF(RESULT = 2 AND RACE = 7,1,0)) AS death_vn')
+        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 2,1,0)) AS case_ch,SUM(IF(RESULT = 2 AND RACE = 2,1,0)) AS death_ch')
+        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 8,1,0)) AS case_oth,SUM(IF(RESULT = 2 AND RACE = 8,1,0)) AS death_oth')
+        ->where('DISEASE','=',$disease_code['0'])
+        ->join('c_province','ur506_'.$tblYear.'.PROVINCE','=','c_province.prov_code')
+        ->groupBy('PROVINCE')
+        ->get();
+    }
+    foreach ($query[0] as $key => $val) {
+      $pt_data[$val->PROVINCE]['prov_dpc'] = $val->prov_dpc;
+      $pt_data[$val->PROVINCE]['PROVINCE'] = $get_provincename_th[$val->PROVINCE];
+      $total_case = $val->case_th+$val->case_bm+$val->case_ms+$val->case_cd+$val->case_los+$val->case_vn+$val->case_ch+$val->case_oth;
+      $total_death = $val->death_th+$val->death_bm+$val->death_ms+$val->death_cd+$val->death_los+$val->death_vn+$val->death_ch+$val->death_oth;
+      $pt_data[$val->PROVINCE]['total_case'] = ($total_case>0) ? $total_case : "0";
+      $pt_data[$val->PROVINCE]['total_death'] = ($total_death>0) ? $total_death : "0";
+      $pt_data[$val->PROVINCE]['case_th'] = $val->case_th;
+      $pt_data[$val->PROVINCE]['death_th'] = $val->death_th;
+      $pt_data[$val->PROVINCE]['case_bm'] = $val->case_bm;
+      $pt_data[$val->PROVINCE]['death_bm'] = $val->death_bm;
+      $pt_data[$val->PROVINCE]['case_ms'] = $val->case_ms;
+      $pt_data[$val->PROVINCE]['death_ms'] = $val->death_ms;
+      $pt_data[$val->PROVINCE]['case_cd'] = $val->case_cd;
+      $pt_data[$val->PROVINCE]['death_cd'] = $val->death_cd;
+      $pt_data[$val->PROVINCE]['case_los'] = $val->case_los;
+      $pt_data[$val->PROVINCE]['death_los'] = $val->death_los;
+      $pt_data[$val->PROVINCE]['case_vn'] = $val->case_vn;
+      $pt_data[$val->PROVINCE]['death_vn'] = $val->death_vn;
+      $pt_data[$val->PROVINCE]['case_ch'] = $val->case_ch;
+      $pt_data[$val->PROVINCE]['death_ch'] = $val->death_ch;
+      $pt_data[$val->PROVINCE]['case_oth'] = $val->case_oth;
+      $pt_data[$val->PROVINCE]['death_oth'] = $val->death_oth;
+    }
+
+    foreach ($get_provincename_th as $key => $value) {
+      if (array_key_exists($key, $pt_data)) {
+        $excel_data[$key] = $pt_data[$key];
+      }else{
+        $excel_data[$key] = array(  'prov_dpc'=>$get_dpc_nameth[$key],
+                                    'PROVINCE' => $get_provincename_th[$key],
+                                    'total_case' => "0",'total_death' => "0",
+                                    'case_th' => "0",'death_th' => "0",'case_bm' => "0",'death_bm' => "0",'case_ms' => "0",
+                                    'death_ms' => "0",'case_cd' => "0",'death_cd' => "0",'case_los' => "0",'death_los' => "0",
+                                    'case_vn' => "0",'death_vn' => "0",'case_ch' => "0",'death_ch' => "0",'case_oth' => "0",
+                                    'death_oth' => "0"
+                            );
+      }
+    }
+    //Year to DC
+    $year_th = $tblYear+543;
+    //filename
+    $filename = 'sick-death-race'.'-year-'.$year_th;
+    //sheetname
+    $sheetname = 'sheet1';
+
+    // header text
+    $header_text = "ตารางข้อมูลจำนวนป่วย/ตาย จำแนกตามสัญชาติ โรค ".$disease_name[$post_disease_code]." ปี ".$year_th;
+
+    Excel::create($filename, function($excel) use($excel_data,$sheetname,$header_text) {
+        // Set the title
+        $excel->setTitle('UCD-Report');
+        // Chain the setters
+        $excel->setCreator('Talek Team')->setCompany('Talek Team');
+        //description
+        $excel->setDescription('สปคม.');
+
+        $excel->sheet($sheetname, function ($sheet) use ($excel_data,$header_text) {
+            //Header Text
+             $sheet->row(1, [$header_text]);
+             $sheet->setAutoFilter('A2:H2');
+             $sheet->fromArray($excel_data, null, 'A2', false, false);
+         });
+     })->download('csv');
+  }
+
 }

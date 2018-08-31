@@ -12,6 +12,7 @@ tr.group:hover {
 use \App\Http\Controllers\Controller as Controller;
 use \App\Http\Controllers\ExportPatientController as ExportPatientController;
 
+$arr_month = array('รวม','ไทย','พม่า','มาเลเซีย','กัมพูชา','ลาว','เวียดนาม','จีน','อื่นๆ');
 $get_all_disease_merge = Controller::list_merge_disease();
 $get_all_disease = Controller::list_disease();
 
@@ -29,16 +30,15 @@ foreach ($get_all_disease_merge as $key_merge => $val_merge){
 $select_year = (isset($_GET['select_year']))? $_GET['select_year'] : date('Y')-1;
 $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 
-
 ?>
 <!-- Content Header (Page header) -->
 <section class="content-header">
-<h1>รายงานข้อมูลผู้ป่วย </h1>
+<h1>รายงานข้อมูลผู้ป่วย</h1>
 <ol class="breadcrumb">
 	<li><a href="{{ route('dashboard') }}"><i class="fa fa-home"></i> หนัาหลัก</a></li>
 	<li><a href="#" class="active">รายงาน</a></li>
   <li><a href="{{ route('export-patient-data.main') }}" class="active">รายงานข้อมูลผู้ป่วย</a></li>
-	<li><a href="{{ route('export-patient.sick-death-month') }}" class="active">ส่งออกข้อมูลผู้ป่วยจำนวนป่วย รายเดือน</a></li>
+	<li><a href="{{ route('export-patient.sick-death-month') }}" class="active">ส่งออกข้อมูลผู้ป่วยจำนวนป่วย/ตาย จำแนกตามสัญชาติ</a></li>
 </ol>
 </section>
 <!-- Main content -->
@@ -48,12 +48,12 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 			<!-- Default box -->
 			<div class="box box-info">
 				<div class="box-header with-border">
-					<h3 class="box-title"><i class="fa fa-search"></i> ค้นหาข้อมูลจำนวนป่วย รายสัปดาห์ จำแนกรายจังหวัด</h3>
+					<h3 class="box-title"><i class="fa fa-search"></i> ค้นหาข้อมูลผู้ป่วยจำนวนป่วย/ตาย จำแนกตามสัญชาติ</h3>
 				</div>
 				<div class="box-body">
-				<form action='{{ route('export-patient.sick-weekly') }}' class="form-horizontal" method="get">
+				<form action='{{ route('export-patient.sick-death-by-nation') }}' class="form-horizontal" method="get">
 					<div class="box-body">
-            <div class="form-group">
+						<div class="form-group">
 							<label for="input_monthchoose" class="col-sm-2 control-label">โรค</label>
 							<div class="col-sm-4">
 								<select class="form-control" name="disease_code" id="disease_code">
@@ -98,7 +98,7 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 	 	<div class="col-md-12">
 			<div class="box box-success">
 				<div class="box-header with-border">
-					<h3 class="box-title"><span class="ds-box-title">ตารางข้อมูลจำนวนป่วย รายสัปดาห์ จำแนกรายจังหวัด โรค <?php echo $get_all_disease[$disease_code];?> ปี <?php echo $select_year+543;?></span></h3>
+					<h3 class="box-title"><span class="ds-box-title">ตารางข้อมูลผู้ป่วยจำนวนป่วย/ตาย จำแนกตามสัญชาติ โรค <?php echo $get_all_disease[$disease_code];?> ปี <?php echo $select_year+543;?></span></h3>
 				</div>
 				<!-- /.box-header -->
 				<div class="box-body">
@@ -108,83 +108,60 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 								<table class="table table-bordered table-responsive" id="example" style="width:100%">
 									<thead>
 											<tr>
-												  <th>DPC_NAME</th>
-													<th>Reporting Area</th>
-													<?php for($wk=1;$wk<=53;$wk++) : ?>
-													<th class="text-center">{{ $wk }}</th>
-													<?php endfor; ?>
+												  <th rowspan="2">DPC_NAME</th>
+													<th rowspan="2" class="text-top">Reporting Area</th>
+													@foreach ($arr_month as $month)
+													<th colspan="2" class="text-center">{{ $month }}</th>
+													@endforeach
+											</tr>
+											<tr>
+												@foreach ($arr_month as $month)
+												<th class="text-center">ป่วย</th>
+												<th class="text-center">ตาย</th>
+												@endforeach
 											</tr>
 									</thead>
 									<tbody>
-											<?php $get_data = ExportPatientController::get_patient_sick_weekly($select_year,$disease_code); ?>
+											<?php $get_data = ExportPatientController::get_patient_sick_death_by_nation($select_year,$disease_code); ?>
 											@foreach ($get_data as $data)
 											<tr>
 												<td>{{ $data['prov_dpc'] }}</td>
 												<td>{{ $data['PROVINCE'] }}</td>
-												<td>{{ number_format($data['wk01']) }}</td>
-												<td>{{ number_format($data['wk02']) }}</td>
-												<td>{{ number_format($data['wk03']) }}</td>
-												<td>{{ number_format($data['wk04']) }}</td>
-												<td>{{ number_format($data['wk05']) }}</td>
-												<td>{{ number_format($data['wk06']) }}</td>
-												<td>{{ number_format($data['wk07']) }}</td>
-												<td>{{ number_format($data['wk08']) }}</td>
-												<td>{{ number_format($data['wk09']) }}</td>
-												<td>{{ number_format($data['wk10']) }}</td>
-												<td>{{ number_format($data['wk11']) }}</td>
-												<td>{{ number_format($data['wk12']) }}</td>
-												<td>{{ number_format($data['wk13']) }}</td>
-												<td>{{ number_format($data['wk14']) }}</td>
-												<td>{{ number_format($data['wk15']) }}</td>
-												<td>{{ number_format($data['wk16']) }}</td>
-												<td>{{ number_format($data['wk17']) }}</td>
-												<td>{{ number_format($data['wk18']) }}</td>
-												<td>{{ number_format($data['wk19']) }}</td>
-												<td>{{ number_format($data['wk20']) }}</td>
-												<td>{{ number_format($data['wk21']) }}</td>
-												<td>{{ number_format($data['wk22']) }}</td>
-												<td>{{ number_format($data['wk23']) }}</td>
-												<td>{{ number_format($data['wk24']) }}</td>
-												<td>{{ number_format($data['wk25']) }}</td>
-												<td>{{ number_format($data['wk26']) }}</td>
-                        <td>{{ number_format($data['wk27']) }}</td>
-                        <td>{{ number_format($data['wk28']) }}</td>
-                        <td>{{ number_format($data['wk29']) }}</td>
-                        <td>{{ number_format($data['wk30']) }}</td>
-                        <td>{{ number_format($data['wk31']) }}</td>
-                        <td>{{ number_format($data['wk32']) }}</td>
-                        <td>{{ number_format($data['wk33']) }}</td>
-                        <td>{{ number_format($data['wk34']) }}</td>
-                        <td>{{ number_format($data['wk35']) }}</td>
-                        <td>{{ number_format($data['wk36']) }}</td>
-                        <td>{{ number_format($data['wk37']) }}</td>
-                        <td>{{ number_format($data['wk38']) }}</td>
-                        <td>{{ number_format($data['wk39']) }}</td>
-                        <td>{{ number_format($data['wk40']) }}</td>
-                        <td>{{ number_format($data['wk41']) }}</td>
-                        <td>{{ number_format($data['wk42']) }}</td>
-                        <td>{{ number_format($data['wk43']) }}</td>
-                        <td>{{ number_format($data['wk44']) }}</td>
-                        <td>{{ number_format($data['wk45']) }}</td>
-                        <td>{{ number_format($data['wk46']) }}</td>
-                        <td>{{ number_format($data['wk47']) }}</td>
-                        <td>{{ number_format($data['wk48']) }}</td>
-                        <td>{{ number_format($data['wk49']) }}</td>
-                        <td>{{ number_format($data['wk50']) }}</td>
-                        <td>{{ number_format($data['wk51']) }}</td>
-                        <td>{{ number_format($data['wk52']) }}</td>
-                        <td>{{ number_format($data['wk53']) }}</td>
+                        <td>{{ number_format($data['total_case']) }}</td>
+                        <td>{{ number_format($data['total_death']) }}</td>
+												<td>{{ number_format($data['case_th']) }}</td>
+												<td>{{ number_format($data['death_th']) }}</td>
+												<td>{{ number_format($data['case_bm']) }}</td>
+												<td>{{ number_format($data['death_bm']) }}</td>
+												<td>{{ number_format($data['case_ms']) }}</td>
+												<td>{{ number_format($data['death_ms']) }}</td>
+												<td>{{ number_format($data['case_cd']) }}</td>
+												<td>{{ number_format($data['death_cd']) }}</td>
+												<td>{{ number_format($data['case_los']) }}</td>
+												<td>{{ number_format($data['death_los']) }}</td>
+												<td>{{ number_format($data['case_vn']) }}</td>
+												<td>{{ number_format($data['death_vn']) }}</td>
+												<td>{{ number_format($data['case_ch']) }}</td>
+												<td>{{ number_format($data['death_ch']) }}</td>
+												<td>{{ number_format($data['case_oth']) }}</td>
+												<td>{{ number_format($data['death_oth']) }}</td>
 											</tr>
 											@endforeach
 									</tbody>
 									<tfoot>
-                    <tr>
-                        <th>DPC_NAME</th>
-                        <th>Reporting Area</th>
-                        <?php for($wk=1;$wk<=53;$wk++) : ?>
-                        <th class="text-center">{{ $wk }}</th>
-                        <?php endfor; ?>
-                    </tr>
+											<tr>
+													<th rowspan="2">DPC_NAME</th>
+													<th rowspan="2">Reporting Area</th>
+													@foreach ($arr_month as $month)
+													<th colspan="2" class="text-center">{{ $month }}</th>
+													@endforeach
+											</tr>
+											<tr>
+												@foreach ($arr_month as $month)
+                        <th class="text-center">ป่วย</th>
+												<th class="text-center">ตาย</th>
+												@endforeach
+											</tr>
 									</tfoot>
 							 </table>
 						 </div>
@@ -195,7 +172,7 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 				</div>
 				<!-- /.box-body -->
 				<div class="box-footer">
-            <a href="{{ route('xls_patient_sick_weekly') }}?disease_code={{ $disease_code }}&select_year={{ $select_year }}" class="btn btn-sm btn-success pull-right"><i class="fa fa-download"> </i> ส่งออกข้อมูลเป็น CSV</a>
+            <a href="{{ route('xls_patient_sick_death_by_nation') }}?disease_code={{ $disease_code }}&select_year={{ $select_year }}" class="btn btn-sm btn-success pull-right"><i class="fa fa-download"> </i> ส่งออกข้อมูลเป็น CSV</a>
 				</div>
 				<!-- /.footer -->
 			</div>
@@ -231,7 +208,7 @@ $(document).ready(function() {
             api.column(groupColumn, {page:'current'} ).data().each( function ( group, i ) {
                 if ( last !== group ) {
                     $(rows).eq( i ).before(
-                        '<tr class="group"><td colspan="54">'+group+'</td></tr>'
+                        '<tr class="group"><td colspan="27">'+group+'</td></tr>'
                     );
                     last = group;
                 }

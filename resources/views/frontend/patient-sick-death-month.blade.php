@@ -48,7 +48,7 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 			<!-- Default box -->
 			<div class="box box-info">
 				<div class="box-header with-border">
-					<h3 class="box-title">ข้อมูลผู้ป่วยจำนวนป่วย/ตาย</h3>
+					<h3 class="box-title"><i class="fa fa-search"></i> ค้นหาข้อมูลผู้ป่วยจำนวนป่วย/ตาย</h3>
 				</div>
 				<div class="box-body">
 				<form action='{{ route('export-patient.sick-death-month') }}' class="form-horizontal" method="get">

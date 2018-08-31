@@ -38,7 +38,7 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 	<li><a href="{{ route('dashboard') }}"><i class="fa fa-home"></i> หนัาหลัก</a></li>
 	<li><a href="#" class="active">รายงาน</a></li>
   <li><a href="{{ route('export-patient-data.main') }}" class="active">รายงานข้อมูลผู้ป่วย</a></li>
-	<li><a href="{{ route('export-patient.sick-death-month') }}" class="active">ส่งออกข้อมูลผู้ป่วยจำนวนป่วย รายเดือน</a></li>
+	<li><a href="{{ route('export-patient.sick-death-month') }}" class="active">ส่งออกข้อมูลจำนวนป่วย ตามอายุ</a></li>
 </ol>
 </section>
 <!-- Main content -->
@@ -48,10 +48,10 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 			<!-- Default box -->
 			<div class="box box-info">
 				<div class="box-header with-border">
-					<h3 class="box-title">ข้อมูลจำนวนป่วย รายสัปดาห์ จำแนกรายจังหวัด</h3>
+					<h3 class="box-title"><i class="fa fa-search"></i> ค้นหาข้อมูลจำนวนป่วย ตามอายุ จำแนกรายจังหวัด</h3>
 				</div>
 				<div class="box-body">
-				<form action='{{ route('export-patient.sick-weekly') }}' class="form-horizontal" method="get">
+				<form action='{{ route('export-patient.sick-by-age') }}' class="form-horizontal" method="get">
 					<div class="box-body">
             <div class="form-group">
 							<label for="input_monthchoose" class="col-sm-2 control-label">โรค</label>
@@ -98,7 +98,7 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 	 	<div class="col-md-12">
 			<div class="box box-success">
 				<div class="box-header with-border">
-					<h3 class="box-title"><span class="ds-box-title">ตารางข้อมูลจำนวนป่วย รายสัปดาห์ จำแนกรายจังหวัด โรค <?php echo $get_all_disease[$disease_code];?> ปี <?php echo $select_year+543;?></span></h3>
+					<h3 class="box-title"><span class="ds-box-title">ตารางข้อมูลจำนวนป่วย ตามอายุ จำแนกรายจังหวัด โรค <?php echo $get_all_disease[$disease_code];?> ปี <?php echo $select_year+543;?></span></h3>
 				</div>
 				<!-- /.box-header -->
 				<div class="box-body">
@@ -110,13 +110,13 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 											<tr>
 												  <th>DPC_NAME</th>
 													<th>Reporting Area</th>
-													<?php for($age=1;$age<=100;$age++) : ?>
+													<?php for($age=0;$age<=100;$age++) : ?>
 													<th class="text-center">{{ $age }}</th>
 													<?php endfor; ?>
 											</tr>
 									</thead>
 									<tbody>
-											<?php $get_data = ExportPatientController::get_patient_sick_weekly($select_year,$disease_code); ?>
+											<?php $get_data = ExportPatientController::get_patient_sick_by_age($select_year,$disease_code); ?>
 											@foreach ($get_data as $data)
 											<tr>
 												<td>{{ $data['prov_dpc'] }}</td>
@@ -229,7 +229,7 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
                     <tr>
                       <th>DPC_NAME</th>
                       <th>Reporting Area</th>
-                      <?php for($age=1;$age<=100;$age++) : ?>
+                      <?php for($age=0;$age<=100;$age++) : ?>
                       <th class="text-center">{{ $age }}</th>
                       <?php endfor; ?>
                     </tr>
@@ -243,7 +243,7 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 				</div>
 				<!-- /.box-body -->
 				<div class="box-footer">
-            <a href="{{ route('xls_patient_sick_weekly') }}?disease_code={{ $disease_code }}&select_year={{ $select_year }}" class="btn btn-sm btn-success pull-right"><i class="fa fa-download"> </i> ส่งออกข้อมูลเป็น CSV</a>
+            <a href="{{ route('xls_patient_sick_by_age') }}?disease_code={{ $disease_code }}&select_year={{ $select_year }}" class="btn btn-sm btn-success pull-right"><i class="fa fa-download"> </i> ส่งออกข้อมูลเป็น CSV</a>
 				</div>
 				<!-- /.footer -->
 			</div>
@@ -279,7 +279,7 @@ $(document).ready(function() {
             api.column(groupColumn, {page:'current'} ).data().each( function ( group, i ) {
                 if ( last !== group ) {
                     $(rows).eq( i ).before(
-                        '<tr class="group"><td colspan="54">'+group+'</td></tr>'
+                        '<tr class="group"><td colspan="103">'+group+'</td></tr>'
                     );
                     last = group;
                 }

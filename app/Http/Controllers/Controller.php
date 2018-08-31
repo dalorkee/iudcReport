@@ -225,5 +225,13 @@ class Controller extends BaseController
       $query = Province::pluck('prov_code');
       return $query;
     }
+    public static function convert_zero_to_string($number){
+      if($number==0){
+        $ret = "0";
+      }else{
+        $ret = (string)$number;
+      }
+      return $ret;
+    }
 
 }
