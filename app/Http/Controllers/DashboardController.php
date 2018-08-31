@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use DateTime;
 use Illuminate\Support\Str;
 
+
 class dashboardController extends DiseasesController
 {
 	public $rqDsCode;
@@ -47,7 +48,6 @@ class dashboardController extends DiseasesController
 		$countCaseDeadPerMonth = $this->getCountCaseDeadPerMonth($rqYear, $ds);
 		$countPatientPerWeek = $this->getCountPatientPerWeek($rqYear, $ds);
 		$patientMap = $this->getPatientMap($rqYear, $ds);
-		//$user = $this->getUser();
 		return view('frontend.dashboard',
 			[
 				'dsgroups'=>$dsgroups,

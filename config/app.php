@@ -177,6 +177,8 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+		/* Helpers */
+		App\Providers\HelperServiceProvider::class,
         //Laravel Chart
         //ConsoleTVs\Charts\ChartsServiceProvider::class,
 		Khill\Lavacharts\Laravel\LavachartsServiceProvider::class,
@@ -249,7 +251,8 @@ return [
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
 		'Form' => Collective\Html\FormFacade::class,
 		'Html' => Collective\Html\HtmlFacade::class,
-    'Active' => Pyaesone17\ActiveState\ActiveFacade::class,
+		'Active' => Pyaesone17\ActiveState\ActiveFacade::class,
+		'Helper' => App\Helpers\Helper::class,
 
     ],
 
