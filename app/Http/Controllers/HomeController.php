@@ -43,8 +43,8 @@ class HomeController extends Controller
 			'userPosition',
 			array(
 				$position[0]->id,
-				$position[0]->positionName,
-				$position[0]->positionNameEn
+				$position[0]->pos_name,
+				$position[0]->pos_name_en
 			)
 		);
 	}
