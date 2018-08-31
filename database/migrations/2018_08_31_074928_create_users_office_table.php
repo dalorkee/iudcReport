@@ -3,26 +3,26 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUsersPositionTable extends Migration {
+class CreateUsersOfficeTable extends Migration
+{
 	/**
 	* Run the migrations.
-	*
 	* @return void
 	*/
 	public function up() {
-		Schema::create('position', function (Blueprint $table) {
-			$table->engine = 'InnoDB';
+		Schema::create('office', function (Blueprint $table) {
 			$table->increments('id')->unsigned();
-			$table->string('pos_name', 90)->nullable();
-			$table->string('pos_name_en', 90)->nullable();
+			$table->string('off_name_full', 120)->nullable();;
+			$table->string('off_name_short', 30)->nullable();;
+			$table->string('off_name_en', 120)->nullable();;
 		});
 	}
+
 	/**
 	* Reverse the migrations.
-	*
 	* @return void
 	*/
 	public function down() {
-		Schema::dropIfExists('position');
+		Schema::dropIfExists('office');
 	}
 }

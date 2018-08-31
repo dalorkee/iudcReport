@@ -10,7 +10,6 @@ class UsersTableSeeder extends Seeder {
 	* @return void
 	*/
 	public function run() {
-		DB::table('users')->delete();
 		DB::table('users')->insert([
 			'username'=>'talek',
 			'password'=>$this->generatesPassword('9kg]Hdmu,'),
@@ -22,7 +21,6 @@ class UsersTableSeeder extends Seeder {
 			'ref_position'=>1,
 			'ref_office'=>1,
 			'user_type'=>'root',
-			'user_level'=>1,
 			'avatar'=>'default-avatar.png',
 			'register'=>Carbon::now(),
 			'created_at'=>Carbon::now()
@@ -38,16 +36,210 @@ class UsersTableSeeder extends Seeder {
 			'ref_position'=>1,
 			'ref_office'=>1,
 			'user_type'=>'administrator',
-			'user_level'=>1,
 			'avatar'=>'default-avatar.png',
 			'register'=>Carbon::now(),
 			'created_at'=>Carbon::now()
 		]);
-		/* position add */
-		DB::table('position')->delete();
+		DB::table('users')->insert([
+			'username'=>'iudc',
+			'password'=>$this->generatesPassword('456789'),
+			'titleName'=>null,
+			'firstName'=>'IUDC',
+			'lastname'=>null,
+			'idcard'=>'1234567891234',
+			'email'=>'iudc@ucdd.com',
+			'ref_position'=>null,
+			'ref_office'=>1,
+			'user_type'=>'administrator',
+			'avatar'=>'default-avatar.png',
+			'register'=>Carbon::now(),
+			'created_at'=>Carbon::now()
+		]);
+		DB::table('users')->insert([
+			'username'=>'dpc001',
+			'password'=>$this->generatesPassword('123456'),
+			'titleName'=>null,
+			'firstName'=>'DPC001',
+			'lastname'=>null,
+			'idcard'=>'1234567891234',
+			'email'=>'dpc001@ucdd.com',
+			'ref_position'=>null,
+			'ref_office'=>2,
+			'user_type'=>'dpc',
+			'avatar'=>'default-avatar.png',
+			'register'=>Carbon::now(),
+			'created_at'=>Carbon::now()
+		]);
+		DB::table('users')->insert([
+			'username'=>'dpc002',
+			'password'=>$this->generatesPassword('123456'),
+			'titleName'=>null,
+			'firstName'=>'DPC002',
+			'lastname'=>null,
+			'idcard'=>'1234567891234',
+			'email'=>'dpc002@ucdd.com',
+			'ref_position'=>null,
+			'ref_office'=>2,
+			'user_type'=>'dpc',
+			'avatar'=>'default-avatar.png',
+			'register'=>Carbon::now(),
+			'created_at'=>Carbon::now()
+		]);
+		DB::table('users')->insert([
+			'username'=>'dpc003',
+			'password'=>$this->generatesPassword('123456'),
+			'titleName'=>null,
+			'firstName'=>'DPC003',
+			'lastname'=>null,
+			'idcard'=>'1234567891234',
+			'email'=>'dpc003@ucdd.com',
+			'ref_position'=>null,
+			'ref_office'=>2,
+			'user_type'=>'dpc',
+			'avatar'=>'default-avatar.png',
+			'register'=>Carbon::now(),
+			'created_at'=>Carbon::now()
+		]);
+		DB::table('users')->insert([
+			'username'=>'dpc004',
+			'password'=>$this->generatesPassword('123456'),
+			'titleName'=>null,
+			'firstName'=>'DPC004',
+			'lastname'=>null,
+			'idcard'=>'1234567891234',
+			'email'=>'dpc004@ucdd.com',
+			'ref_position'=>null,
+			'ref_office'=>2,
+			'user_type'=>'dpc',
+			'avatar'=>'default-avatar.png',
+			'register'=>Carbon::now(),
+			'created_at'=>Carbon::now()
+		]);
+		DB::table('users')->insert([
+			'username'=>'dpc005',
+			'password'=>$this->generatesPassword('123456'),
+			'titleName'=>null,
+			'firstName'=>'DPC005',
+			'lastname'=>null,
+			'idcard'=>'1234567891234',
+			'email'=>'dpc005@ucdd.com',
+			'ref_position'=>null,
+			'ref_office'=>2,
+			'user_type'=>'dpc',
+			'avatar'=>'default-avatar.png',
+			'register'=>Carbon::now(),
+			'created_at'=>Carbon::now()
+		]);
+		DB::table('users')->insert([
+			'username'=>'dpc006',
+			'password'=>$this->generatesPassword('123456'),
+			'titleName'=>null,
+			'firstName'=>'DPC006',
+			'lastname'=>null,
+			'idcard'=>'1234567891234',
+			'email'=>'dpc006@ucdd.com',
+			'ref_position'=>null,
+			'ref_office'=>2,
+			'user_type'=>'dpc',
+			'avatar'=>'default-avatar.png',
+			'register'=>Carbon::now(),
+			'created_at'=>Carbon::now()
+		]);
+		DB::table('users')->insert([
+			'username'=>'dpc007',
+			'password'=>$this->generatesPassword('123456'),
+			'titleName'=>null,
+			'firstName'=>'DPC007',
+			'lastname'=>null,
+			'idcard'=>'1234567891234',
+			'email'=>'dpc007@ucdd.com',
+			'ref_position'=>null,
+			'ref_office'=>2,
+			'user_type'=>'dpc',
+			'avatar'=>'default-avatar.png',
+			'register'=>Carbon::now(),
+			'created_at'=>Carbon::now()
+		]);
+		DB::table('users')->insert([
+			'username'=>'dpc008',
+			'password'=>$this->generatesPassword('123456'),
+			'titleName'=>null,
+			'firstName'=>'DPC008',
+			'lastname'=>null,
+			'idcard'=>'1234567891234',
+			'email'=>'dpc008@ucdd.com',
+			'ref_position'=>null,
+			'ref_office'=>2,
+			'user_type'=>'dpc',
+			'avatar'=>'default-avatar.png',
+			'register'=>Carbon::now(),
+			'created_at'=>Carbon::now()
+		]);
+		DB::table('users')->insert([
+			'username'=>'dpc009',
+			'password'=>$this->generatesPassword('123456'),
+			'titleName'=>null,
+			'firstName'=>'DPC009',
+			'lastname'=>null,
+			'idcard'=>'1234567891234',
+			'email'=>'dpc009@ucdd.com',
+			'ref_position'=>null,
+			'ref_office'=>2,
+			'user_type'=>'dpc',
+			'avatar'=>'default-avatar.png',
+			'register'=>Carbon::now(),
+			'created_at'=>Carbon::now()
+		]);
+		DB::table('users')->insert([
+			'username'=>'dpc010',
+			'password'=>$this->generatesPassword('123456'),
+			'titleName'=>null,
+			'firstName'=>'DPC010',
+			'lastname'=>null,
+			'idcard'=>'1234567891234',
+			'email'=>'dpc010@ucdd.com',
+			'ref_position'=>null,
+			'ref_office'=>2,
+			'user_type'=>'dpc',
+			'avatar'=>'default-avatar.png',
+			'register'=>Carbon::now(),
+			'created_at'=>Carbon::now()
+		]);
+		DB::table('users')->insert([
+			'username'=>'dpc011',
+			'password'=>$this->generatesPassword('123456'),
+			'titleName'=>null,
+			'firstName'=>'DPC011',
+			'lastname'=>null,
+			'idcard'=>'1234567891234',
+			'email'=>'dpc011@ucdd.com',
+			'ref_position'=>null,
+			'ref_office'=>2,
+			'user_type'=>'dpc',
+			'avatar'=>'default-avatar.png',
+			'register'=>Carbon::now(),
+			'created_at'=>Carbon::now()
+		]);
+		/* position tbl seed */
 		DB::table('position')->insert([
-			'positionName'=>'นักวิชาการสาธารณสุข',
-			'positionNameEn'=>'Public health scholar'
+			'pos_name'=>'นักวิชาการสาธารณสุข',
+			'pos_name_en'=>'Public health scholar'
+		]);
+		/* office tbl seed */
+		DB::table('office')->insert([
+			'off_name_full'=>'สถาบันป้องกันโรคควบคุมโรคเขตเมือง',
+			'off_name_short'=>'สปคม.',
+			'off_name_en'=>'Institute for Urban Disease Control and Prevention'
+		]);
+		DB::table('office')->insert([
+			'off_name_full'=>'สำนักงานป้องกันโรคควบคุมโรค',
+			'off_name_short'=>'สคร.',
+			'off_name_en'=>'Office of Disease Prevention and Control'
+		]);
+		DB::table('office')->insert([
+			'off_name_full'=>'สำนักระบาดวิทยา',
+			'off_name_short'=>'สนร.',
+			'off_name_en'=>'Bureau Of Epidemiology'
 		]);
 	}
 

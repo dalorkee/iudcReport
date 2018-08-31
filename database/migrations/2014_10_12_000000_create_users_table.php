@@ -17,14 +17,13 @@ class CreateUsersTable extends Migration {
 			$table->string('password', 255);
 			$table->string('titleName', 90)->nullable();
 			$table->string('firstName', 120);
-			$table->string('lastname', 140);
+			$table->string('lastname', 140)->nullable();
 			$table->string('idcard', 40)->nullable();
 			$table->string('email')->unique();
 			$table->string('ref_position', 10)->nullable();
-			$table->string('ref_office', 10);
-			$table->enum('user_type', ['root', 'administrator', 'web master', 'viewer'])->default('viewer');
-			$table->enum('user_level', [1, 2, 3, 4, 5])->default(5);
-			$table->string('avatar', 120);
+			$table->string('ref_office', 10)->nullable();
+			$table->enum('user_type', ['root', 'administrator', 'viewer'])->default('viewer');
+			$table->string('avatar', 120)->default('default-avatar.png');
 			$table->dateTime('register')->default(NOW());
 			$table->rememberToken();
 			$table->timestamps();
