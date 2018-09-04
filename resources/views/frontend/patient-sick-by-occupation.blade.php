@@ -11,9 +11,8 @@ tr.group:hover {
 <?php
 use \App\Http\Controllers\Controller as Controller;
 use \App\Http\Controllers\ExportPatientController as ExportPatientController;
-use \App\Http\Controllers\PopulationController as PopulationController;
 
-
+$arr_occupation = array('เกษตรกรรม','ข้าราชการ','รับจ้าง','ค้าขาย','งานบ้าน','นักเรียน','ทหาร/ตำรวจ','ประมง','ครู','เลี้ยงสัตว์','นักบวช','อาชีพพิเศษ','บุคคลากรสาธารณสุข','อื่นๆ','ไม่ทราบ/นปค');
 $get_all_disease_merge = Controller::list_merge_disease();
 $get_all_disease = Controller::list_disease();
 
@@ -33,12 +32,12 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 ?>
 <!-- Content Header (Page header) -->
 <section class="content-header">
-<h1>รายงานข้อมูลอัตราป่วย/อัตราตาย/อัตราป่วย-ตาย</h1>
+<h1>รายงานข้อมูลจำนวนป่วยแยกตามอาชีพ</h1>
 <ol class="breadcrumb">
 	<li><a href="{{ route('dashboard') }}"><i class="fa fa-home"></i> หนัาหลัก</a></li>
 	<li><a href="#" class="active">รายงาน</a></li>
   <li><a href="{{ route('export-patient-data.main') }}" class="active">รายงานข้อมูลผู้ป่วย</a></li>
-	<li><a href="{{ route('export-patient.sick-death-month') }}" class="active">ส่งออกข้อมูลอัตราป่วย/อัตราตาย/อัตราป่วย-ตาย จำแนกรายจังหวัด</a></li>
+	<li><a href="{{ route('export-patient.sick-death-month') }}" class="active">ส่งออกข้อมูลจำนวนป่วยแยกตามอาชีพ จำแนกรายจังหวัด</a></li>
 </ol>
 </section>
 <!-- Main content -->
@@ -48,10 +47,10 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 			<!-- Default box -->
 			<div class="box box-info">
 				<div class="box-header with-border">
-					<h3 class="box-title"><i class="fa fa-search"></i> ค้นหาข้อมูลอัตราป่วย/อัตราตาย/อัตราป่วย-ตาย จำแนกรายจังหวัด</h3>
+					<h3 class="box-title"><i class="fa fa-search"></i> ค้นหาข้อมูลจำนวนป่วยแยกตามอาชีพ จำแนกรายจังหวัด</h3>
 				</div>
 				<div class="box-body">
-				<form action='{{ route('export-patient.sick-death-ratio') }}' class="form-horizontal" method="get">
+				<form action='{{ route('export-patient.sick-by-occupation') }}' class="form-horizontal" method="get">
 					<div class="box-body">
 						<div class="form-group">
 							<label for="input_monthchoose" class="col-sm-2 control-label">โรค</label>
@@ -98,7 +97,7 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 	 	<div class="col-md-12">
 			<div class="box box-success">
 				<div class="box-header with-border">
-					<h3 class="box-title"><span class="ds-box-title">ตารางข้อมูลอัตราป่วย/อัตราตาย/อัตราป่วย-ตาย จำแนกรายจังหวัด โรค <?php echo $get_all_disease[$disease_code];?> ปี <?php echo $select_year+543;?></span></h3>
+					<h3 class="box-title"><span class="ds-box-title">ตารางข้อมูลจำนวนป่วยแยกตามอาชีพ จำแนกรายจังหวัด โรค <?php echo $get_all_disease[$disease_code];?> ปี <?php echo $select_year+543;?></span></h3>
 				</div>
 				<!-- /.box-header -->
 				<div class="box-body">
@@ -110,50 +109,41 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 											<tr>
 												  <th>DPC_NAME</th>
 													<th>Reporting Area</th>
-													<th class="text-center">จำนวนผู้ป่วย</th>
-                          <th class="text-center">อัตราป่วย(ต่อประชากรแสนคน)</th>
-                          <th class="text-center">จำนวนผู้เสียชีวิต</th>
-                          <th class="text-center">อัตราป่วยตาย(%)</th>
-                          <th class="text-center">อัตราตาย(ต่อประชากรแสนคน)</th>
-                          <th class="text-center">จำนวนประชากร</th>
+                          @foreach ($arr_occupation as $occupation)
+													<th class="text-center">{{ $occupation }}</th>
+													@endforeach
 											</tr>
 									</thead>
 									<tbody>
-											<?php $get_data = ExportPatientController::get_patient_sick_death_ratio($select_year,$disease_code); ?>
+											<?php $get_data = ExportPatientController::get_patient_sick_by_occupation($select_year,$disease_code);?>
                     	@foreach ($get_data as $data)
-                      <?php $total_pop_in_province = PopulationController::all_population_by_province($select_year);
-                            if(isset($total_pop_in_province[$data['PROVINCE_CODE']]['poptotal_in_province'])){
-                              $total_pop = number_format($total_pop_in_province[$data['PROVINCE_CODE']]['poptotal_in_province']);
-                              $cal_ratio_cases = Controller::cal_ratio_cases($total_pop_in_province[$data['PROVINCE_CODE']]['poptotal_in_province'],$data['case_total']);
-                              $cal_ratio_deaths = Controller::cal_ratio_cases_deaths($total_pop_in_province[$data['PROVINCE_CODE']]['poptotal_in_province'],$data['death_total']);
-                              $cal_ratio_cases_deaths = Controller::cal_ratio_cases_deaths($data['case_total'],$data['death_total']);
-                            }else{
-                              $total_pop = 0;
-                              $cal_ratio_cases = 0;
-                              $cal_ratio_deaths = 0;
-                            }
-                            ?>
 											<tr>
                         <td>{{ $data['prov_dpc'] }}</td>
 												<td>{{ $data['PROVINCE'] }}</td>
-												<td class="text-center">{{ number_format($data['case_total']) }}</td>
-												<td class="text-center">{{ $cal_ratio_cases }}</td>
-												<td class="text-center">{{ number_format($data['death_total']) }}</td>
-												<td class="text-center">{{ $cal_ratio_cases_deaths }}</td>
-												<td class="text-center">{{ $cal_ratio_deaths }}</td>
-												<td class="text-center">{{ $total_pop }}</td>
+												<td class="text-center">{{ number_format($data['famer_case']) }}</td>
+                        <td class="text-center">{{ number_format($data['official_case']) }}</td>
+                        <td class="text-center">{{ number_format($data['hire_case']) }}</td>
+                        <td class="text-center">{{ number_format($data['trade_case']) }}</td>
+                        <td class="text-center">{{ number_format($data['housework_case']) }}</td>
+                        <td class="text-center">{{ number_format($data['student_case']) }}</td>
+                        <td class="text-center">{{ number_format($data['soldier_case']) }}</td>
+                        <td class="text-center">{{ number_format($data['fishing_case']) }}</td>
+                        <td class="text-center">{{ number_format($data['instructor_case']) }}</td>
+                        <td class="text-center">{{ number_format($data['animal_husbandry_case']) }}</td>
+                        <td class="text-center">{{ number_format($data['priest_case']) }}</td>
+                        <td class="text-center">{{ number_format($data['special_career_STI_case']) }}</td>
+                        <td class="text-center">{{ number_format($data['public_health_officer_case']) }}</td>
+                        <td class="text-center">{{ number_format($data['unknow_govern_case']) }}</td>
+                        <td class="text-center">{{ number_format($data['other_case']) }}</td>
 											</tr>
 											@endforeach
 									</tbody>
 									<tfoot>
                     <th>DPC_NAME</th>
                     <th>Reporting Area</th>
-                    <th class="text-center">จำนวนผู้ป่วย</th>
-                    <th class="text-center">อัตราป่วย(ต่อประชากรแสนคน)</th>
-                    <th class="text-center">จำนวนผู้เสียชีวิต</th>
-                    <th class="text-center">อัตราป่วยตาย(%)</th>
-                    <th class="text-center">อัตราตาย(ต่อประชากรแสนคน)</th>
-                    <th class="text-center">จำนวนประชากร</th>
+                    @foreach ($arr_occupation as $occupation)
+                    <th class="text-center">{{ $occupation }}</th>
+                    @endforeach
 									</tfoot>
 							 </table>
 						 </div>
@@ -164,7 +154,7 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 				</div>
 				<!-- /.box-body -->
 				<div class="box-footer">
-            <a href="{{ route('xls_patient_sick_death_ratio') }}?disease_code={{ $disease_code }}&select_year={{ $select_year }}" class="btn btn-sm btn-success pull-right"><i class="fa fa-download"> </i> ส่งออกข้อมูลเป็น CSV</a>
+            <a href="{{ route('xls_patient_sick_by_occupation') }}?disease_code={{ $disease_code }}&select_year={{ $select_year }}" class="btn btn-sm btn-success pull-right"><i class="fa fa-download"> </i> ส่งออกข้อมูลเป็น CSV</a>
 				</div>
 				<!-- /.footer -->
 			</div>
@@ -200,7 +190,7 @@ $(document).ready(function() {
             api.column(groupColumn, {page:'current'} ).data().each( function ( group, i ) {
                 if ( last !== group ) {
                     $(rows).eq( i ).before(
-                        '<tr class="group"><td colspan="7">'+group+'</td></tr>'
+                        '<tr class="group"><td colspan="17">'+group+'</td></tr>'
                     );
                     last = group;
                 }

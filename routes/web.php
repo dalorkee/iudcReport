@@ -66,6 +66,8 @@ Route::get('export-patient/export-xls-sick-weekly','ExportPatientController@xls_
 Route::get('export-patient/export-xls-sick-by-age','ExportPatientController@xls_patient_sick_by_age')->name('xls_patient_sick_by_age');
 Route::get('export-patient/export-xls-death-by-age','ExportPatientController@xls_patient_death_by_age')->name('xls_patient_death_by_age');
 Route::get('export-patient/export-xls-sick-death-by-nation','ExportPatientController@xls_patient_sick_death_by_nation')->name('xls_patient_sick_death_by_nation');
+Route::get('export-patient/export-xls-sick-by-occupation','ExportPatientController@xls_patient_sick_by_occupation')->name('xls_patient_sick_by_occupation');
+Route::get('export-patient/export-xls-sick-by-sex','ExportPatientController@xls_patient_sick_by_sex')->name('xls_patient_sick_by_sex');
 /* End Export Patient Data */
 /* Report */
 Route::get('/report', function() {

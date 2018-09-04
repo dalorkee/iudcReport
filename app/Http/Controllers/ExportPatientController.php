@@ -1927,14 +1927,14 @@ class ExportPatientController extends Controller
     if(count($disease_code)>2){
         $query[] = DB::table('ur506_'.$tblYear)
         ->select('prov_dpc','PROVINCE')
-        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 1,1,0)) AS case_th,SUM(IF(RESULT = 2 AND RACE = 1,1,0)) AS death_th')
-        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 3,1,0)) AS case_bm,SUM(IF(RESULT = 2 AND RACE = 3,1,0)) AS death_bm')
-        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 4,1,0)) AS case_ms,SUM(IF(RESULT = 2 AND RACE = 4,1,0)) AS death_ms')
-        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 5,1,0)) AS case_cd,SUM(IF(RESULT = 2 AND RACE = 5,1,0)) AS death_cd')
-        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 6,1,0)) AS case_los,SUM(IF(RESULT = 2 AND RACE = 6,1,0)) AS death_los')
-        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 7,1,0)) AS case_vn,SUM(IF(RESULT = 2 AND RACE = 7,1,0)) AS death_vn')
-        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 2,1,0)) AS case_ch,SUM(IF(RESULT = 2 AND RACE = 2,1,0)) AS death_ch')
-        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 8,1,0)) AS case_oth,SUM(IF(RESULT = 2 AND RACE = 8,1,0)) AS death_oth')
+        ->selectRaw('SUM(IF(RACE = 1,1,0)) AS case_th,SUM(IF(RESULT = 2 AND RACE = 1,1,0)) AS death_th')
+        ->selectRaw('SUM(IF(RACE = 3,1,0)) AS case_bm,SUM(IF(RESULT = 2 AND RACE = 3,1,0)) AS death_bm')
+        ->selectRaw('SUM(IF(RACE = 4,1,0)) AS case_ms,SUM(IF(RESULT = 2 AND RACE = 4,1,0)) AS death_ms')
+        ->selectRaw('SUM(IF(RACE = 5,1,0)) AS case_cd,SUM(IF(RESULT = 2 AND RACE = 5,1,0)) AS death_cd')
+        ->selectRaw('SUM(IF(RACE = 6,1,0)) AS case_los,SUM(IF(RESULT = 2 AND RACE = 6,1,0)) AS death_los')
+        ->selectRaw('SUM(IF(RACE = 7,1,0)) AS case_vn,SUM(IF(RESULT = 2 AND RACE = 7,1,0)) AS death_vn')
+        ->selectRaw('SUM(IF(RACE = 2,1,0)) AS case_ch,SUM(IF(RESULT = 2 AND RACE = 2,1,0)) AS death_ch')
+        ->selectRaw('SUM(IF(RACE = 8,1,0)) AS case_oth,SUM(IF(RESULT = 2 AND RACE = 8,1,0)) AS death_oth')
         ->whereIn('DISEASE',$disease_code)
         ->join('c_province','ur506_'.$tblYear.'.PROVINCE','=','c_province.prov_code')
         ->groupBy('PROVINCE')
@@ -1942,14 +1942,14 @@ class ExportPatientController extends Controller
     }else{
         $query[] = DB::table('ur506_'.$tblYear)
         ->select('prov_dpc','PROVINCE')
-        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 1,1,0)) AS case_th,SUM(IF(RESULT = 2 AND RACE = 1,1,0)) AS death_th')
-        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 3,1,0)) AS case_bm,SUM(IF(RESULT = 2 AND RACE = 3,1,0)) AS death_bm')
-        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 4,1,0)) AS case_ms,SUM(IF(RESULT = 2 AND RACE = 4,1,0)) AS death_ms')
-        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 5,1,0)) AS case_cd,SUM(IF(RESULT = 2 AND RACE = 5,1,0)) AS death_cd')
-        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 6,1,0)) AS case_los,SUM(IF(RESULT = 2 AND RACE = 6,1,0)) AS death_los')
-        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 7,1,0)) AS case_vn,SUM(IF(RESULT = 2 AND RACE = 7,1,0)) AS death_vn')
-        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 2,1,0)) AS case_ch,SUM(IF(RESULT = 2 AND RACE = 2,1,0)) AS death_ch')
-        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 8,1,0)) AS case_oth,SUM(IF(RESULT = 2 AND RACE = 8,1,0)) AS death_oth')
+        ->selectRaw('SUM(IF(RACE = 1,1,0)) AS case_th,SUM(IF(RESULT = 2 AND RACE = 1,1,0)) AS death_th')
+        ->selectRaw('SUM(IF(RACE = 3,1,0)) AS case_bm,SUM(IF(RESULT = 2 AND RACE = 3,1,0)) AS death_bm')
+        ->selectRaw('SUM(IF(RACE = 4,1,0)) AS case_ms,SUM(IF(RESULT = 2 AND RACE = 4,1,0)) AS death_ms')
+        ->selectRaw('SUM(IF(RACE = 5,1,0)) AS case_cd,SUM(IF(RESULT = 2 AND RACE = 5,1,0)) AS death_cd')
+        ->selectRaw('SUM(IF(RACE = 6,1,0)) AS case_los,SUM(IF(RESULT = 2 AND RACE = 6,1,0)) AS death_los')
+        ->selectRaw('SUM(IF(RACE = 7,1,0)) AS case_vn,SUM(IF(RESULT = 2 AND RACE = 7,1,0)) AS death_vn')
+        ->selectRaw('SUM(IF(RACE = 2,1,0)) AS case_ch,SUM(IF(RESULT = 2 AND RACE = 2,1,0)) AS death_ch')
+        ->selectRaw('SUM(IF(RACE = 8,1,0)) AS case_oth,SUM(IF(RESULT = 2 AND RACE = 8,1,0)) AS death_oth')
         ->where('DISEASE','=',$disease_code['0'])
         ->join('c_province','ur506_'.$tblYear.'.PROVINCE','=','c_province.prov_code')
         ->groupBy('PROVINCE')
@@ -2012,14 +2012,14 @@ class ExportPatientController extends Controller
     if(count($disease_code)>2){
         $query[] = DB::table('ur506_'.$tblYear)
         ->select('prov_dpc','PROVINCE')
-        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 1,1,0)) AS case_th,SUM(IF(RESULT = 2 AND RACE = 1,1,0)) AS death_th')
-        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 3,1,0)) AS case_bm,SUM(IF(RESULT = 2 AND RACE = 3,1,0)) AS death_bm')
-        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 4,1,0)) AS case_ms,SUM(IF(RESULT = 2 AND RACE = 4,1,0)) AS death_ms')
-        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 5,1,0)) AS case_cd,SUM(IF(RESULT = 2 AND RACE = 5,1,0)) AS death_cd')
-        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 6,1,0)) AS case_los,SUM(IF(RESULT = 2 AND RACE = 6,1,0)) AS death_los')
-        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 7,1,0)) AS case_vn,SUM(IF(RESULT = 2 AND RACE = 7,1,0)) AS death_vn')
-        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 2,1,0)) AS case_ch,SUM(IF(RESULT = 2 AND RACE = 2,1,0)) AS death_ch')
-        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 8,1,0)) AS case_oth,SUM(IF(RESULT = 2 AND RACE = 8,1,0)) AS death_oth')
+        ->selectRaw('SUM(IF(RACE = 1,1,0)) AS case_th,SUM(IF(RESULT = 2 AND RACE = 1,1,0)) AS death_th')
+        ->selectRaw('SUM(IF(RACE = 3,1,0)) AS case_bm,SUM(IF(RESULT = 2 AND RACE = 3,1,0)) AS death_bm')
+        ->selectRaw('SUM(IF(RACE = 4,1,0)) AS case_ms,SUM(IF(RESULT = 2 AND RACE = 4,1,0)) AS death_ms')
+        ->selectRaw('SUM(IF(RACE = 5,1,0)) AS case_cd,SUM(IF(RESULT = 2 AND RACE = 5,1,0)) AS death_cd')
+        ->selectRaw('SUM(IF(RACE = 6,1,0)) AS case_los,SUM(IF(RESULT = 2 AND RACE = 6,1,0)) AS death_los')
+        ->selectRaw('SUM(IF(RACE = 7,1,0)) AS case_vn,SUM(IF(RESULT = 2 AND RACE = 7,1,0)) AS death_vn')
+        ->selectRaw('SUM(IF(RACE = 2,1,0)) AS case_ch,SUM(IF(RESULT = 2 AND RACE = 2,1,0)) AS death_ch')
+        ->selectRaw('SUM(IF(RACE = 8,1,0)) AS case_oth,SUM(IF(RESULT = 2 AND RACE = 8,1,0)) AS death_oth')
         ->whereIn('DISEASE',$disease_code)
         ->join('c_province','ur506_'.$tblYear.'.PROVINCE','=','c_province.prov_code')
         ->groupBy('PROVINCE')
@@ -2027,14 +2027,14 @@ class ExportPatientController extends Controller
     }else{
         $query[] = DB::table('ur506_'.$tblYear)
         ->select('prov_dpc','PROVINCE')
-        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 1,1,0)) AS case_th,SUM(IF(RESULT = 2 AND RACE = 1,1,0)) AS death_th')
-        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 3,1,0)) AS case_bm,SUM(IF(RESULT = 2 AND RACE = 3,1,0)) AS death_bm')
-        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 4,1,0)) AS case_ms,SUM(IF(RESULT = 2 AND RACE = 4,1,0)) AS death_ms')
-        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 5,1,0)) AS case_cd,SUM(IF(RESULT = 2 AND RACE = 5,1,0)) AS death_cd')
-        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 6,1,0)) AS case_los,SUM(IF(RESULT = 2 AND RACE = 6,1,0)) AS death_los')
-        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 7,1,0)) AS case_vn,SUM(IF(RESULT = 2 AND RACE = 7,1,0)) AS death_vn')
-        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 2,1,0)) AS case_ch,SUM(IF(RESULT = 2 AND RACE = 2,1,0)) AS death_ch')
-        ->selectRaw('SUM(IF(RESULT <> 2 AND RACE = 8,1,0)) AS case_oth,SUM(IF(RESULT = 2 AND RACE = 8,1,0)) AS death_oth')
+        ->selectRaw('SUM(IF(RACE = 1,1,0)) AS case_th,SUM(IF(RESULT = 2 AND RACE = 1,1,0)) AS death_th')
+        ->selectRaw('SUM(IF(RACE = 3,1,0)) AS case_bm,SUM(IF(RESULT = 2 AND RACE = 3,1,0)) AS death_bm')
+        ->selectRaw('SUM(IF(RACE = 4,1,0)) AS case_ms,SUM(IF(RESULT = 2 AND RACE = 4,1,0)) AS death_ms')
+        ->selectRaw('SUM(IF(RACE = 5,1,0)) AS case_cd,SUM(IF(RESULT = 2 AND RACE = 5,1,0)) AS death_cd')
+        ->selectRaw('SUM(IF(RACE = 6,1,0)) AS case_los,SUM(IF(RESULT = 2 AND RACE = 6,1,0)) AS death_los')
+        ->selectRaw('SUM(IF(RACE = 7,1,0)) AS case_vn,SUM(IF(RESULT = 2 AND RACE = 7,1,0)) AS death_vn')
+        ->selectRaw('SUM(IF(RACE = 2,1,0)) AS case_ch,SUM(IF(RESULT = 2 AND RACE = 2,1,0)) AS death_ch')
+        ->selectRaw('SUM(IF(RACE = 8,1,0)) AS case_oth,SUM(IF(RESULT = 2 AND RACE = 8,1,0)) AS death_oth')
         ->where('DISEASE','=',$disease_code['0'])
         ->join('c_province','ur506_'.$tblYear.'.PROVINCE','=','c_province.prov_code')
         ->groupBy('PROVINCE')
@@ -2105,5 +2105,315 @@ class ExportPatientController extends Controller
          });
      })->download('csv');
   }
+
+  public static function get_patient_sick_by_occupation($select_year,$disease_code){
+    $tblYear = (isset($select_year))? $select_year : date('Y')-1;
+    $post_disease_code = (isset($disease_code))? $disease_code : "01";
+    $disease_name =\App\Http\Controllers\Controller::All_disease()->toArray();
+    $get_dpc_nameth = \App\Http\Controllers\Controller::get_dpc_nameth()->toArray();
+    $get_provincename_th =\App\Http\Controllers\Controller::get_provincename_th()->toArray();
+    //Check Disease
+    $disease_code =  explode(",",$post_disease_code);
+    if(count($disease_code)>2){
+        $query[] = DB::table('ur506_'.$tblYear)
+        ->select('prov_dpc','PROVINCE')
+        ->selectRaw('SUM(IF(OCCUPAT = 1,1,0)) AS famer_case,SUM(IF(OCCUPAT = 2,1,0)) AS official_case')
+        ->selectRaw('SUM(IF(OCCUPAT = 3,1,0)) AS hire_case,SUM(IF(OCCUPAT = 4,1,0)) AS trade_case')
+        ->selectRaw('SUM(IF(OCCUPAT = 5,1,0)) AS housework_case,SUM(IF(OCCUPAT = 6,1,0)) AS student_case')
+        ->selectRaw('SUM(IF(OCCUPAT = 7,1,0)) AS soldier_case,SUM(IF(OCCUPAT = 8,1,0)) AS fishing_case')
+        ->selectRaw('SUM(IF(OCCUPAT = 9,1,0)) AS instructor_case,SUM(IF(OCCUPAT = 12,1,0)) AS animal_husbandry_case')
+        ->selectRaw('SUM(IF(OCCUPAT = 13,1,0)) AS priest_case,SUM(IF(OCCUPAT = 14,1,0)) AS special_career_STI_case')
+        ->selectRaw('SUM(IF(OCCUPAT = 15,1,0)) AS public_health_officer_case,SUM(IF(OCCUPAT = 11,1,0)) AS unknow_govern_case')
+        ->selectRaw('SUM(IF(OCCUPAT = 10,1,0)) AS other_case')
+        ->whereIn('DISEASE',$disease_code)
+        ->join('c_province','ur506_'.$tblYear.'.PROVINCE','=','c_province.prov_code')
+        ->groupBy('PROVINCE')
+        ->get();
+    }else{
+        $query[] = DB::table('ur506_'.$tblYear)
+        ->select('prov_dpc','PROVINCE')
+        ->selectRaw('SUM(IF(OCCUPAT = 1,1,0)) AS famer_case,SUM(IF(OCCUPAT = 2,1,0)) AS official_case')
+        ->selectRaw('SUM(IF(OCCUPAT = 3,1,0)) AS hire_case,SUM(IF(OCCUPAT = 4,1,0)) AS trade_case')
+        ->selectRaw('SUM(IF(OCCUPAT = 5,1,0)) AS housework_case,SUM(IF(OCCUPAT = 6,1,0)) AS student_case')
+        ->selectRaw('SUM(IF(OCCUPAT = 7,1,0)) AS soldier_case,SUM(IF(OCCUPAT = 8,1,0)) AS fishing_case')
+        ->selectRaw('SUM(IF(OCCUPAT = 9,1,0)) AS instructor_case,SUM(IF(OCCUPAT = 12,1,0)) AS animal_husbandry_case')
+        ->selectRaw('SUM(IF(OCCUPAT = 13,1,0)) AS priest_case,SUM(IF(OCCUPAT = 14,1,0)) AS special_career_STI_case')
+        ->selectRaw('SUM(IF(OCCUPAT = 15,1,0)) AS public_health_officer_case,SUM(IF(OCCUPAT = 11,1,0)) AS unknow_govern_case')
+        ->selectRaw('SUM(IF(OCCUPAT = 10,1,0)) AS other_case')
+        ->where('DISEASE','=',$disease_code['0'])
+        ->join('c_province','ur506_'.$tblYear.'.PROVINCE','=','c_province.prov_code')
+        ->groupBy('PROVINCE')
+        ->get();
+    }
+        foreach ($query[0] as $key => $val) {
+          $pt_data[$val->PROVINCE]['prov_dpc'] = $val->prov_dpc;
+          $pt_data[$val->PROVINCE]['PROVINCE'] = $get_provincename_th[$val->PROVINCE];
+          $pt_data[$val->PROVINCE]['famer_case'] = $val->famer_case;
+          $pt_data[$val->PROVINCE]['official_case'] = $val->official_case;
+          $pt_data[$val->PROVINCE]['hire_case'] = $val->hire_case;
+          $pt_data[$val->PROVINCE]['trade_case'] = $val->trade_case;
+          $pt_data[$val->PROVINCE]['housework_case'] = $val->housework_case;
+          $pt_data[$val->PROVINCE]['student_case'] = $val->student_case;
+          $pt_data[$val->PROVINCE]['soldier_case'] = $val->soldier_case;
+          $pt_data[$val->PROVINCE]['fishing_case'] = $val->fishing_case;
+          $pt_data[$val->PROVINCE]['instructor_case'] = $val->instructor_case;
+          $pt_data[$val->PROVINCE]['animal_husbandry_case'] = $val->animal_husbandry_case;
+          $pt_data[$val->PROVINCE]['priest_case'] = $val->priest_case;
+          $pt_data[$val->PROVINCE]['special_career_STI_case'] = $val->special_career_STI_case;
+          $pt_data[$val->PROVINCE]['public_health_officer_case'] = $val->public_health_officer_case;
+          $pt_data[$val->PROVINCE]['unknow_govern_case'] = $val->unknow_govern_case;
+          $pt_data[$val->PROVINCE]['other_case'] = $val->other_case;
+        }
+
+        foreach ($get_provincename_th as $key => $value) {
+          if (array_key_exists($key, $pt_data)) {
+            $excel_data[$key] = $pt_data[$key];
+          }else{
+            $excel_data[$key] = array(  'prov_dpc'=>$get_dpc_nameth[$key],
+                                        'PROVINCE' => $get_provincename_th[$key],
+                                        'famer_case' => "0",'official_case' => "0",
+                                        'hire_case' => "0",'trade_case' => "0",'housework_case' => "0",'student_case' => "0",'soldier_case' => "0",
+                                        'fishing_case' => "0",'instructor_case' => "0",'animal_husbandry_case' => "0",'priest_case' => "0",'special_career_STI_case' => "0",
+                                        'public_health_officer_case' => "0",'unknow_govern_case' => "0",'other_case' => "0"
+                                );
+          }
+        }
+          //dd($excel_data);
+          return $excel_data;
+
+  }
+  public static function xls_patient_sick_by_occupation(Request $request){
+    if(empty($request->select_year) || empty($request->disease_code)) return false;
+    $post_disease_code = $request->disease_code;
+    $tblYear = $request->select_year;
+    $disease_name =\App\Http\Controllers\Controller::All_disease()->toArray();
+    $get_dpc_nameth = \App\Http\Controllers\Controller::get_dpc_nameth()->toArray();
+    $get_provincename_th =\App\Http\Controllers\Controller::get_provincename_th()->toArray();
+    //Col A1 Excel
+    $excel_data[] = array('DPC','Reporting Area','เกษตรกรรม','ข้าราชการ','รับจ้าง','ค้าขาย','งานบ้าน','นักเรียน','ทหาร/ตำรวจ','ประมง','ครู','เลี้ยงสัตว์',
+                          'นักบวช','อาชีพพิเศษ','บุคคลากรสาธารณสุข','อื่นๆ','ไม่ทราบ/นปค'
+                         );
+    //Check Disease
+    $disease_code =  explode(",",$post_disease_code);
+    if(count($disease_code)>2){
+        $query[] = DB::table('ur506_'.$tblYear)
+        ->select('prov_dpc','PROVINCE')
+        ->selectRaw('SUM(IF(OCCUPAT = 1,1,0)) AS famer_case,SUM(IF(OCCUPAT = 2,1,0)) AS official_case')
+        ->selectRaw('SUM(IF(OCCUPAT = 3,1,0)) AS hire_case,SUM(IF(OCCUPAT = 4,1,0)) AS trade_case')
+        ->selectRaw('SUM(IF(OCCUPAT = 5,1,0)) AS housework_case,SUM(IF(OCCUPAT = 6,1,0)) AS student_case')
+        ->selectRaw('SUM(IF(OCCUPAT = 7,1,0)) AS soldier_case,SUM(IF(OCCUPAT = 8,1,0)) AS fishing_case')
+        ->selectRaw('SUM(IF(OCCUPAT = 9,1,0)) AS instructor_case,SUM(IF(OCCUPAT = 12,1,0)) AS animal_husbandry_case')
+        ->selectRaw('SUM(IF(OCCUPAT = 13,1,0)) AS priest_case,SUM(IF(OCCUPAT = 14,1,0)) AS special_career_STI_case')
+        ->selectRaw('SUM(IF(OCCUPAT = 15,1,0)) AS public_health_officer_case,SUM(IF(OCCUPAT = 11,1,0)) AS unknow_govern_case')
+        ->selectRaw('SUM(IF(OCCUPAT = 10,1,0)) AS other_case')
+        ->whereIn('DISEASE',$disease_code)
+        ->join('c_province','ur506_'.$tblYear.'.PROVINCE','=','c_province.prov_code')
+        ->groupBy('PROVINCE')
+        ->get();
+    }else{
+        $query[] = DB::table('ur506_'.$tblYear)
+        ->select('prov_dpc','PROVINCE')
+        ->selectRaw('SUM(IF(OCCUPAT = 1,1,0)) AS famer_case,SUM(IF(OCCUPAT = 2,1,0)) AS official_case')
+        ->selectRaw('SUM(IF(OCCUPAT = 3,1,0)) AS hire_case,SUM(IF(OCCUPAT = 4,1,0)) AS trade_case')
+        ->selectRaw('SUM(IF(OCCUPAT = 5,1,0)) AS housework_case,SUM(IF(OCCUPAT = 6,1,0)) AS student_case')
+        ->selectRaw('SUM(IF(OCCUPAT = 7,1,0)) AS soldier_case,SUM(IF(OCCUPAT = 8,1,0)) AS fishing_case')
+        ->selectRaw('SUM(IF(OCCUPAT = 9,1,0)) AS instructor_case,SUM(IF(OCCUPAT = 12,1,0)) AS animal_husbandry_case')
+        ->selectRaw('SUM(IF(OCCUPAT = 13,1,0)) AS priest_case,SUM(IF(OCCUPAT = 14,1,0)) AS special_career_STI_case')
+        ->selectRaw('SUM(IF(OCCUPAT = 15,1,0)) AS public_health_officer_case,SUM(IF(OCCUPAT = 11,1,0)) AS unknow_govern_case')
+        ->selectRaw('SUM(IF(OCCUPAT = 10,1,0)) AS other_case')
+        ->where('DISEASE','=',$disease_code['0'])
+        ->join('c_province','ur506_'.$tblYear.'.PROVINCE','=','c_province.prov_code')
+        ->groupBy('PROVINCE')
+        ->get();
+    }
+      foreach ($query[0] as $key => $val) {
+        $pt_data[$val->PROVINCE]['prov_dpc'] = $val->prov_dpc;
+        $pt_data[$val->PROVINCE]['PROVINCE'] = $get_provincename_th[$val->PROVINCE];
+        $pt_data[$val->PROVINCE]['famer_case'] = $val->famer_case;
+        $pt_data[$val->PROVINCE]['official_case'] = $val->official_case;
+        $pt_data[$val->PROVINCE]['hire_case'] = $val->hire_case;
+        $pt_data[$val->PROVINCE]['trade_case'] = $val->trade_case;
+        $pt_data[$val->PROVINCE]['housework_case'] = $val->housework_case;
+        $pt_data[$val->PROVINCE]['student_case'] = $val->student_case;
+        $pt_data[$val->PROVINCE]['soldier_case'] = $val->soldier_case;
+        $pt_data[$val->PROVINCE]['fishing_case'] = $val->fishing_case;
+        $pt_data[$val->PROVINCE]['instructor_case'] = $val->instructor_case;
+        $pt_data[$val->PROVINCE]['animal_husbandry_case'] = $val->animal_husbandry_case;
+        $pt_data[$val->PROVINCE]['priest_case'] = $val->priest_case;
+        $pt_data[$val->PROVINCE]['special_career_STI_case'] = $val->special_career_STI_case;
+        $pt_data[$val->PROVINCE]['public_health_officer_case'] = $val->public_health_officer_case;
+        $pt_data[$val->PROVINCE]['unknow_govern_case'] = $val->unknow_govern_case;
+        $pt_data[$val->PROVINCE]['other_case'] = $val->other_case;
+      }
+
+      foreach ($get_provincename_th as $key => $value) {
+        if (array_key_exists($key, $pt_data)) {
+          $excel_data[$key] = $pt_data[$key];
+        }else{
+          $excel_data[$key] = array(  'prov_dpc'=>$get_dpc_nameth[$key],
+                                      'PROVINCE' => $get_provincename_th[$key],
+                                      'famer_case' => "0",'official_case' => "0",
+                                      'hire_case' => "0",'trade_case' => "0",'housework_case' => "0",'student_case' => "0",'soldier_case' => "0",
+                                      'fishing_case' => "0",'instructor_case' => "0",'animal_husbandry_case' => "0",'priest_case' => "0",'special_career_STI_case' => "0",
+                                      'public_health_officer_case' => "0",'unknow_govern_case' => "0",'other_case' => "0"
+                              );
+        }
+      }
+      //Year to DC
+      $year_th = $tblYear+543;
+      //filename
+      $filename = 'sick-by-occupation'.'-year-'.$year_th;
+      //sheetname
+      $sheetname = 'sheet1';
+
+      // header text
+      $header_text = "ตารางข้อมูลจำนวนป่วยแยกตามอาชีพ โรค ".$disease_name[$post_disease_code]." ปี ".$year_th;
+
+      Excel::create($filename, function($excel) use($excel_data,$sheetname,$header_text) {
+          // Set the title
+          $excel->setTitle('UCD-Report');
+          // Chain the setters
+          $excel->setCreator('Talek Team')->setCompany('Talek Team');
+          //description
+          $excel->setDescription('สปคม.');
+
+          $excel->sheet($sheetname, function ($sheet) use ($excel_data,$header_text) {
+              //Header Text
+               $sheet->row(1, [$header_text]);
+               $sheet->setAutoFilter('A2:H2');
+               $sheet->fromArray($excel_data, null, 'A2', false, false);
+           });
+       })->download('csv');
+  }
+  public static function get_patient_sick_by_sex($select_year,$disease_code){
+    $tblYear = (isset($select_year))? $select_year : date('Y')-1;
+    $post_disease_code = (isset($disease_code))? $disease_code : "01";
+    $disease_name =\App\Http\Controllers\Controller::All_disease()->toArray();
+    $get_dpc_nameth = \App\Http\Controllers\Controller::get_dpc_nameth()->toArray();
+    $get_provincename_th =\App\Http\Controllers\Controller::get_provincename_th()->toArray();
+    //Check Disease
+    $disease_code =  explode(",",$post_disease_code);
+    if(count($disease_code)>2){
+        $query[] = DB::table('ur506_'.$tblYear)
+        ->select('prov_dpc','PROVINCE')
+        ->selectRaw('SUM(IF(SEX = "1",1,0)) AS male,SUM(IF(SEX = "2",1,0)) AS female')
+        ->selectRaw('SUM(IF(SEX <> "" OR SEX IS NOT NULL,1,0)) AS total_sex_case')
+        ->whereIn('DISEASE',$disease_code)
+        ->join('c_province','ur506_'.$tblYear.'.PROVINCE','=','c_province.prov_code')
+        ->groupBy('PROVINCE')
+        ->get();
+    }else{
+        $query[] = DB::table('ur506_'.$tblYear)
+        ->select('prov_dpc','PROVINCE')
+        ->selectRaw('SUM(IF(SEX = "1",1,0)) AS male,SUM(IF(SEX = "2",1,0)) AS female')
+        ->selectRaw('SUM(IF(SEX <> "" OR SEX IS NOT NULL,1,0)) AS total_sex_case')
+        ->where('DISEASE','=',$disease_code['0'])
+        ->join('c_province','ur506_'.$tblYear.'.PROVINCE','=','c_province.prov_code')
+        ->groupBy('PROVINCE')
+        ->get();
+    }
+        foreach ($query[0] as $key => $val) {
+          $pt_data[$val->PROVINCE]['prov_dpc'] = $val->prov_dpc;
+          $pt_data[$val->PROVINCE]['PROVINCE'] = $get_provincename_th[$val->PROVINCE];
+          $pt_data[$val->PROVINCE]['male'] = $val->male;
+          $pt_data[$val->PROVINCE]['female'] = $val->female;
+          $pt_data[$val->PROVINCE]['total_sex_case'] = $val->total_sex_case;
+        }
+
+        foreach ($get_provincename_th as $key => $value) {
+          if (array_key_exists($key, $pt_data)) {
+            $excel_data[$key] = $pt_data[$key];
+          }else{
+            $excel_data[$key] = array(  'prov_dpc'=>$get_dpc_nameth[$key],
+                                        'PROVINCE' => $get_provincename_th[$key],
+                                        'male' => "0",
+                                        'female' => "0",
+                                        'total_sex_case' => "0",
+                                );
+          }
+        }
+          //dd($excel_data);
+          return $excel_data;
+
+  }
+  public static function xls_patient_sick_by_sex(Request $request){
+    if(empty($request->select_year) || empty($request->disease_code)) return false;
+    $post_disease_code = $request->disease_code;
+    $tblYear = $request->select_year;
+    $disease_name =\App\Http\Controllers\Controller::All_disease()->toArray();
+    $get_dpc_nameth = \App\Http\Controllers\Controller::get_dpc_nameth()->toArray();
+    $get_provincename_th =\App\Http\Controllers\Controller::get_provincename_th()->toArray();
+    //Col A1 Excel
+    $excel_data[] = array('DPC','Reporting Area','ชาย','หญิง','รวม'
+                         );
+    //Check Disease
+    $disease_code =  explode(",",$post_disease_code);
+    if(count($disease_code)>2){
+        $query[] = DB::table('ur506_'.$tblYear)
+        ->select('prov_dpc','PROVINCE')
+        ->selectRaw('SUM(IF(SEX = "1",1,0)) AS male,SUM(IF(SEX = "2",1,0)) AS female')
+        ->selectRaw('SUM(IF(SEX <> "" OR SEX IS NOT NULL,1,0)) AS total_sex_case')
+        ->whereIn('DISEASE',$disease_code)
+        ->join('c_province','ur506_'.$tblYear.'.PROVINCE','=','c_province.prov_code')
+        ->groupBy('PROVINCE')
+        ->get();
+    }else{
+        $query[] = DB::table('ur506_'.$tblYear)
+        ->select('prov_dpc','PROVINCE')
+        ->selectRaw('SUM(IF(SEX = "1",1,0)) AS male,SUM(IF(SEX = "2",1,0)) AS female')
+        ->selectRaw('SUM(IF(SEX <> "" OR SEX IS NOT NULL,1,0)) AS total_sex_case')
+        ->where('DISEASE','=',$disease_code['0'])
+        ->join('c_province','ur506_'.$tblYear.'.PROVINCE','=','c_province.prov_code')
+        ->groupBy('PROVINCE')
+        ->get();
+    }
+      foreach ($query[0] as $key => $val) {
+        $pt_data[$val->PROVINCE]['prov_dpc'] = $val->prov_dpc;
+        $pt_data[$val->PROVINCE]['PROVINCE'] = $get_provincename_th[$val->PROVINCE];
+        $pt_data[$val->PROVINCE]['male'] = $val->male;
+        $pt_data[$val->PROVINCE]['female'] = $val->female;
+        $pt_data[$val->PROVINCE]['total_sex_case'] = $val->total_sex_case;
+      }
+
+      foreach ($get_provincename_th as $key => $value) {
+        if (array_key_exists($key, $pt_data)) {
+          $excel_data[$key] = $pt_data[$key];
+        }else{
+          $excel_data[$key] = array(  'prov_dpc'=>$get_dpc_nameth[$key],
+                                      'PROVINCE' => $get_provincename_th[$key],
+                                      'male' => "0",
+                                      'female' => "0",
+                                      'total_sex_case' => "0",
+                              );
+        }
+
+      }
+      //Year to DC
+      $year_th = $tblYear+543;
+      //filename
+      $filename = 'sick-by-sex'.'-year-'.$year_th;
+      //sheetname
+      $sheetname = 'sheet1';
+
+      // header text
+      $header_text = "ตารางข้อมูลจจำนวนป่วยแยกตามเพศ โรค ".$disease_name[$post_disease_code]." ปี ".$year_th;
+
+      Excel::create($filename, function($excel) use($excel_data,$sheetname,$header_text) {
+          // Set the title
+          $excel->setTitle('UCD-Report');
+          // Chain the setters
+          $excel->setCreator('Talek Team')->setCompany('Talek Team');
+          //description
+          $excel->setDescription('สปคม.');
+
+          $excel->sheet($sheetname, function ($sheet) use ($excel_data,$header_text) {
+              //Header Text
+               $sheet->row(1, [$header_text]);
+               $sheet->setAutoFilter('A2:H2');
+               $sheet->fromArray($excel_data, null, 'A2', false, false);
+           });
+       })->download('csv');
+  }
+
 
 }
