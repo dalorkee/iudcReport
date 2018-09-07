@@ -36,22 +36,30 @@ class PopulationController extends Controller
     public function ShowByDisease(Request $request){
       if(empty($request->year) || empty($request->disease_code)) return false;
         $year = trim($request->year);
-        $disease_code = trim($request->disease_code);
+        $post_disease_code = (isset($request->disease_code))? $request->disease_code : "01";
         $table_name = 'ur506_'.$year;
+        $get_provincename_th =\App\Http\Controllers\Controller::get_provincename_th()->toArray();
+        $get_dpc_nameth = \App\Http\Controllers\Controller::get_dpc_nameth()->toArray();
 
-        if($disease_code=='26-27-66'){
+        //Check Disease
+        $disease_code =  explode(",",$post_disease_code);
+        //dd($disease_code);
+
+        if(count($disease_code)>2){
+
           $query = DB::table($table_name)
             ->select('PROVINCE')
             ->selectRaw('count('.$table_name.'.DISEASE) as total_cases')
             ->selectRaw('SUM(IF('.$table_name.'.RESULT = "2",1,0)) as total_deaths')
-            ->whereIN('DISEASE',['26','27','66'])
+            //->whereIN('DISEASE',['26','27','66'])
+            ->whereIn('DISEASE',$disease_code)
             ->groupBy('ur506_'.$year.'.'.'PROVINCE');
         }else{
           $query = DB::table($table_name)
             ->select('PROVINCE')
             ->selectRaw('count('.$table_name.'.DISEASE) as total_cases')
             ->selectRaw('SUM(IF('.$table_name.'.RESULT = "2",1,0)) as total_deaths')
-            ->where('DISEASE','=',$disease_code)
+            ->where('DISEASE','=',$disease_code['0'])
             ->groupBy('ur506_'.$year.'.'.'PROVINCE');
         }
            $result['datas_province']  = $query->paginate(10);
@@ -61,15 +69,20 @@ class PopulationController extends Controller
     public static function ShowByDiseaseSub($province,$year,$disease_code){
       if(empty($province) || empty($year) || empty($disease_code)) return false;
         $year = trim($year);
-        $disease_code = trim($disease_code);
+        $post_disease_code = (isset($disease_code))? $disease_code : "01";
         $table_name = "ur506_".$year;
         $province = trim($province);
 
-        if($disease_code=='26-27-66'){
+        //Check Disease
+        $disease_code =  explode(",",$post_disease_code);
+        //dd($disease_code);
+
+        if(count($disease_code)>2){
           $query_amphur = DB::table($table_name)
                                          ->select(DB::raw('count(DISEASE) as total_cases,urbanname,urbancode'))
                                          ->selectRaw('SUM(IF('.$table_name.'.RESULT = "2",1,0)) as total_deaths')
-                                         ->whereIN('DISEASE',['26','27','66'])
+                                         //->whereIN('DISEASE',['26','27','66'])
+                                         ->whereIn('DISEASE',$disease_code)
                                          ->where(\DB::raw('substr(urbancode, 1, 2)'), '=' , $province)
                                          ->groupBy('urbanname');
           $result = $query_amphur->get();
@@ -77,12 +90,13 @@ class PopulationController extends Controller
           $query_amphur = DB::table($table_name)
                                          ->select(DB::raw('count(DISEASE) as total_cases,urbanname,urbancode'))
                                          ->selectRaw('SUM(IF('.$table_name.'.RESULT = "2",1,0)) as total_deaths')
-                                         ->where('DISEASE',$disease_code)
+                                         ->where('DISEASE','=',$disease_code['0'])
                                          ->where(\DB::raw('substr(urbancode, 1, 2)'), '=' , $province)
                                          ->groupBy('urbanname');
           $result = $query_amphur->get();
         }
         return $result;
+        //dd($result);
     }
 
     public function ShowByDisease_Export(Request $request){
@@ -92,28 +106,30 @@ class PopulationController extends Controller
 
 
         $year = trim($request->year);
-        $disease_code = trim($request->disease_code);
+        $post_disease_code = (isset($request->disease_code))? $request->disease_code : "01";
         $table_name = "ur506_".$year;
         $total_all_pop = PopulationController::all_population($year);
         $total_pop_in_province = PopulationController::all_population_by_province($year);
         $total_pop_in_urban = PopulationController::all_population_by_urban($year);
-
-        //dd($total_pop_in_urban);
         //Query Province
 
-        if($disease_code=='26-27-66'){
+        //Check Disease
+        $disease_code =  explode(",",$post_disease_code);
+        //dd($disease_code);
+
+        if(count($disease_code)>2){
           $query = DB::table($table_name)
             ->select('PROVINCE')
             ->selectRaw('count('.$table_name.'.DISEASE) as total_cases')
             ->selectRaw('SUM(IF('.$table_name.'.RESULT = "2",1,0)) as total_deaths')
-            ->whereIN('DISEASE',['26','27','66'])
+            ->whereIn('DISEASE',$disease_code)
             ->groupBy('ur506_'.$year.'.'.'PROVINCE');
         }else{
           $query = DB::table($table_name)
             ->select('PROVINCE')
             ->selectRaw('count('.$table_name.'.DISEASE) as total_cases')
             ->selectRaw('SUM(IF('.$table_name.'.RESULT = "2",1,0)) as total_deaths')
-            ->where('DISEASE','=',$disease_code)
+            ->where('DISEASE','=',$disease_code['0'])
             ->groupBy('ur506_'.$year.'.'.'PROVINCE');
         }
           $data_province = $query->get();
@@ -141,27 +157,28 @@ class PopulationController extends Controller
                                   $cal_ratio_cases_deaths_province//อัตรา(ป่วย/ตาย)
                                  );
             //Query Amphur
-            if($disease_code=='26-27-66'){
+            if(count($disease_code)>2){
               $query_amphur = DB::table($table_name)
                                              ->select(DB::raw('count(DISEASE) as total_cases,urbanname,urbancode'))
                                              ->selectRaw('SUM(IF('.$table_name.'.RESULT = "2",1,0)) as total_deaths')
-                                             ->whereIN('DISEASE',['26','27','66'])
+                                             ->whereIn('DISEASE',$disease_code)
                                              ->where(\DB::raw('substr(urbancode, 1, 2)'), '=' , $val_data_province->PROVINCE)
                                              ->groupBy('urbanname');
             }else{
               $query_amphur = DB::table($table_name)
                                              ->select(DB::raw('count(DISEASE) as total_cases,urbanname,urbancode'))
                                              ->selectRaw('SUM(IF('.$table_name.'.RESULT = "2",1,0)) as total_deaths')
-                                             ->where('DISEASE',$disease_code)
+                                             ->where('DISEASE','=',$disease_code['0'])
                                              ->where(\DB::raw('substr(urbancode, 1, 2)'), '=' , $val_data_province->PROVINCE)
                                              ->groupBy('urbanname');
             }
               $data_amphur=$query_amphur->get();
+
                 foreach($data_amphur as $val_data_amphur){
-                  if(isset($total_pop_in_urban[$val_data_amphur->urbancode]['poptotal_in_urban'])){
-                          $total_pop_urban = number_format($total_pop_in_urban[$val_data_amphur->urbancode]['poptotal_in_urban']);
-                          $cal_ratio_cases_urban = Controller::cal_ratio_cases($total_pop_in_urban[$val_data_amphur->urbancode]['poptotal_in_urban'],$val_data_amphur->total_cases);
-                          $cal_ratio_deaths_urban = Controller::cal_ratio_cases_deaths($total_pop_in_urban[$val_data_amphur->urbancode]['poptotal_in_urban'],$val_data_amphur->total_deaths);
+                  if(isset($total_pop_in_urban[$val_data_amphur->urbanname]['poptotal_in_urban'])){
+                          $total_pop_urban = number_format($total_pop_in_urban[$val_data_amphur->urbanname]['poptotal_in_urban']);
+                          $cal_ratio_cases_urban = Controller::cal_ratio_cases($total_pop_in_urban[$val_data_amphur->urbanname]['poptotal_in_urban'],$val_data_amphur->total_cases);
+                          $cal_ratio_deaths_urban = Controller::cal_ratio_cases_deaths($total_pop_in_urban[$val_data_amphur->urbanname]['poptotal_in_urban'],$val_data_amphur->total_deaths);
                           $cal_ratio_cases_deaths_urban = Controller::cal_ratio_cases_deaths($val_data_amphur->total_cases,$val_data_amphur->total_deaths);
                   }else{
                     $total_pop_urban = '0';
@@ -179,31 +196,32 @@ class PopulationController extends Controller
                 }
 
           }
-          //dd($data_excel);
+          $disease_name =\App\Http\Controllers\Controller::All_disease()->toArray();
+          //Year to DC
+          $year_th = $year+543;
+          //filename
+          $filename = 'pop-'.$disease_name[$post_disease_code].'-year'.$year_th;
+          //sheetname
+          $sheetname = 'sheet1';
 
-          // if($disease_code=="26-27-66"){
-          //  $disease_name = "Total D.H.F.";
-          // }else{
-          //  $disease_name = $get_list_disease[$disease_code];
-          // }
+          // header text
+          $header_text = "ตารางข้อมูลจำนวนประชากร โรค ".$disease_name[$post_disease_code]." ปี ".$year_th;
 
-            //filename
-            $show_year = $year+543;
-            $filename = 'จำนวนประชากร โรค'.$disease_code.'ปี'.$show_year;
-            //sheetname
-            $data2 = 'จำนวนประชากร โรค'.$disease_code.'ปี'.$show_year;
+          Excel::create($filename, function($excel) use($data_excel,$sheetname,$header_text) {
+              // Set the title
+              $excel->setTitle('UCD-Report');
+              // Chain the setters
+              $excel->setCreator('Talek Team')->setCompany('Talek Team');
+              //description
+              $excel->setDescription('สปคม.');
 
-            Excel::create($filename, function($excel) use($data_excel,$data2) {
-                // Set the title
-                $excel->setTitle('UCD-Report');
-                // Chain the setters
-                $excel->setCreator('Talek Team')->setCompany('Talek Team');
-                //description
-                $excel->setDescription('สปคม.');
-                $excel->sheet($data2, function ($sheet) use ($data_excel) {
-                     $sheet->fromArray($data_excel, null, 'A1', false, false);
-                 });
-             })->download('xlsx');
+              $excel->sheet($sheetname, function ($sheet) use ($data_excel,$header_text) {
+                  //Header Text
+                   $sheet->row(1, [$header_text]);
+                   //$sheet->setAutoFilter('A2:H2');
+                   $sheet->fromArray($data_excel, null, 'A2', false, false);
+               });
+           })->download('xlsx');
     }
 
     //Population Menu 2
@@ -241,13 +259,16 @@ class PopulationController extends Controller
     }
     public static function all_population_by_urban($year){
       $query = DB::table('pop_urban_sex')
-        ->select(DB::raw("pop_urban_sex.urbancode,SUM(pop_urban_sex.male)+SUM(pop_urban_sex.female) AS poptotal"))
+        ->select(DB::raw("pop_urban_sex.urbancode,SUM(pop_urban_sex.male)+SUM(pop_urban_sex.female) AS poptotal,pop_urban_sex.name_addr"))
         ->where('pop_urban_sex.pop_year','=',$year)
-        ->groupBy('pop_urban_sex.urbancode');
+        ->groupBy('pop_urban_sex.name_addr');
         $result = $query->get()->toArray();
         foreach ($result as $val){
-          $data[$val->urbancode] = array('poptotal_in_urban' => $val->poptotal);
+          $data[trim($val->name_addr)] = array('poptotal_in_urban' => $val->poptotal);
         }
          return $data;
+    }
+    public static function Show_disease_more_code($year){
+      
     }
 }

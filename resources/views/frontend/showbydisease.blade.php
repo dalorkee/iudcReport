@@ -15,6 +15,9 @@ $current_year_th = $current_year+543;
 $total_pop_in_province = PopulationController::all_population_by_province($current_year);
 $total_pop_in_urban = PopulationController::all_population_by_urban($current_year);
 
+
+//dd($total_pop_in_urban['เทศบาลนครเชียงใหม่']);
+
 if($disease_code=="26-27-66"){
  $disease_name = "Total D.H.F.";
 }else{
@@ -79,10 +82,10 @@ if($disease_code=="26-27-66"){
 							</tr>
 							<?php $get_sub_level = \App\Http\Controllers\PopulationController::ShowByDiseaseSub($value_province->PROVINCE,$current_year,$disease_code); ?>
               @foreach ($get_sub_level as $value_sub_level)
-              <?php if(isset($total_pop_in_urban[$value_sub_level->urbancode]['poptotal_in_urban'])){
-                      $total_pop_urban = number_format($total_pop_in_urban[$value_sub_level->urbancode]['poptotal_in_urban']);
-                      $cal_ratio_cases_urban = Controller::cal_ratio_cases($total_pop_in_urban[$value_sub_level->urbancode]['poptotal_in_urban'],$value_sub_level->total_cases);
-                      $cal_ratio_deaths_urban = Controller::cal_ratio_cases_deaths($total_pop_in_urban[$value_sub_level->urbancode]['poptotal_in_urban'],$value_sub_level->total_deaths);
+              <?php if(isset($total_pop_in_urban[$value_sub_level->urbanname]['poptotal_in_urban'])){
+                      $total_pop_urban = number_format($total_pop_in_urban[$value_sub_level->urbanname]['poptotal_in_urban']);
+                      $cal_ratio_cases_urban = Controller::cal_ratio_cases($total_pop_in_urban[$value_sub_level->urbanname]['poptotal_in_urban'],$value_sub_level->total_cases);
+                      $cal_ratio_deaths_urban = Controller::cal_ratio_cases_deaths($total_pop_in_urban[$value_sub_level->urbanname]['poptotal_in_urban'],$value_sub_level->total_deaths);
                       $cal_ratio_cases_deaths_urban = Controller::cal_ratio_cases_deaths($value_sub_level->total_cases,$value_sub_level->total_deaths);
               }else{
                 $total_pop_urban = 0;

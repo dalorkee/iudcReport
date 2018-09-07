@@ -2374,7 +2374,6 @@ class ExportPatientController extends Controller
         $pt_data[$val->PROVINCE]['female'] = $val->female;
         $pt_data[$val->PROVINCE]['total_sex_case'] = $val->total_sex_case;
       }
-
       foreach ($get_provincename_th as $key => $value) {
         if (array_key_exists($key, $pt_data)) {
           $excel_data[$key] = $pt_data[$key];
@@ -2396,7 +2395,7 @@ class ExportPatientController extends Controller
       $sheetname = 'sheet1';
 
       // header text
-      $header_text = "ตารางข้อมูลจจำนวนป่วยแยกตามเพศ โรค ".$disease_name[$post_disease_code]." ปี ".$year_th;
+      $header_text = "ตารางข้อมูลจำนวนป่วยแยกตามเพศ โรค ".$disease_name[$post_disease_code]." ปี ".$year_th;
 
       Excel::create($filename, function($excel) use($excel_data,$sheetname,$header_text) {
           // Set the title

@@ -9,7 +9,8 @@
 	$get_group_of_disease =\App\Http\Controllers\Controller::get_group_of_disease($select_year);
 	$get_group_of_disease_th =\App\Http\Controllers\Controller::get_group_of_disease_th($select_year);
 
-	// dd($get_group_of_disease_th);
+  $get_disease_more_code = \App\Http\Controllers\Controller::list_merge_disease();
+	 //dd($get_disease_more_code);
 	//count group_of_disease
 	$total_group_of_disease = count($get_group_of_disease);
 	$current_year =  (isset($_GET['year']))? $_GET['year']: date('Y');
@@ -89,13 +90,13 @@
 						</tbody>
 					</table>
 				</div>
-				<?php if($group_name_of_disease=='vbd') :?>
+				<!-- <?php if($group_name_of_disease=='vbd') :?>
 					<div class="box-footer text-center">
 						<div class="no-margin">
 							 <a href="showbydisease?disease_code=26-27-66&year={{ $current_year }}">Total D.H.F. = <?php echo number_format($json['vbd']['0']['total']+$json['vbd']['1']['total']+$json['vbd']['3']['total']); ?></a>
 						</div>
 					</div>
-				<?php endif; ?>
+				<?php endif; ?> -->
 			</div><!-- /.box-body -->
 		</div>
 	</div>
@@ -107,13 +108,55 @@
 <?php if($i%$max_columns!=0) { // put closing div if loop is not exactly a multiple of 3 ?>
 	</div>
 <?php } ?>
+<div class="row">
+    <div class="col-md-6">
+      <div class="box box-primary direct-chat direct-chat-primary">
+        <div class="box-header with-border">
+          <h3 class="box-title">โรคหลายรหัส</h3>
+        </div>
+        <div class="box-body">
+          <div class="table-responsive">
+            <table class="iudc-tbl" id="example10">
+              <thead>
+                <tr>
+                  <th rowspan="2">โรค (Code)</th>
+                  <th colspan="2">ป่วย</th>
+                  <th colspan="2">ตาย</th>
+                  <th rowspan="2">อัตรา ป/ต</th>
+                </tr>
+                <tr>
+                  <th>จำนวน</th>
+                  <th>อัตรา</th>
+                  <th>ตาย</th>
+                  <th>อัตรา</th>
+                </tr>
+              </thead>
+              <tfoot></tfoot>
+              <tbody>
+                @foreach ($get_disease_more_code as $key_disease_more_code => $val_disease_more_code)
+                <tr>
+                  <td>{{ $val_disease_more_code }}</td>
+                  <td>fdfdf</td>
+                  <td>fdfdf</td>
+                  <td>fdfdf</td>
+                  <td>fdfdf</td>
+                  <td>fdfdf</td>
+                </tr>
+                @endforeach
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
 </section>
 <!-- /.content -->
 @stop
 @section('script')
 <script>
 $(document).ready(function () {
-	$('#example0,#example1,#example2,#example3,#example4,#example5,#example6,#example7,#example8,#example9').DataTable({
+	$('#example0,#example1,#example2,#example3,#example4,#example5,#example6,#example7,#example8,#example9,#example10').DataTable({
 		'paging'      : false,
 		'lengthChange': false,
 		'searching'   : false,
