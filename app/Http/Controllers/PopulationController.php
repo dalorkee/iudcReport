@@ -72,10 +72,8 @@ class PopulationController extends Controller
         $post_disease_code = (isset($disease_code))? $disease_code : "01";
         $table_name = "ur506_".$year;
         $province = trim($province);
-
         //Check Disease
         $disease_code =  explode(",",$post_disease_code);
-        //dd($disease_code);
 
         if(count($disease_code)>2){
           $query_amphur = DB::table($table_name)
@@ -269,6 +267,6 @@ class PopulationController extends Controller
          return $data;
     }
     public static function Show_disease_more_code($year){
-      
+
     }
 }
