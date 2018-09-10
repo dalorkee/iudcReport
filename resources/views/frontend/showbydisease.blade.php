@@ -7,7 +7,20 @@ $j=2;
 use \App\Http\Controllers\Controller as Controller;
 use \App\Http\Controllers\PopulationController as PopulationController;
 $get_provincename_th =\App\Http\Controllers\Controller::get_provincename_th();
-$get_list_disease =\App\Http\Controllers\Controller::list_disease();
+//$get_list_disease =\App\Http\Controllers\Controller::list_disease();
+$get_all_disease_merge = Controller::list_merge_disease();
+$get_all_disease = Controller::list_disease();
+
+//add array
+function array_push_assoc($array, $key, $value){
+$array[$key] = $value;
+return $array;
+}
+
+foreach ($get_all_disease_merge as $key_merge => $val_merge){
+
+  array_push_assoc($get_all_disease,$key_merge,$val_merge);
+}
 $current_year =  (isset($_GET['year']))? $_GET['year']: date('Y');
 $disease_code =  (isset($_GET['disease_code']))? $_GET['disease_code']: '01';
 $current_year_th = $current_year+543;
@@ -18,29 +31,29 @@ $total_pop_in_urban = PopulationController::all_population_by_urban($current_yea
 
 //dd($total_pop_in_urban['เทศบาลนครเชียงใหม่']);
 
-if($disease_code=="26-27-66"){
- $disease_name = "Total D.H.F.";
-}else{
- $disease_name = $get_list_disease[$disease_code];
-}
+// if($disease_code=="26-27-66"){
+//  $disease_name = "Total D.H.F.";
+// }else{
+//  $disease_name = $get_list_disease[$disease_code];
+// }
 ?>
 <!-- Content Header (Page header) -->
 <section class="content-header">
-<h1>รายงานปี <?php echo $current_year_th; ?> โรค <?php echo $disease_name;  ?></h1>
+<h1>รายงานปี <?php echo $current_year_th; ?> โรค <?php echo $get_all_disease[$disease_code];?></h1>
 <ol class="breadcrumb">
 	<li><a href="{{ route('dashboard') }}"><i class="fa fa-home"></i> หน้าหลัก</a></li>
 	<li><a href="{{ route('dashboard') }}?year=<?php echo $current_year; ?>">ข้อมูลปี <?php echo $current_year_th; ?></a></li>
-	<li class="active"><a href="showbydisease?disease_code={{ $disease_code }}&year={{ $current_year }}"> โรค <?php echo $disease_name; ?></a></li>
+	<li class="active"><a href="showbydisease?disease_code={{ $disease_code }}&year={{ $current_year }}"> โรค <?php echo $get_all_disease[$disease_code];?></a></li>
 </ol>
 </section>
 <!-- Main content -->
 <section class="content">
 	<div class="row">
-		<div class="col-md-6">
+		<div class="col-md-8">
 			<!-- Default box -->
 			<div class="box">
 				<div class="box-header with-border">
-					<h3 class="box-title">แสดงข้อมูลปี <?php echo $current_year_th; ?> โรค <?php echo $disease_name; ?></h3>
+					<h3 class="box-title">แสดงข้อมูลปี <?php echo $current_year_th; ?> โรค <?php echo $get_all_disease[$disease_code];?></h3>
 				</div>
 				<div class="box-body">
 					<table id="tree-table" class="table table-hover table-bordered">

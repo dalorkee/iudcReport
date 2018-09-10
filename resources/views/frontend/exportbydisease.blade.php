@@ -1,14 +1,20 @@
 @extends('layouts.template')
 @section('content')
 <?php
-$get_all_disease =\App\Http\Controllers\Controller::list_disease();
+use \App\Http\Controllers\Controller as Controller;
+
+$get_all_disease_merge = Controller::list_merge_disease();
+$get_all_disease = Controller::list_disease();
 //add array
 function array_push_assoc($array, $key, $value){
 $array[$key] = $value;
 return $array;
 }
-array_push_assoc($get_all_disease,'26-27-66',"DHF Total");
 
+foreach ($get_all_disease_merge as $key_merge => $val_merge){
+
+  array_push_assoc($get_all_disease,$key_merge,$val_merge);
+}
 ?>
 <!-- Content Header (Page header) -->
 <section class="content-header">

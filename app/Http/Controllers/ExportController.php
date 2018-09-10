@@ -21,11 +21,12 @@ class ExportController extends Controller
     }
     public function get_files_export_by_disease(Request $request){
       $current_year = date('Y');
-      $disease_code = (isset($request->disease_code)) ? $request->disease_code : '';
+      $post_disease_code = (isset($request->disease_code)) ? $request->disease_code : '';
       $year = (isset($request->select_year)) ? $request->select_year : $current_year ;
-
-      if($disease_code=="26-27-66"){
-        $file_name = 'TOTAL-DHF-Y'.$year.'.csv';
+      $list_disease_all = \App\Http\Controllers\Controller::list_disease_all()->toArray();
+      $disease_code =  explode(",",$post_disease_code);
+      if(count($disease_code)>2){
+        $file_name = $list_disease_all[$post_disease_code].'-Y'.$year.'.csv';
       }else{
         $file_name = 'DIS'.$disease_code.'-Y'.$year.'.csv';
       }
@@ -164,7 +165,7 @@ class ExportController extends Controller
         				->groupBy(DB::raw('pop_urban_sex.prov_code'))
                 ->orderBy('pop_urban_sex.prov_code','ASC')
         				->get();
-                
+
               if(count($query)<1){
                 //dd('No Record');
                 $message = "ไม่พบข้อมูล";

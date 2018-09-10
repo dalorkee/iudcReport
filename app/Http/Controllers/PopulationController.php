@@ -266,7 +266,23 @@ class PopulationController extends Controller
         }
          return $data;
     }
-    public static function Show_disease_more_code($year){
+    public static function Show_disease_more_code($c_year,$post_disease_code){
+        $get_disease_more_code = \App\Http\Controllers\Controller::list_merge_disease();
+        $disease_code =  explode(",",$post_disease_code);
+        $year = (isset($c_year)) ? $c_year : date('Y');
+        $query = DB::table('ur_count_all')
+                  ->select(DB::raw("SUM(total) AS total_case,SUM(totald) AS total_death"))
+                  ->where('c_year','=',$year)
+                  ->whereIn('DISEASE',$disease_code)->get()->toArray();
+        //dd($query);
 
+        $data = array();
+        foreach ($query as $data_val) {
+            $total_case = $data_val->total_case;
+            $total_death = $data_val->total_death;
+        }
+        $data = array('total_case' => $total_case,'total_death' => $total_death);
+        //dd($data);
+        return $data;
     }
 }

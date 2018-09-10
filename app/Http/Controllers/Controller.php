@@ -233,5 +233,23 @@ class Controller extends BaseController
       }
       return $ret;
     }
+    public static function list_disease_all(){
+
+      $get_all_disease_merge = \App\Http\Controllers\Controller::list_merge_disease();
+      $get_all_disease = \App\Http\Controllers\Controller::list_disease();
+
+      //add array
+      function array_push_assoc($array, $key, $value){
+      $array[$key] = $value;
+      return $array;
+      }
+
+      foreach ($get_all_disease_merge as $key_merge => $val_merge){
+
+        array_push_assoc($get_all_disease,$key_merge,$val_merge);
+      }
+
+      return $get_all_disease;
+    }
 
 }

@@ -8,17 +8,15 @@
 	// get group disease name
 	$get_group_of_disease =\App\Http\Controllers\Controller::get_group_of_disease($select_year);
 	$get_group_of_disease_th =\App\Http\Controllers\Controller::get_group_of_disease_th($select_year);
-
   $get_disease_more_code = \App\Http\Controllers\Controller::list_merge_disease();
-	 //dd($get_disease_more_code);
+
 	//count group_of_disease
 	$total_group_of_disease = count($get_group_of_disease);
 	$current_year =  (isset($_GET['year']))? $_GET['year']: date('Y');
 	$current_year_th = $current_year+543;
 
 	$total_all_pop = PopulationController::all_population($current_year);
-	//dd($total_all_pop);
-//	echo $total_all_pop;
+  //echo $total_all_pop;
 ?>
 <!-- Content Header (Page header) -->
 <section class="content-header">
@@ -42,8 +40,6 @@
 <?php $data[$group_name_of_disease] = PopulationController::get_total_population($select_year);
 	//convert json data
 	$json = json_decode($data[$group_name_of_disease], true);
-
-	//dd($json);
 ?>
 <?php if ($i%$max_columns==0) { // if counter is multiple of 3 ?>
 	<div class="row">
@@ -109,7 +105,7 @@
 	</div>
 <?php } ?>
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-8">
       <div class="box box-primary direct-chat direct-chat-primary">
         <div class="box-header with-border">
           <h3 class="box-title">โรคหลายรหัส</h3>
@@ -134,13 +130,14 @@
               <tfoot></tfoot>
               <tbody>
                 @foreach ($get_disease_more_code as $key_disease_more_code => $val_disease_more_code)
+                <?php $list_disease = PopulationController::Show_disease_more_code($select_year,$key_disease_more_code); ?>
                 <tr>
-                  <td>{{ $val_disease_more_code }}</td>
-                  <td>fdfdf</td>
-                  <td>fdfdf</td>
-                  <td>fdfdf</td>
-                  <td>fdfdf</td>
-                  <td>fdfdf</td>
+                  <td><a href="showbydisease?disease_code={{ $key_disease_more_code }}&year={{ $current_year }}">{{ $val_disease_more_code }}</a></td>
+                  <td><?php echo number_format($list_disease['total_case']);?></td>
+                  <td><?php echo Controller::cal_ratio_cases($total_all_pop,$list_disease['total_case']);?></td>
+                  <td><?php echo number_format($list_disease['total_death']);?></td>
+                  <td><?php echo Controller::cal_ratio_deaths($total_all_pop,$list_disease['total_death']);?></td>
+                  <td><?php if($list_disease['total_death']>0) { echo Controller::cal_ratio_cases_deaths($list_disease['total_case'],$list_disease['total_death']); }else{ echo "0.00";}?></td>
                 </tr>
                 @endforeach
               </tbody>
