@@ -38,7 +38,7 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 	<li><a href="{{ route('dashboard') }}"><i class="fa fa-home"></i> หนัาหลัก</a></li>
 	<li><a href="#" class="active">รายงาน</a></li>
   <li><a href="{{ route('export-patient-data.main') }}" class="active">รายงานข้อมูลผู้ป่วย</a></li>
-	<li><a href="{{ route('export-patient.sick-death-month') }}" class="active">ส่งออกข้อมูลผู้ป่วยจำนวนป่วย/ตาย รายเดือน</a></li>
+	<li><a href="{{ route('export-patient.sick-death-month') }}" class="active">ส่งออกข้อมูลจำนวนป่วย/ตาย รายเดือน</a></li>
 </ol>
 </section>
 <!-- Main content -->
@@ -48,7 +48,7 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 			<!-- Default box -->
 			<div class="box box-info">
 				<div class="box-header with-border">
-					<h3 class="box-title"><i class="fa fa-search"></i> ค้นหาข้อมูลผู้ป่วยจำนวนป่วย/ตาย</h3>
+					<h3 class="box-title"><i class="fa fa-search"></i> ค้นหาข้อมูลจำนวนป่วย/ตาย</h3>
 				</div>
 				<div class="box-body">
 				<form action='{{ route('export-patient.sick-death-month') }}' class="form-horizontal" method="get">
@@ -98,7 +98,7 @@ $disease_code = (isset($_GET['disease_code']))? $_GET['disease_code'] : "01";
 	 	<div class="col-md-12">
 			<div class="box box-success">
 				<div class="box-header with-border">
-					<h3 class="box-title"><span class="ds-box-title">ตารางข้อมูลผู้ป่วยจำนวนป่วย/ตาย โรค <?php echo $get_all_disease[$disease_code];?> ปี <?php echo $select_year+543;?></span></h3>
+					<h3 class="box-title"><span class="ds-box-title">ตารางข้อมูลจำนวนป่วย/ตาย โรค <?php echo $get_all_disease[$disease_code];?> ปี <?php echo $select_year+543;?></span></h3>
 				</div>
 				<!-- /.box-header -->
 				<div class="box-body">
