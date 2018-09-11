@@ -203,7 +203,7 @@ class PopulationController extends Controller
           $sheetname = 'sheet1';
 
           // header text
-          $header_text = "ตารางข้อมูลจำนวนประชากร โรค ".$disease_name[$post_disease_code]." ปี ".$year_th;
+          $header_text = "ตารางข้อมูล โรค ".$disease_name[$post_disease_code]." ปี ".$year_th;
 
           Excel::create($filename, function($excel) use($data_excel,$sheetname,$header_text) {
               // Set the title
