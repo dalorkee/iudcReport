@@ -25,10 +25,11 @@ class ExportController extends Controller
       $year = (isset($request->select_year)) ? $request->select_year : $current_year ;
       $list_disease_all = \App\Http\Controllers\Controller::list_disease_all()->toArray();
       $disease_code =  explode(",",$post_disease_code);
+
       if(count($disease_code)>2){
         $file_name = $list_disease_all[$post_disease_code].'-Y'.$year.'.csv';
       }else{
-        $file_name = 'DIS'.$disease_code.'-Y'.$year.'.csv';
+        $file_name = 'DIS'.$disease_code['0'].'-Y'.$year.'.csv';
       }
       $path = storage_path().'/'.'app'.'/report_disease/'.$file_name;
       if (file_exists($path)) {
