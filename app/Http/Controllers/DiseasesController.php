@@ -489,7 +489,7 @@ class DiseasesController extends Controller
 			->get()
 			->toArray();
 		} else {
-			$result = DB::table('ur506_'.$year)
+			$result = DB::table('ur506_'.$tblYear)
 			->select(DB::raw('COUNT(DATESICK) AS patient, province'))
 			->whereIn('week_no', $week_no)
 			->whereIn('DISEASE', $diseaseCode)
