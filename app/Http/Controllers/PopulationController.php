@@ -198,7 +198,7 @@ class PopulationController extends Controller
           //Year to DC
           $year_th = $year+543;
           //filename
-          $filename = 'pop-'.$disease_name[$post_disease_code].'-year'.$year_th;
+          $filename = $disease_name[$post_disease_code].'-year'.$year_th;
           //sheetname
           $sheetname = 'sheet1';
 
