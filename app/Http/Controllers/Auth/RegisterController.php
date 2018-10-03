@@ -68,4 +68,8 @@ class RegisterController extends Controller
             'password' => bcrypt($data['password']),
         ]);
     }
+
+	protected function getPassword($pwd_str=null) {
+		return bcrypt($pwd_str);
+	}
 }

@@ -29,7 +29,7 @@ class OnePageController extends DiseasesController
 			}
 			$this->rqDsCode = $request->disease;
 			$selected_ds = true;
-			if ($request->week_number !== 'all') {
+			if ($request->week_number != 'all') {
 				$week_arr = array();
 				for ($i=1; $i<=$request->week_number; $i++) {
 					array_push($week_arr, sprintf('%02d', $i));
@@ -44,7 +44,7 @@ class OnePageController extends DiseasesController
 			$nowYear = parent::getLastUr506Year();
 			$rqYear = $nowYear;
 			$ds = array(78);
-			$this->rqDsCode = 78;
+			$this->rqDsCode = $ds[0];
 			$rqWeek = 'all';
 			$str_week = 'all';
 			$selected_ds = false;
@@ -74,6 +74,7 @@ class OnePageController extends DiseasesController
 		$patientOnLastWeek = $this->getPatientOnLastWeek($rqYear, $ds);
 		$patientPerWeek = $this->getPatientPerWeek($rqYear, $ds, $rqWeek);
 		$patientMap = $this->getPatientMap($rqYear, $ds, $rqWeek);
+		$patientByWeek = $this->getPatientOnWeek($rqYear, $ds, $str_week);
 		return view(
 			'frontend.onePageReport',
 			[
@@ -90,7 +91,8 @@ class OnePageController extends DiseasesController
 				'patientByProvRegion'=>$patientByProvRegion,
 				'patientOnLastWeek'=>$patientOnLastWeek,
 				'patintPerWeek'=>$patientPerWeek,
-				'patientMap'=>$patientMap
+				'patientMap'=>$patientMap,
+				'patientByWeek'=>$patientByWeek
 			]
 		);
 	}
@@ -548,6 +550,21 @@ class OnePageController extends DiseasesController
 		return $result;
 	}
 
+	private function getPatientOnWeek($year, $diseaseCode, $week_no) {
+		if ($week_no != 'all') {
+			$cntPt = parent::patientByWeek($week_no, $year, $diseaseCode);
+			$dateList = parent::getDateRangeByWeek($year, array($week_no));
+			$cntDateRange = count($dateList);
+			$sDate = parent::cvDateToTH($dateList[0]->DATESICK);
+			$eDate = parent::cvDateToTH($dateList[((int)$cntDateRange)-1]->DATESICK);
+			$dateRange = $sDate." - ".$eDate;
+			$ptByWeek = array('week'=>$week_no, 'dateRange'=>$dateRange, 'cntPatient'=>$cntPt[0]->patient);
+		} else {
+			$ptByWeek = 'all';
+		}
+		return $ptByWeek;
+	}
+
 	private function getPatientPerWeek($year, $diseaseCode, $week_no) {
 		/* get provice from db */
 		$lstProv = parent::getProvince();
@@ -800,4 +817,6 @@ class OnePageController extends DiseasesController
 		}
 		return $result;
 	}
+
+
 }

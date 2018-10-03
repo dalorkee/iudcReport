@@ -356,7 +356,7 @@ class DiseasesController extends Controller
 			$result = DB::table('ur506_'.$year)
 			->select('DATESICK')
 			->whereIn('week_no', $week_no)
-			->where('DATESICK', '<>', "")
+			->where('DATESICK', '!=', "")
 			->groupBy('DATESICK')
 			->orderBy('DATESICK')
 			->get()
@@ -364,7 +364,7 @@ class DiseasesController extends Controller
 		} else {
 			$result = DB::table('ur506_'.$year)
 			->select('DATESICK')
-			->where('DATESICK', '<>', "")
+			->where('DATESICK', '!=', "")
 			->groupBy('DATESICK')
 			->orderBy('DATESICK')
 			->get()

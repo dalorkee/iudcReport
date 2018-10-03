@@ -266,9 +266,12 @@
 										@endif
 									</div>
 									<div class="bs-callout bs-callout-danger">
-										@if ($patientOnLastWeek['patient'] > 0)
+										@if ($patientByWeek != 'all')
+											ในสัปดาห์ที่ {{ $patientByWeek['week'] }} ตั้งแต่วันที่ {{ $patientByWeek['dateRange'] }} พบผู้ป่วย {{ number_format($patientByWeek['cntPatient']) }} ราย
+										@endif
+										@if ($patientByWeek == 'all' && $patientOnLastWeek['patient'] > 0)
 											ในสัปดาห์สุดท้าย ตั้งแต่วันที่ {{ $patientOnLastWeek['date_start']." - ".$patientOnLastWeek['date_end'] }}
-											 พบผู้ป่วย {{ $patientOnLastWeek['patient'] }} ราย
+											 พบผู้ป่วย {{ number_format($patientOnLastWeek['patient']) }} ราย
 										@endif
 									</div>
 								</article>
