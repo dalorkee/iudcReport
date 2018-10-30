@@ -141,8 +141,8 @@ class ExportPatientController extends Controller
                 $pt_data[$val->PROVINCE]['death_oct'] = $val->death_oct;
                 $pt_data[$val->PROVINCE]['case_nov'] = $val->case_nov;
                 $pt_data[$val->PROVINCE]['death_nov'] = $val->death_nov;
-                $pt_data[$val->PROVINCE]['case_dec'] = $val->case_feb;
-                $pt_data[$val->PROVINCE]['death_dec'] = $val->case_feb;
+                $pt_data[$val->PROVINCE]['case_dec'] = $val->case_dec;
+                $pt_data[$val->PROVINCE]['death_dec'] = $val->case_dec;
                 //Total
                 $total_case = $val->case_jan+$val->case_feb+$val->case_mar+$val->case_apr+$val->case_may+$val->case_jun+$val->case_jul+$val->case_aug+$val->case_sep+$val->case_oct+$val->case_nov+$val->case_dec;
                 $total_death = $val->death_jan+$val->death_feb+$val->death_mar+$val->death_apr+$val->death_may+$val->death_jun+$val->death_jul+$val->death_aug+$val->death_sep+$val->death_oct+$val->death_nov+$val->death_dec;
