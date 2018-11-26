@@ -9,6 +9,10 @@ use \App\Http\Controllers\Controller as Controller;
 
 class PopulationController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     // public function index()
     // {
     // $chart = Charts::database(Population::all(), 'bar', 'google')

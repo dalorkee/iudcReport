@@ -14,6 +14,10 @@ class ExportController extends Controller
     // {
     //     //return view('frontend.population');
     // }
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     //Load View
     public function export_by_disease(){
