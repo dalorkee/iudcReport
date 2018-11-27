@@ -5,9 +5,9 @@
 	<!-- Logo -->
 	<a href="{{ route('population')}}?year=<?php echo $current_year; ?>" class="logo">
 		<!-- mini logo for sidebar mini 50x50 pixels -->
-		<span class="logo-mini hidden-xs hidden-sm hidden-md hidden-xl hidden-lg"><b>D</b>UDC</span>
+		<span class="logo-mini"><span class="color-gold">D</span>UDC</span>
 		<!-- logo for regular state and mobile devices -->
-		<span class="logo-lg"><b>Database of</b>&nbsp;UCD</span>
+		<span class="logo-lg"><span class="color-gold">D</span>atabase of UCD</span>
 	</a>
 	<!-- Header Navbar: style can be found in header.less -->
 	<nav class="navbar navbar-static-top">

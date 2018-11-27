@@ -1,16 +1,15 @@
 @font-face {
-  font-family: 'promptregular';
+  font-family: 'Prompt';
   src: url("../fonts/prompt-regular-webfont.eot");
   src: url("../fonts/prompt-regular-webfont.eot?#iefix") format("embedded-opentype"), url("../fonts/prompt-regular-webfont.woff2") format("woff2"), url("../fonts/prompt-regular-webfont.woff") format("woff"), url("../fonts/prompt-regular-webfont.ttf") format("truetype"), url("../fonts/prompt-regular-webfont.svg#promptregular") format("svg");
   font-weight: normal;
   font-style: normal; }
 body {
   color: "#4C4A4A";
-  font-family: 'Prompt', promptregular, sans-serif;
-  font-size: 1.275em; }
+  font-family: 'Prompt', sans-serif; }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Prompt', promptregular, sans-serif; }
+  font-family: 'Prompt', sans-serif; }
 
 .treegrid-indent {
   width: 0;
@@ -47,7 +46,7 @@ h1, h2, h3, h4, h5, h6 {
 
 #select-year {
   position: relative;
-  z-index: 100000 !important; }
+  z-index: 49 !important; }
 
 .iudc-header div,
 .iudc-header figure,
@@ -55,7 +54,7 @@ h1, h2, h3, h4, h5, h6 {
 .iudc-header p {
   margin: 0;
   padding: 0;
-  font-family: 'Prompt', promptregular, sans-serif; }
+  font-family: 'Prompt', sans-serif; }
 
 .iudc-header:after {
   content: "";
@@ -86,7 +85,7 @@ h1, h2, h3, h4, h5, h6 {
   margin: 0;
   padding: 0;
   font-size: 1.475em;
-  font-family: 'Prompt', promptregular, sans-serif; }
+  font-family: 'Prompt', sans-serif; }
 
 .box-title {
   font-size: 1.275em; }
@@ -112,12 +111,12 @@ table.iudc-tbl tr:first-child th:last-child,
 table.iudc-tbl tr td:last-child {
   border-right: none; }
 
-.sidebar-menu {
-  line-height: 1.20em !important; }
-
+/*.sidebar-menu {
+	line-height: 1.20em !important;
+}
 .nav-level2 a {
-  font-size: 1em !important; }
-
+	font-size: 1em !important;
+} */
 /* bootstrap bs-collout */
 .bs-callout {
   padding: 20px;
@@ -175,5 +174,69 @@ table.iudc-tbl tr td:last-child {
 
 .bs-callout-info h4 {
   color: #5bc0de; }
+
+/* set font step size */
+.step {
+  display: inline-block;
+  line-height: 1;
+  position: relative;
+  width: 10%; }
+
+.step i {
+  -webkit-transition: opacity .3s;
+  -moz-transition: opacity .3s;
+  -ms-transition: opacity .3s;
+  -o-transition: opacity .3s;
+  transition: opacity .3s; }
+
+.step:hover i {
+  opacity: .3; }
+
+.size-12 {
+  font-size: 12px; }
+
+.size-14 {
+  font-size: 14px; }
+
+.size-16 {
+  font-size: 16px; }
+
+.size-18 {
+  font-size: 18px; }
+
+.size-21 {
+  font-size: 21px; }
+
+.size-24 {
+  font-size: 24px; }
+
+.size-32 {
+  font-size: 32px; }
+
+.size-48 {
+  font-size: 48px; }
+
+.size-64 {
+  font-size: 64px; }
+
+.size-96 {
+  font-size: 96px; }
+
+/* setting admin lte template by tonn */
+/*.main-header {
+	z-index:49;
+}
+*/
+.ui-datepicker-div {
+  z-index: 9999 !important; }
+
+.datepicker {
+  z-index: 9999 !important; }
+
+.logo-mini {
+  font-size: .80em !important; }
+
+.color-gold {
+  color: #F39C12; }
 
 /*# sourceMappingURL=main.css.map */

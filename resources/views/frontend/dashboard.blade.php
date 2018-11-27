@@ -75,7 +75,7 @@
 <section class="content-header">
 	<h1>Dashboard</h1>
 	<ol class="breadcrumb">
-		<li><a href="#"><i class="fa fa-dashboard"></i> หน้าหลัก</a></li>
+		<li><a href="#"><i class="fa fa-home"></i> หน้าหลัก</a></li>
 		<li class="active">Dashboard</li>
 	</ol>
 </section>

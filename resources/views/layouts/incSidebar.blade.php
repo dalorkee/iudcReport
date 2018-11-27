@@ -1,17 +1,41 @@
 <!-- sidebar: style can be found in sidebar.less -->
 <section class="sidebar">
+	<!-- Sidebar user panel -->
+	<div class="user-panel">
+		<div class="pull-left image">
+			{{ Html::image('public/images/default-avatar.png', 'alt=User Image', array('class'=>'img-circle')) }}
+		</div>
+		<div class="pull-left info">
+			<p>{{ Auth::user()->firstName."&nbsp;".Auth::user()->lastname."&nbsp;-&nbsp;".Auth::user()->user_type }}</p>
+			<a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+		</div>
+	</div>
+	<!-- search form -->
+	<!--
+	<form action="#" method="get" class="sidebar-form">
+		<div class="input-group">
+			<input type="text" name="q" class="form-control" placeholder="Search...">
+			<span class="input-group-btn">
+				<button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i></button>
+			</span>
+		</div>
+	</form>
+	-->
+	<!-- /.search form -->
 	<!-- sidebar menu: : style can be found in sidebar.less -->
 	<ul class="sidebar-menu" data-widget="tree">
 		<li class="header" style="font-size:1em;color:#fff;">เมนูหลัก</li>
 		<li class="{{ active_check('dbd') }} {{ active_check('/') }}" >
 			<a href="{{ route('dbd') }}">
-				<i class="fa fa-tachometer" aria-hidden="true"></i> <span>Dashboard</span>
+				<i class="ion-ios-speedometer-outline size-21"></i> <span>&nbsp;Dashboard</span>
 			</a>
 		</li>
-		<li class="treeview {{ active_check('population') }}">
+		<li class="{{ active_check('population') }} treeview">
 			<a href="#">
-				<i class="fa fa-list-ol" aria-hidden="true"></i> <span>รายการข้อมูล</span>
-				<span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+				<i class="fa fa-list-ol size-18" aria-hidden="true"></i> <span>&nbsp;รายการข้อมูล</span>
+				<span class="pull-right-container">
+					<i class="fa fa-angle-left pull-right"></i>
+				</span>
 			</a>
 			<ul class="treeview-menu">
 				<?php
@@ -29,7 +53,7 @@
 		</li>
 		<li class="treeview {{ Active::check('export-csv') }} {{ Active::check('export-population') }}">
 			<a href="#">
-				<i class="fa fa-cloud-download"></i> <span>ส่งออกข้อมูล</span>
+				<i class="fa fa-cloud-download size-18"></i> <span>&nbsp;ส่งออกข้อมูล</span>
 				<span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
 			</a>
 			<ul class="treeview-menu">
@@ -39,15 +63,15 @@
 		</li>
 		<li class="treeview {{ Active::check('top10DsPt') }} {{ Active::check('onePage') }} {{ Active::check('export-patient') }}">
 			<a href="#">
-				<i class="fa fa-pie-chart"></i>
-				<span>รายงาน</span>
+				<i class="fa fa-pie-chart size-18"></i>
+				<span>&nbsp;รายงาน</span>
 				<span class="pull-right-container">
 					<i class="fa fa-angle-left pull-right"></i>
 				</span>
 			</a>
-			<ul class="treeview-menu nav-level2">
-				<li class="{{ Active::check('top10DsPt') }}">
-					<a href="{{ route('top10DsPt') }}"><i class="fa fa-circle-o text-red"></i> 10 อันดับโรคที่มีอัตราป่วยสูงสุด</a>
+			<ul class="treeview-menu">
+				<li class="{{ Active::check('top10DsPt') }}" style="overflow:hidden; clear:both;">
+					<a href="{{ route('top10DsPt') }}" title="10 อันดับโรคที่มีอัตราป่วยสูงสุด"><i class="fa fa-circle-o text-red"></i> <span style="font-size:.80em;">10 อันดับโรคที่มีอัตราป่วยสูงสุด</span></a>
 				</li>
 				<li class="{{ Active::check('onePage') }}">
 					<a href="{{ route('onePage') }}"><i class="fa fa-circle-o text-yellow"></i> One page report</a>
