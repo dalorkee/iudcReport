@@ -47,27 +47,29 @@ Route::post('post_population_municipality','ExportController@post_population_mun
 Route::post('post_population_sex_age_province','ExportController@post_population_sex_age_province')->name('post_sex-age-province');
 Route::post('post_population_sex_age_municipality','ExportController@post_population_sex_age_municipality')->name('post_sex-age-municipality');
 /* End Export Population */
+Route::prefix('export-patient')->group(function () {
 /* Start Export Patient Data */
 //Load Form
-Route::get('export-patient','ExportPatientController@patient_main')->name('export-patient-data.main');
-Route::get('export-patient/sick-death-month', 'ExportPatientController@patient_sick_death_by_month')->name('export-patient.sick-death-month');
-Route::get('export-patient/sick-death-ratio', 'ExportPatientController@patient_sick_death_ratio')->name('export-patient.sick-death-ratio');
-Route::get('export-patient/sick-weekly', 'ExportPatientController@patient_sick_weekly')->name('export-patient.sick-weekly');
-Route::get('export-patient/sick-by-age', 'ExportPatientController@patient_sick_by_age')->name('export-patient.sick-by-age');
-Route::get('export-patient/death-by-age', 'ExportPatientController@patient_death_by_age')->name('export-patient.death-by-age');
-Route::get('export-patient/sick-death-by-nation', 'ExportPatientController@patient_sick_death_by_nation')->name('export-patient.sick-death-by-nation');
-Route::get('export-patient/sick-by-occupation', 'ExportPatientController@patient_sick_by_occupation')->name('export-patient.sick-by-occupation');
-Route::get('export-patient/sick-by-sex', 'ExportPatientController@patient_sick_by_sex')->name('export-patient.sick-by-sex');
+Route::get('/','ExportPatientController@patient_main')->name('export-patient-data.main');
+Route::get('sick-death-month', 'ExportPatientController@patient_sick_death_by_month')->name('export-patient.sick-death-month');
+Route::get('sick-death-ratio', 'ExportPatientController@patient_sick_death_ratio')->name('export-patient.sick-death-ratio');
+Route::get('sick-weekly', 'ExportPatientController@patient_sick_weekly')->name('export-patient.sick-weekly');
+Route::get('sick-by-age', 'ExportPatientController@patient_sick_by_age')->name('export-patient.sick-by-age');
+Route::get('death-by-age', 'ExportPatientController@patient_death_by_age')->name('export-patient.death-by-age');
+Route::get('sick-death-by-nation', 'ExportPatientController@patient_sick_death_by_nation')->name('export-patient.sick-death-by-nation');
+Route::get('sick-by-occupation', 'ExportPatientController@patient_sick_by_occupation')->name('export-patient.sick-by-occupation');
+Route::get('sick-by-sex', 'ExportPatientController@patient_sick_by_sex')->name('export-patient.sick-by-sex');
 //Post Action
 // API call Data
-Route::get('export-patient/export-xls-patient-sick-death-by-month','ExportPatientController@xls_patient_sick_death_by_month')->name('xls_patient_sick_death_by_month');
-Route::get('export-patient/export-xls-patient-sick-death-ratio','ExportPatientController@xls_patient_sick_death_ratio')->name('xls_patient_sick_death_ratio');
-Route::get('export-patient/export-xls-sick-weekly','ExportPatientController@xls_patient_sick_weekly')->name('xls_patient_sick_weekly');
-Route::get('export-patient/export-xls-sick-by-age','ExportPatientController@xls_patient_sick_by_age')->name('xls_patient_sick_by_age');
-Route::get('export-patient/export-xls-death-by-age','ExportPatientController@xls_patient_death_by_age')->name('xls_patient_death_by_age');
-Route::get('export-patient/export-xls-sick-death-by-nation','ExportPatientController@xls_patient_sick_death_by_nation')->name('xls_patient_sick_death_by_nation');
-Route::get('export-patient/export-xls-sick-by-occupation','ExportPatientController@xls_patient_sick_by_occupation')->name('xls_patient_sick_by_occupation');
-Route::get('export-patient/export-xls-sick-by-sex','ExportPatientController@xls_patient_sick_by_sex')->name('xls_patient_sick_by_sex');
+Route::get('export-xls-patient-sick-death-by-month','ExportPatientController@xls_patient_sick_death_by_month')->name('xls_patient_sick_death_by_month');
+Route::get('export-xls-patient-sick-death-ratio','ExportPatientController@xls_patient_sick_death_ratio')->name('xls_patient_sick_death_ratio');
+Route::get('export-xls-sick-weekly','ExportPatientController@xls_patient_sick_weekly')->name('xls_patient_sick_weekly');
+Route::get('export-xls-sick-by-age','ExportPatientController@xls_patient_sick_by_age')->name('xls_patient_sick_by_age');
+Route::get('export-xls-death-by-age','ExportPatientController@xls_patient_death_by_age')->name('xls_patient_death_by_age');
+Route::get('export-xls-sick-death-by-nation','ExportPatientController@xls_patient_sick_death_by_nation')->name('xls_patient_sick_death_by_nation');
+Route::get('export-xls-sick-by-occupation','ExportPatientController@xls_patient_sick_by_occupation')->name('xls_patient_sick_by_occupation');
+Route::get('export-xls-sick-by-sex','ExportPatientController@xls_patient_sick_by_sex')->name('xls_patient_sick_by_sex');
+});
 /* End Export Patient Data */
 /* Report */
 Route::get('/report', function() {
