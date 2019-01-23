@@ -279,8 +279,10 @@ class DiseasesController extends Controller
 
 	protected function totalPopPerProv($year=0) {
 		$currentPopYear = $this->getCurrentPopYear($year);
-		if ($year != $currentPopYear) {
-			$year = $currentPopYear;
+		if (!in_array($year, $currentPopYear)) {
+			$year = $currentPopYear[count($currentPopYear)-1];
+		} else {
+			$year = $year;
 		}
 		$result = DB::table('pop_urban_sex')
 		->selectRaw('SUM(male)+SUM(female) AS pop, prov_code')
@@ -291,6 +293,8 @@ class DiseasesController extends Controller
 		->toArray();
 		return $result;
 	}
+
+
 
 	protected function getFirstWeek($year=0) {
 		$result = DB::table('ur506_'.$year)
@@ -648,10 +652,10 @@ class DiseasesController extends Controller
 		foreach ($dbSchema as $key=>$value) {
 			if (preg_match('/^pop_2+[0-9]/', $value)) {
 				$str = mb_substr($value, -4);
-				array_push($year, (int)$str);
+				array_push($year, $str);
 			}
 		}
 		asort($year);
-		return $year[count($year)-1];
+		return $year;
 	}
 }
