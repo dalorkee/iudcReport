@@ -223,6 +223,7 @@ class dashboardController extends DiseasesController
 		foreach ($totalPop as $key=>$val) {
 			$popPerProv[$val->prov_code] = (int)$val->pop;
 		}
+		dd($popPerProv);
 		/* resetup population per province is missing add it to 0 */
 		foreach ($prov as $key=>$val) {
 			if (array_key_exists($key, $popPerProv)) {
