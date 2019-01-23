@@ -285,6 +285,7 @@ class DiseasesController extends Controller
 		->orderBY('prov_code')
 		->get()
 		->toArray();
+		dd($result);
 		return $result;
 	}
 

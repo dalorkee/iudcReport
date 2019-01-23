@@ -220,7 +220,6 @@ class dashboardController extends DiseasesController
 		}
 		/* set poputation per province to array */
 		$totalPop = parent::totalPopPerProv($year);
-		dd($totalPop);
 		foreach ($totalPop as $key=>$val) {
 			$popPerProv[$val->prov_code] = (int)$val->pop;
 		}
