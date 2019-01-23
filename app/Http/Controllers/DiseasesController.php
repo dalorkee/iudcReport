@@ -278,7 +278,10 @@ class DiseasesController extends Controller
 	}
 
 	protected function totalPopPerProv($year=0) {
-		dd($year);
+		$currentPopYear = $this->getCurrentPopYear($year);
+		if ($year != $currentPopYear) {
+			$year = $currentPopYear;
+		}
 		$result = DB::table('pop_urban_sex')
 		->selectRaw('SUM(male)+SUM(female) AS pop, prov_code')
 		->where('pop_year', $year)
@@ -286,7 +289,6 @@ class DiseasesController extends Controller
 		->orderBY('prov_code')
 		->get()
 		->toArray();
-		dd($result);
 		return $result;
 	}
 
@@ -651,14 +653,5 @@ class DiseasesController extends Controller
 		}
 		asort($year);
 		return $year[count($year)-1];
-	}
-
-	protected function setPopYearForCalc($year=0) {
-		/* check current pop year on database */
-		$currentPopYear = $this->getCurrentPopYear();
-		if ($year != $currentPopYear) {
-			$year = $currentPopYear;
-		}
-		return $year;
 	}
 }
