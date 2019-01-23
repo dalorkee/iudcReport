@@ -220,10 +220,10 @@ class dashboardController extends DiseasesController
 		}
 		/* set poputation per province to array */
 		$totalPop = parent::totalPopPerProv($year);
+		dd($totalPop);
 		foreach ($totalPop as $key=>$val) {
 			$popPerProv[$val->prov_code] = (int)$val->pop;
 		}
-		dd($popPerProv);
 		/* resetup population per province is missing add it to 0 */
 		foreach ($prov as $key=>$val) {
 			if (array_key_exists($key, $popPerProv)) {
