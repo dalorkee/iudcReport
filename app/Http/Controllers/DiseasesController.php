@@ -284,7 +284,7 @@ class DiseasesController extends Controller
 		->groupBy('prov_code')
 		->orderBY('prov_code')
 		->toSQL();
-		
+		dd($result);
 		/*->toArray();
 		dd($result);
 		return $result; */
