@@ -278,6 +278,7 @@ class DiseasesController extends Controller
 	}
 
 	protected function totalPopPerProv($year=0) {
+		dd($year);
 		$result = DB::table('pop_urban_sex')
 		->selectRaw('SUM(male)+SUM(female) AS pop, prov_code')
 		->where('pop_year', $year)
