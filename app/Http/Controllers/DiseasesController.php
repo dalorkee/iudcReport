@@ -261,6 +261,10 @@ class DiseasesController extends Controller
 	}
 
 	protected function sumPopByAgegroup($year=0) {
+		$yearLst = $this->getYearOnPopUrbanAgeGroup();
+		if (!in_array($year, $yearLst)) {
+			$year = $yearLst[count($yearLst)-1];
+		}
 		$result = DB::table('pop_urban_age_group')
 		->selectRaw('
 			IFNULL(age_0_4,0)+
@@ -602,6 +606,10 @@ class DiseasesController extends Controller
 	}
 
 	protected function sumPopByProvCode($prov_code=array(), $pop_year=0) {
+		$yearLst = $this->getYearOnPopUrbanSex();
+		if (!in_array($pop_year, $yearLst)) {
+			$pop_year = $yearLst[count($yearLst)-1];
+		}
 		$result = DB::table('pop_urban_sex')
 		->select(DB::raw('SUM(male+female) AS pop'))
 		->whereIn('prov_code', $prov_code)
@@ -655,6 +663,43 @@ class DiseasesController extends Controller
 				array_push($year, $str);
 			}
 		}
+		asort($year);
+		return $year;
+	}
+
+	protected function lstYearOnPopUrbanAgeGroup() {
+		$result = DB::table('pop_urban_age_group')
+			->select('year_')
+			->get()
+			->toArray();
+		return $result;
+	}
+
+	protected function getYearOnPopUrbanAgeGroup() {
+		$lstYear = $this->lstYearOnPopUrbanAgeGroup();
+		$year = array();
+		foreach($lstYear as $key=>$value) {
+			array_push($year, $value->year_);
+		};
+		asort($year);
+		return $year;
+	}
+
+	protected function lstYearOnPopUrbanSex() {
+		$result = DB::table('pop_urban_sex')
+			->select('pop_year')
+			->groupBy('pop_year')
+			->get()
+			->toArray();
+		return $result;
+	}
+
+	protected function getYearOnPopUrbanSex() {
+		$lstYear = $this->lstYearOnPopUrbanSex();
+		$year = array();
+		foreach($lstYear as $key=>$value) {
+			array_push($year, $value->pop_year);
+		};
 		asort($year);
 		return $year;
 	}
