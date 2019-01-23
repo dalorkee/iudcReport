@@ -283,10 +283,11 @@ class DiseasesController extends Controller
 		->where('pop_year', $year)
 		->groupBy('prov_code')
 		->orderBY('prov_code')
-		->get()
-		->toArray();
+		->toSQL();
+		
+		/*->toArray();
 		dd($result);
-		return $result;
+		return $result; */
 	}
 
 	protected function getFirstWeek($year=0) {
